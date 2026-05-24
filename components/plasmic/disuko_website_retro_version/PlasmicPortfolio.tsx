@@ -440,8 +440,9 @@ function PlasmicPortfolio__RenderFunc(props: {
                 className={classNames(projectcss.all, sty.webDesign)}
               >
                 <Window
+                  children={null}
                   className={classNames("__wab_instance", sty.window__b4HY)}
-                  linkDestination={`/IMM`}
+                  linkDestination={"https://disuko.cloud"}
                   windowImage={
                     <PlasmicImg__
                       alt={""}
@@ -466,6 +467,16 @@ function PlasmicPortfolio__RenderFunc(props: {
                   }
                   windowTitle={"Web Design"}
                 />
+
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__x4Mcq
+                  )}
+                >
+                  {"New website coming soon!"}
+                </div>
               </div>
               <div
                 data-plasmic-name={"_3DDesign"}
