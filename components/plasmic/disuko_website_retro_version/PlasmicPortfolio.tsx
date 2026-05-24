@@ -142,6 +142,7 @@ export type PlasmicPortfolio__OverridesType = {
   columns?: Flex__<"div">;
   imm?: Flex__<"div">;
   webDesign?: Flex__<"div">;
+  link?: Flex__<"a"> & Partial<LinkProps>;
   _3DDesign?: Flex__<"div">;
   music?: Flex__<"div">;
   _2DDesign?: Flex__<"div">;
@@ -468,15 +469,24 @@ function PlasmicPortfolio__RenderFunc(props: {
                   windowTitle={"Web Design"}
                 />
 
-                <div
+                <PlasmicLink__
+                  data-plasmic-name={"link"}
+                  data-plasmic-override={overrides.link}
                   className={classNames(
                     projectcss.all,
+                    projectcss.a,
+                    projectcss.a__x4VgG,
                     projectcss.__wab_text,
-                    sty.text__x4Mcq
+                    sty.link
                   )}
+                  component={Link}
+                  href={"https://disuko.cloud"}
+                  legacyBehavior={false}
+                  platform={"nextjs"}
+                  target={"_blank"}
                 >
-                  {"New website coming soon!"}
-                </div>
+                  {"NEW WEBSITE UNDER CONSTRUCTION"}
+                </PlasmicLink__>
               </div>
               <div
                 data-plasmic-name={"_3DDesign"}
@@ -628,6 +638,7 @@ const PlasmicDescendants = {
     "columns",
     "imm",
     "webDesign",
+    "link",
     "_3DDesign",
     "music",
     "_2DDesign",
@@ -641,6 +652,7 @@ const PlasmicDescendants = {
     "columns",
     "imm",
     "webDesign",
+    "link",
     "_3DDesign",
     "music",
     "_2DDesign",
@@ -651,13 +663,15 @@ const PlasmicDescendants = {
     "columns",
     "imm",
     "webDesign",
+    "link",
     "_3DDesign",
     "music",
     "_2DDesign",
     "film"
   ],
   imm: ["imm"],
-  webDesign: ["webDesign"],
+  webDesign: ["webDesign", "link"],
+  link: ["link"],
   _3DDesign: ["_3DDesign"],
   music: ["music"],
   _2DDesign: ["_2DDesign"],
@@ -675,6 +689,7 @@ type NodeDefaultElementType = {
   columns: "div";
   imm: "div";
   webDesign: "div";
+  link: "a";
   _3DDesign: "div";
   music: "div";
   _2DDesign: "div";
@@ -775,6 +790,7 @@ export const PlasmicPortfolio = Object.assign(
     columns: makeNodeComponent("columns"),
     imm: makeNodeComponent("imm"),
     webDesign: makeNodeComponent("webDesign"),
+    link: makeNodeComponent("link"),
     _3DDesign: makeNodeComponent("_3DDesign"),
     music: makeNodeComponent("music"),
     _2DDesign: makeNodeComponent("_2DDesign"),
