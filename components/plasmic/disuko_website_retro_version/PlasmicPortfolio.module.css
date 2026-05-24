@@ -249,6 +249,38 @@
   object-fit: cover;
   object-position: 50% center;
 }
+.webDesign {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  min-width: 0;
+  padding: 0px;
+}
+.window__b4HY:global(.__wab_instance) {
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+}
+.img__lHzoC {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  box-shadow:
+    -4px -4px 0px 0px var(--token-GXH3dzbZuw1x),
+    4px 4px 0px 0px var(--token-FYHois2LGA8g);
+  aspect-ratio: 16/9;
+  object-position: 50% center;
+  margin: 10px;
+}
+.img__lHzoC > picture > img {
+  object-fit: cover;
+  object-position: 50% center;
+}
 ._3DDesign {
   display: flex;
   flex-direction: column;

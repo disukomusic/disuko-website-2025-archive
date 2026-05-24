@@ -137,10 +137,6 @@ function PlasmicBlurredPicture__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const globalVariants = _useGlobalVariants();
-
-  const currentUser = useCurrentUser?.() || {};
-
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
@@ -152,6 +148,11 @@ function PlasmicBlurredPicture__RenderFunc(props: {
     ],
     [$props, $ctx, $refs]
   );
+
+  const globalVariants = _useGlobalVariants();
+
+  const currentUser = useCurrentUser?.() || {};
+
   const $state = useDollarState(stateSpecs, {
     $props,
     $ctx,
@@ -175,15 +176,7 @@ function PlasmicBlurredPicture__RenderFunc(props: {
         projectcss.plasmic_mixins,
         styleTokensClassNames,
         sty.root,
-        {
-          [sty.rootglobal_unnamedGlobalGroupOfVariants_unnamedVariant]:
-            hasVariant(
-              globalVariants,
-              "unnamedGlobalGroupOfVariants",
-              "unnamedVariant"
-            ),
-          [sty.rootunblurred]: hasVariant($state, "unblurred", "unblurred")
-        }
+        { [sty.rootunblurred]: hasVariant($state, "unblurred", "unblurred") }
       )}
       onClick={async event => {
         const $steps = {};

@@ -141,6 +141,7 @@ export type PlasmicPortfolio__OverridesType = {
   imageWindow?: Flex__<typeof ImageWindow>;
   columns?: Flex__<"div">;
   imm?: Flex__<"div">;
+  webDesign?: Flex__<"div">;
   _3DDesign?: Flex__<"div">;
   music?: Flex__<"div">;
   _2DDesign?: Flex__<"div">;
@@ -434,6 +435,39 @@ function PlasmicPortfolio__RenderFunc(props: {
                 />
               </div>
               <div
+                data-plasmic-name={"webDesign"}
+                data-plasmic-override={overrides.webDesign}
+                className={classNames(projectcss.all, sty.webDesign)}
+              >
+                <Window
+                  className={classNames("__wab_instance", sty.window__b4HY)}
+                  linkDestination={`/IMM`}
+                  windowImage={
+                    <PlasmicImg__
+                      alt={""}
+                      className={classNames(sty.img__lHzoC)}
+                      displayHeight={"auto"}
+                      displayMaxHeight={"none"}
+                      displayMaxWidth={"100%"}
+                      displayMinHeight={"0"}
+                      displayMinWidth={"0"}
+                      displayWidth={"auto"}
+                      loading={"lazy"}
+                      src={{
+                        src: "/plasmic/disuko_website_retro_version/images/screenshot20260510194928Png.png",
+                        fullWidth: 1717,
+                        fullHeight: 920,
+                        aspectRatio: undefined
+                      }}
+                    />
+                  }
+                  windowText={
+                    "Plasmic, TypeScript, React, Node.js, HTML, Javascript, CSS"
+                  }
+                  windowTitle={"Web Design"}
+                />
+              </div>
+              <div
                 data-plasmic-name={"_3DDesign"}
                 data-plasmic-override={overrides._3DDesign}
                 className={classNames(projectcss.all, sty._3DDesign)}
@@ -582,6 +616,7 @@ const PlasmicDescendants = {
     "imageWindow",
     "columns",
     "imm",
+    "webDesign",
     "_3DDesign",
     "music",
     "_2DDesign",
@@ -594,14 +629,24 @@ const PlasmicDescendants = {
     "imageWindow",
     "columns",
     "imm",
+    "webDesign",
     "_3DDesign",
     "music",
     "_2DDesign",
     "film"
   ],
   imageWindow: ["imageWindow"],
-  columns: ["columns", "imm", "_3DDesign", "music", "_2DDesign", "film"],
+  columns: [
+    "columns",
+    "imm",
+    "webDesign",
+    "_3DDesign",
+    "music",
+    "_2DDesign",
+    "film"
+  ],
   imm: ["imm"],
+  webDesign: ["webDesign"],
   _3DDesign: ["_3DDesign"],
   music: ["music"],
   _2DDesign: ["_2DDesign"],
@@ -618,6 +663,7 @@ type NodeDefaultElementType = {
   imageWindow: typeof ImageWindow;
   columns: "div";
   imm: "div";
+  webDesign: "div";
   _3DDesign: "div";
   music: "div";
   _2DDesign: "div";
@@ -717,6 +763,7 @@ export const PlasmicPortfolio = Object.assign(
     imageWindow: makeNodeComponent("imageWindow"),
     columns: makeNodeComponent("columns"),
     imm: makeNodeComponent("imm"),
+    webDesign: makeNodeComponent("webDesign"),
     _3DDesign: makeNodeComponent("_3DDesign"),
     music: makeNodeComponent("music"),
     _2DDesign: makeNodeComponent("_2DDesign"),
