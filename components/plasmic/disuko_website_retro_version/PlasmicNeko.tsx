@@ -65,15 +65,51 @@ import { usePlasmicDataSourceContext } from "@plasmicapp/data-sources-context";
 import { Embed } from "@plasmicpkgs/plasmic-basic-components";
 import WindowButton from "../../WindowButton"; // plasmic-import: KZYdo-R8GYAn/component
 import { AntdPopover } from "@plasmicpkgs/antd5/skinny/registerPopover";
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectcss
 import sty from "./PlasmicNeko.module.css"; // plasmic-import: ESUbYUmzi1NH/css
 
 import NounPixelHeart10989631SvgIcon from "./icons/PlasmicIcon__NounPixelHeart10989631Svg"; // plasmic-import: tvndHRt1AD9R/icon
+
+const emptyProxy: any = new Proxy(() => "", {
+  get(_, prop) {
+    return prop === Symbol.toPrimitive ? () => "" : emptyProxy;
+  }
+});
+
+function wrapQueriesWithLoadingProxy($q: any): any {
+  return new Proxy($q, {
+    get(target, queryName) {
+      const query = target[queryName];
+      return !query || query.isLoading || !query.data ? emptyProxy : query;
+    }
+  });
+}
+
+export type PageCtx = {
+  pageRoute: string;
+  pagePath: string;
+  params: Record<string, string | string[] | undefined>;
+  query: Record<string, string | string[] | undefined>;
+};
+
+export function generateDynamicMetadata($q: any, $ctx: PageCtx) {
+  return {
+    title: "neko",
+
+    openGraph: {
+      title: "neko"
+    },
+    twitter: {
+      card: "summary" as const,
+      title: "neko"
+    }
+  };
+}
 
 createPlasmicElementProxy;
 
@@ -135,40 +171,47 @@ function PlasmicNeko__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const currentUser = useCurrentUser?.() || {};
-
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
         path: "popover.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
   );
+
+  const globalVariants = _useGlobalVariants();
+
+  const currentUser = useCurrentUser?.() || {};
+
   const $state = useDollarState(stateSpecs, {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
+
+  const pageMetadata = generateDynamicMetadata(
+    wrapQueriesWithLoadingProxy({}),
+    $ctx as PageCtx
+  );
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <React.Fragment>
       <Head>
         <meta name="twitter:card" content="summary" />
-        <title key="title">{PlasmicNeko.pageMetadata.title}</title>
-        <meta
-          key="og:title"
-          property="og:title"
-          content={PlasmicNeko.pageMetadata.title}
-        />
+        <title key="title">{pageMetadata.title}</title>
+        <meta key="og:title" property="og:title" content={pageMetadata.title} />
         <meta
           key="twitter:title"
-          name="twitter:title"
-          content={PlasmicNeko.pageMetadata.title}
+          property="twitter:title"
+          content={pageMetadata.title}
         />
       </Head>
 
@@ -189,9 +232,7 @@ function PlasmicNeko__RenderFunc(props: {
             projectcss.root_reset,
             projectcss.plasmic_default_styles,
             projectcss.plasmic_mixins,
-            projectcss.plasmic_tokens,
-            plasmic_antd_5_hostless_css.plasmic_tokens,
-            plasmic_plasmic_rich_components_css.plasmic_tokens,
+            styleTokensClassNames,
             sty.root
           )}
         >
@@ -220,9 +261,7 @@ function PlasmicNeko__RenderFunc(props: {
                 projectcss.root_reset,
                 projectcss.plasmic_default_styles,
                 projectcss.plasmic_mixins,
-                projectcss.plasmic_tokens,
-                plasmic_antd_5_hostless_css.plasmic_tokens,
-                plasmic_plasmic_rich_components_css.plasmic_tokens
+                styleTokensClassNames
               )}
               mouseEnterDelay={0}
               mouseLeaveDelay={0}
@@ -281,7 +320,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicNeko__VariantsArgs;
     args?: PlasmicNeko__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicNeko__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicNeko__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicNeko__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
@@ -364,13 +405,12 @@ export const PlasmicNeko = Object.assign(
     internalVariantProps: PlasmicNeko__VariantProps,
     internalArgProps: PlasmicNeko__ArgProps,
 
-    // Page metadata
-    pageMetadata: {
-      title: "neko",
-      description: "",
-      ogImageSrc: "",
-      canonical: ""
-    }
+    pageMetadata: generateDynamicMetadata(wrapQueriesWithLoadingProxy({}), {
+      pageRoute: "/neko",
+      pagePath: "/neko",
+      params: {},
+      query: {}
+    })
   }
 );
 

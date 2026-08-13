@@ -61,13 +61,11 @@ import {
 
 import { NavigationBar } from "@plasmicpkgs/plasmic-nav";
 import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
-
-import { useScreenVariants as useScreenVariantsdmuurUfQuA6N } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: DmuurUFQuA6N/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectcss
 import sty from "./PlasmicNavbarPixel.module.css"; // plasmic-import: T3-8dI7L0stN/css
 
@@ -138,11 +136,11 @@ function PlasmicNavbarPixel__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = _useGlobalVariants();
+
   const currentUser = useCurrentUser?.() || {};
 
-  const globalVariants = ensureGlobalVariants({
-    screen: useScreenVariantsdmuurUfQuA6N()
-  });
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <NavigationBar
@@ -164,9 +162,15 @@ function PlasmicNavbarPixel__RenderFunc(props: {
           <PlasmicLink__
             data-plasmic-name={"link"}
             data-plasmic-override={overrides.link}
-            className={classNames(projectcss.all, projectcss.a, sty.link)}
+            className={classNames(
+              projectcss.all,
+              projectcss.a,
+              projectcss.a__x4VgG,
+              sty.link
+            )}
             component={Link}
             href={`/`}
+            legacyBehavior={false}
             platform={"nextjs"}
           >
             <PlasmicImg__
@@ -193,9 +197,7 @@ function PlasmicNavbarPixel__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
-        plasmic_plasmic_rich_components_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
       closeButton={
@@ -220,9 +222,15 @@ function PlasmicNavbarPixel__RenderFunc(props: {
             <PlasmicLink__
               data-plasmic-name={"home"}
               data-plasmic-override={overrides.home}
-              className={classNames(projectcss.all, projectcss.a, sty.home)}
+              className={classNames(
+                projectcss.all,
+                projectcss.a,
+                projectcss.a__x4VgG,
+                sty.home
+              )}
               component={Link}
               href={`/`}
+              legacyBehavior={false}
               platform={"nextjs"}
               title={"home"}
             >
@@ -272,9 +280,11 @@ function PlasmicNavbarPixel__RenderFunc(props: {
               className={classNames(
                 projectcss.all,
                 projectcss.a,
+                projectcss.a__x4VgG,
                 sty.portfolio
               )}
               component={Link}
+              legacyBehavior={false}
               platform={"nextjs"}
               title={"portfolio"}
             >
@@ -327,9 +337,15 @@ function PlasmicNavbarPixel__RenderFunc(props: {
             <PlasmicLink__
               data-plasmic-name={"music"}
               data-plasmic-override={overrides.music}
-              className={classNames(projectcss.all, projectcss.a, sty.music)}
+              className={classNames(
+                projectcss.all,
+                projectcss.a,
+                projectcss.a__x4VgG,
+                sty.music
+              )}
               component={Link}
               href={`/music`}
+              legacyBehavior={false}
               platform={"nextjs"}
               title={"music"}
             >
@@ -382,9 +398,15 @@ function PlasmicNavbarPixel__RenderFunc(props: {
             <PlasmicLink__
               data-plasmic-name={"merch"}
               data-plasmic-override={overrides.merch}
-              className={classNames(projectcss.all, projectcss.a, sty.merch)}
+              className={classNames(
+                projectcss.all,
+                projectcss.a,
+                projectcss.a__x4VgG,
+                sty.merch
+              )}
               component={Link}
               href={"https://merch.disuko.gay"}
+              legacyBehavior={false}
               platform={"nextjs"}
               title={"merch"}
             >
@@ -437,9 +459,15 @@ function PlasmicNavbarPixel__RenderFunc(props: {
             <PlasmicLink__
               data-plasmic-name={"links"}
               data-plasmic-override={overrides.links}
-              className={classNames(projectcss.all, projectcss.a, sty.links)}
+              className={classNames(
+                projectcss.all,
+                projectcss.a,
+                projectcss.a__x4VgG,
+                sty.links
+              )}
               component={Link}
               href={`/links`}
+              legacyBehavior={false}
               platform={"nextjs"}
               title={"links"}
             >
@@ -528,7 +556,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicNavbarPixel__VariantsArgs;
     args?: PlasmicNavbarPixel__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicNavbarPixel__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicNavbarPixel__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicNavbarPixel__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

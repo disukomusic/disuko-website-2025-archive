@@ -59,13 +59,11 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import { ThemeValue, useTheme } from "./PlasmicGlobalVariant__Theme"; // plasmic-import: 3K9IqsAFaaID/globalVariant
-import { useScreenVariants as useScreenVariantsdmuurUfQuA6N } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: DmuurUFQuA6N/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectcss
 import sty from "./PlasmicWindow.module.css"; // plasmic-import: BWjgdOwFY_OO/css
 
@@ -155,12 +153,11 @@ function PlasmicWindow__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = _useGlobalVariants();
+
   const currentUser = useCurrentUser?.() || {};
 
-  const globalVariants = ensureGlobalVariants({
-    theme: useTheme(),
-    screen: useScreenVariantsdmuurUfQuA6N()
-  });
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <PlasmicLink__
@@ -171,19 +168,13 @@ function PlasmicWindow__RenderFunc(props: {
       className={classNames(
         projectcss.all,
         projectcss.a,
+        projectcss.a__x4VgG,
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
-        plasmic_plasmic_rich_components_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.music,
         {
-          [projectcss.global_theme_classic]: hasVariant(
-            globalVariants,
-            "theme",
-            "classic"
-          ),
           [sty.musicglobal_theme_classic]: hasVariant(
             globalVariants,
             "theme",
@@ -205,6 +196,7 @@ function PlasmicWindow__RenderFunc(props: {
           throw e;
         }
       })()}
+      legacyBehavior={false}
       platform={"nextjs"}
     >
       <div
@@ -249,13 +241,19 @@ function PlasmicWindow__RenderFunc(props: {
         <PlasmicLink__
           data-plasmic-name={"xButton"}
           data-plasmic-override={overrides.xButton}
-          className={classNames(projectcss.all, projectcss.a, sty.xButton, {
-            [sty.xButtonglobal_theme_classic]: hasVariant(
-              globalVariants,
-              "theme",
-              "classic"
-            )
-          })}
+          className={classNames(
+            projectcss.all,
+            projectcss.a,
+            projectcss.a__x4VgG,
+            sty.xButton,
+            {
+              [sty.xButtonglobal_theme_classic]: hasVariant(
+                globalVariants,
+                "theme",
+                "classic"
+              )
+            }
+          )}
           component={Link}
           href={(() => {
             try {
@@ -270,6 +268,7 @@ function PlasmicWindow__RenderFunc(props: {
               throw e;
             }
           })()}
+          legacyBehavior={false}
           onClick={async event => {
             const $steps = {};
 
@@ -308,9 +307,7 @@ function PlasmicWindow__RenderFunc(props: {
           />
         </PlasmicLink__>
       </div>
-      <Stack__
-        as={"div"}
-        hasGap={true}
+      <div
         className={classNames(projectcss.all, sty.freeBox__p2PhV, {
           [sty.freeBoxglobal_theme_classic__p2PhVeNktM]: hasVariant(
             globalVariants,
@@ -384,7 +381,7 @@ function PlasmicWindow__RenderFunc(props: {
                   e instanceof TypeError ||
                   e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  return "i release all kinds of electronic music on various streaming platforms like bandcamp, spotify, and itunes! go check it out!";
+                  return "My F";
                 }
                 throw e;
               }
@@ -397,7 +394,7 @@ function PlasmicWindow__RenderFunc(props: {
             value: args.children
           })}
         </div>
-      </Stack__>
+      </div>
     </PlasmicLink__>
   ) as React.ReactElement | null;
 }
@@ -427,7 +424,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicWindow__VariantsArgs;
     args?: PlasmicWindow__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicWindow__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicWindow__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicWindow__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

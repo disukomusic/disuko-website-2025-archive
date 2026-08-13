@@ -70,16 +70,61 @@ import MusicAlbum from "../../MusicAlbum"; // plasmic-import: xhHvzxTdb1Y8/compo
 import YouTube from "@plasmicpkgs/react-youtube";
 import Footer from "../../Footer"; // plasmic-import: shKoGjSwLEEB/component
 import Snowflakes from "../../Snowflakes"; // plasmic-import: dS2R33xrvHt2/component
-
-import { ThemeValue, useTheme } from "./PlasmicGlobalVariant__Theme"; // plasmic-import: 3K9IqsAFaaID/globalVariant
-import { useScreenVariants as useScreenVariantsdmuurUfQuA6N } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: DmuurUFQuA6N/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectcss
 import sty from "./PlasmicMusic.module.css"; // plasmic-import: Omf247aRwark/css
+
+const emptyProxy: any = new Proxy(() => "", {
+  get(_, prop) {
+    return prop === Symbol.toPrimitive ? () => "" : emptyProxy;
+  }
+});
+
+function wrapQueriesWithLoadingProxy($q: any): any {
+  return new Proxy($q, {
+    get(target, queryName) {
+      const query = target[queryName];
+      return !query || query.isLoading || !query.data ? emptyProxy : query;
+    }
+  });
+}
+
+export type PageCtx = {
+  pageRoute: string;
+  pagePath: string;
+  params: Record<string, string | string[] | undefined>;
+  query: Record<string, string | string[] | undefined>;
+};
+
+export function generateDynamicMetadata($q: any, $ctx: PageCtx) {
+  return {
+    title: "disuko - music 🌸",
+    description:
+      "~i produce electronic music and also DJ! i like making music with high energy and cute sounds. my genres range from kawaii future bass to hardcore!",
+    openGraph: {
+      title: "disuko - music 🌸",
+      description:
+        "~i produce electronic music and also DJ! i like making music with high energy and cute sounds. my genres range from kawaii future bass to hardcore!",
+      images: [
+        "https://site-assets.plasmic.app/f33b16e8e3629b301959c659f5c8f11d.jpg"
+      ]
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      title: "disuko - music 🌸",
+      description:
+        "~i produce electronic music and also DJ! i like making music with high energy and cute sounds. my genres range from kawaii future bass to hardcore!",
+      images: [
+        "https://site-assets.plasmic.app/f33b16e8e3629b301959c659f5c8f11d.jpg"
+      ]
+    },
+    alternates: { canonical: "https://disuko.gay/music" }
+  };
+}
 
 createPlasmicElementProxy;
 
@@ -96,9 +141,12 @@ export type PlasmicMusic__OverridesType = {
   root?: Flex__<"div">;
   navbar?: Flex__<typeof Navbar>;
   main?: Flex__<"div">;
+  bandcamp?: Flex__<typeof WindowButton>;
   spotify?: Flex__<typeof WindowButton>;
   appleMusic?: Flex__<typeof WindowButton>;
-  bandcamp?: Flex__<typeof WindowButton>;
+  youTube?: Flex__<typeof WindowButton>;
+  tidal?: Flex__<typeof WindowButton>;
+  cloudddreamer?: Flex__<typeof MusicAlbum>;
   pirateThisSong?: Flex__<typeof MusicAlbum>;
   _727PpDeathLaser?: Flex__<typeof MusicAlbum>;
   lilypadTea?: Flex__<typeof MusicAlbum>;
@@ -115,6 +163,7 @@ export type PlasmicMusic__OverridesType = {
   bigShotRemix2?: Flex__<typeof MusicAlbum>;
   footer?: Flex__<typeof Footer>;
   snowflakes?: Flex__<typeof Snowflakes>;
+  windowButton?: Flex__<typeof WindowButton>;
 };
 
 export interface DefaultMusicProps {}
@@ -158,54 +207,54 @@ function PlasmicMusic__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = _useGlobalVariants();
+
   const currentUser = useCurrentUser?.() || {};
 
-  const globalVariants = ensureGlobalVariants({
-    theme: useTheme(),
-    screen: useScreenVariantsdmuurUfQuA6N()
-  });
+  const pageMetadata = generateDynamicMetadata(
+    wrapQueriesWithLoadingProxy({}),
+    $ctx as PageCtx
+  );
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <React.Fragment>
       <Head>
         <meta name="twitter:card" content="summary_large_image" />
-        <title key="title">{PlasmicMusic.pageMetadata.title}</title>
-        <meta
-          key="og:title"
-          property="og:title"
-          content={PlasmicMusic.pageMetadata.title}
-        />
+        <title key="title">{pageMetadata.title}</title>
+        <meta key="og:title" property="og:title" content={pageMetadata.title} />
         <meta
           key="twitter:title"
-          name="twitter:title"
-          content={PlasmicMusic.pageMetadata.title}
+          property="twitter:title"
+          content={pageMetadata.title}
         />
         <meta
           key="description"
-          name="description"
-          content={PlasmicMusic.pageMetadata.description}
+          property="description"
+          content={pageMetadata.description}
         />
         <meta
           key="og:description"
           property="og:description"
-          content={PlasmicMusic.pageMetadata.description}
+          content={pageMetadata.description}
         />
         <meta
           key="twitter:description"
-          name="twitter:description"
-          content={PlasmicMusic.pageMetadata.description}
+          property="twitter:description"
+          content={pageMetadata.description}
         />
         <meta
           key="og:image"
           property="og:image"
-          content={PlasmicMusic.pageMetadata.ogImageSrc}
+          content={pageMetadata.ogImageSrc}
         />
         <meta
           key="twitter:image"
-          name="twitter:image"
-          content={PlasmicMusic.pageMetadata.ogImageSrc}
+          property="twitter:image"
+          content={pageMetadata.ogImageSrc}
         />
-        <link rel="canonical" href={PlasmicMusic.pageMetadata.canonical} />
+        <link rel="canonical" href={pageMetadata.alternates?.canonical} />
       </Head>
 
       <style>{`
@@ -225,9 +274,7 @@ function PlasmicMusic__RenderFunc(props: {
             projectcss.root_reset,
             projectcss.plasmic_default_styles,
             projectcss.plasmic_mixins,
-            projectcss.plasmic_tokens,
-            plasmic_antd_5_hostless_css.plasmic_tokens,
-            plasmic_plasmic_rich_components_css.plasmic_tokens,
+            styleTokensClassNames,
             sty.root,
             {
               [sty.rootglobal_theme_classic]: hasVariant(
@@ -244,11 +291,9 @@ function PlasmicMusic__RenderFunc(props: {
             className={classNames("__wab_instance", sty.navbar)}
           />
 
-          <Stack__
-            as={"div"}
+          <div
             data-plasmic-name={"main"}
             data-plasmic-override={overrides.main}
-            hasGap={true}
             className={classNames(projectcss.all, sty.main, {
               [sty.mainglobal_theme_classic]: hasVariant(
                 globalVariants,
@@ -304,6 +349,29 @@ function PlasmicMusic__RenderFunc(props: {
                 windowTitle={"Music Production"}
               >
                 <WindowButton
+                  data-plasmic-name={"bandcamp"}
+                  data-plasmic-override={overrides.bandcamp}
+                  className={classNames("__wab_instance", sty.bandcamp)}
+                  link={"disuko.bandcamp.com"}
+                >
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__vj4I0,
+                      {
+                        [sty.textglobal_theme_classic__vj4I0ENktM]: hasVariant(
+                          globalVariants,
+                          "theme",
+                          "classic"
+                        )
+                      }
+                    )}
+                  >
+                    {"Bandcamp"}
+                  </div>
+                </WindowButton>
+                <WindowButton
                   data-plasmic-name={"spotify"}
                   data-plasmic-override={overrides.spotify}
                   className={classNames("__wab_instance", sty.spotify)}
@@ -352,33 +420,9 @@ function PlasmicMusic__RenderFunc(props: {
                   </div>
                 </WindowButton>
                 <WindowButton
-                  data-plasmic-name={"bandcamp"}
-                  data-plasmic-override={overrides.bandcamp}
-                  className={classNames("__wab_instance", sty.bandcamp)}
-                  link={"disuko.bandcamp.com"}
-                >
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text__vj4I0,
-                      {
-                        [sty.textglobal_theme_classic__vj4I0ENktM]: hasVariant(
-                          globalVariants,
-                          "theme",
-                          "classic"
-                        )
-                      }
-                    )}
-                  >
-                    {"Bandcamp"}
-                  </div>
-                </WindowButton>
-                <WindowButton
-                  className={classNames(
-                    "__wab_instance",
-                    sty.windowButton___8OpWk
-                  )}
+                  data-plasmic-name={"youTube"}
+                  data-plasmic-override={overrides.youTube}
+                  className={classNames("__wab_instance", sty.youTube)}
                   link={
                     "https://music.youtube.com/channel/UCbAnd4M7lDhKXfZfD09rZnA"
                   }
@@ -400,8 +444,54 @@ function PlasmicMusic__RenderFunc(props: {
                     {"YouTube Music"}
                   </div>
                 </WindowButton>
+                <WindowButton
+                  data-plasmic-name={"tidal"}
+                  data-plasmic-override={overrides.tidal}
+                  className={classNames("__wab_instance", sty.tidal)}
+                  link={"https://tidal.com/artist/44231190"}
+                >
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__hMMwa,
+                      {
+                        [sty.textglobal_theme_classic__hMMwaeNktM]: hasVariant(
+                          globalVariants,
+                          "theme",
+                          "classic"
+                        )
+                      }
+                    )}
+                  >
+                    {"Tidal"}
+                  </div>
+                </WindowButton>
               </Window>
             </Reveal>
+            <MusicAlbum
+              data-plasmic-name={"cloudddreamer"}
+              data-plasmic-override={overrides.cloudddreamer}
+              albumArt={{
+                src: "/plasmic/disuko_website_retro_version/images/image108.png",
+                fullWidth: 1200,
+                fullHeight: 1200,
+                aspectRatio: undefined
+              }}
+              appleMusicLink={
+                "https://music.apple.com/us/album/cloudddreamer/1836145336?uo=4&app=music&at=1001lry3&ct=dashboard"
+              }
+              bandcampLink={"https://disuko.bandcamp.com/album/cloudddreamer"}
+              className={classNames("__wab_instance", sty.cloudddreamer)}
+              description={"CLOUDDDREAMER"}
+              spotifyLink={
+                "https://open.spotify.com/album/36iojxXRP0dXjGZ3gFufIP"
+              }
+              youTubeLink={
+                "https://www.youtube.com/watch?v=WPGzsUJyXsI&list=OLAK5uy_nJVsd7CsY6FXN-qS_2zx830iS5glEKs3Y"
+              }
+            />
+
             <div className={classNames(projectcss.all, sty.freeBox___6KiX9)}>
               <MusicAlbum
                 data-plasmic-name={"pirateThisSong"}
@@ -736,11 +826,7 @@ function PlasmicMusic__RenderFunc(props: {
               />
             </Reveal>
             <div className={classNames(projectcss.all, sty.freeBox__b6Lww)}>
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__r5Fn9)}
-              >
+              <div className={classNames(projectcss.all, sty.freeBox__r5Fn9)}>
                 <YouTube
                   className={classNames("__wab_instance", sty.youTube__hJhn5)}
                   videoId={"/T8scVcjPDDY"}
@@ -755,12 +841,8 @@ function PlasmicMusic__RenderFunc(props: {
                   className={classNames("__wab_instance", sty.youTube__vt36J)}
                   videoId={"l6Bh6fn8x5c"}
                 />
-              </Stack__>
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__wGgf1)}
-              >
+              </div>
+              <div className={classNames(projectcss.all, sty.freeBox__wGgf1)}>
                 <YouTube
                   className={classNames("__wab_instance", sty.youTube__kgcx)}
                   videoId={"dJvF_pr5P0Q"}
@@ -775,9 +857,9 @@ function PlasmicMusic__RenderFunc(props: {
                   className={classNames("__wab_instance", sty.youTube__i2Re9)}
                   videoId={"Qu2Bg9x-lrk"}
                 />
-              </Stack__>
+              </div>
             </div>
-          </Stack__>
+          </div>
           <Footer
             data-plasmic-name={"footer"}
             data-plasmic-override={overrides.footer}
@@ -791,8 +873,10 @@ function PlasmicMusic__RenderFunc(props: {
           />
 
           <WindowButton
-            className={classNames("__wab_instance", sty.windowButton__fk8Nu, {
-              [sty.windowButtonglobal_theme_classic__fk8NUeNktM]: hasVariant(
+            data-plasmic-name={"windowButton"}
+            data-plasmic-override={overrides.windowButton}
+            className={classNames("__wab_instance", sty.windowButton, {
+              [sty.windowButtonglobal_theme_classic]: hasVariant(
                 globalVariants,
                 "theme",
                 "classic"
@@ -828,9 +912,12 @@ const PlasmicDescendants = {
     "root",
     "navbar",
     "main",
+    "bandcamp",
     "spotify",
     "appleMusic",
-    "bandcamp",
+    "youTube",
+    "tidal",
+    "cloudddreamer",
     "pirateThisSong",
     "_727PpDeathLaser",
     "lilypadTea",
@@ -846,14 +933,18 @@ const PlasmicDescendants = {
     "bigShotRemix",
     "bigShotRemix2",
     "footer",
-    "snowflakes"
+    "snowflakes",
+    "windowButton"
   ],
   navbar: ["navbar"],
   main: [
     "main",
+    "bandcamp",
     "spotify",
     "appleMusic",
-    "bandcamp",
+    "youTube",
+    "tidal",
+    "cloudddreamer",
     "pirateThisSong",
     "_727PpDeathLaser",
     "lilypadTea",
@@ -869,9 +960,12 @@ const PlasmicDescendants = {
     "bigShotRemix",
     "bigShotRemix2"
   ],
+  bandcamp: ["bandcamp"],
   spotify: ["spotify"],
   appleMusic: ["appleMusic"],
-  bandcamp: ["bandcamp"],
+  youTube: ["youTube"],
+  tidal: ["tidal"],
+  cloudddreamer: ["cloudddreamer"],
   pirateThisSong: ["pirateThisSong"],
   _727PpDeathLaser: ["_727PpDeathLaser"],
   lilypadTea: ["lilypadTea"],
@@ -887,7 +981,8 @@ const PlasmicDescendants = {
   bigShotRemix: ["bigShotRemix"],
   bigShotRemix2: ["bigShotRemix2"],
   footer: ["footer"],
-  snowflakes: ["snowflakes"]
+  snowflakes: ["snowflakes"],
+  windowButton: ["windowButton"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -896,9 +991,12 @@ type NodeDefaultElementType = {
   root: "div";
   navbar: typeof Navbar;
   main: "div";
+  bandcamp: typeof WindowButton;
   spotify: typeof WindowButton;
   appleMusic: typeof WindowButton;
-  bandcamp: typeof WindowButton;
+  youTube: typeof WindowButton;
+  tidal: typeof WindowButton;
+  cloudddreamer: typeof MusicAlbum;
   pirateThisSong: typeof MusicAlbum;
   _727PpDeathLaser: typeof MusicAlbum;
   lilypadTea: typeof MusicAlbum;
@@ -915,6 +1013,7 @@ type NodeDefaultElementType = {
   bigShotRemix2: typeof MusicAlbum;
   footer: typeof Footer;
   snowflakes: typeof Snowflakes;
+  windowButton: typeof WindowButton;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -928,7 +1027,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicMusic__VariantsArgs;
     args?: PlasmicMusic__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicMusic__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicMusic__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicMusic__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
@@ -1004,9 +1105,12 @@ export const PlasmicMusic = Object.assign(
     // Helper components rendering sub-elements
     navbar: makeNodeComponent("navbar"),
     main: makeNodeComponent("main"),
+    bandcamp: makeNodeComponent("bandcamp"),
     spotify: makeNodeComponent("spotify"),
     appleMusic: makeNodeComponent("appleMusic"),
-    bandcamp: makeNodeComponent("bandcamp"),
+    youTube: makeNodeComponent("youTube"),
+    tidal: makeNodeComponent("tidal"),
+    cloudddreamer: makeNodeComponent("cloudddreamer"),
     pirateThisSong: makeNodeComponent("pirateThisSong"),
     _727PpDeathLaser: makeNodeComponent("_727PpDeathLaser"),
     lilypadTea: makeNodeComponent("lilypadTea"),
@@ -1023,20 +1127,18 @@ export const PlasmicMusic = Object.assign(
     bigShotRemix2: makeNodeComponent("bigShotRemix2"),
     footer: makeNodeComponent("footer"),
     snowflakes: makeNodeComponent("snowflakes"),
+    windowButton: makeNodeComponent("windowButton"),
 
     // Metadata about props expected for PlasmicMusic
     internalVariantProps: PlasmicMusic__VariantProps,
     internalArgProps: PlasmicMusic__ArgProps,
 
-    // Page metadata
-    pageMetadata: {
-      title: "disuko - music 🌸",
-      description:
-        "~i produce electronic music and also DJ! i like making music with high energy and cute sounds. my genres range from kawaii future bass to hardcore!",
-      ogImageSrc:
-        "https://site-assets.plasmic.app/f33b16e8e3629b301959c659f5c8f11d.jpg",
-      canonical: "https://disuko.gay/music"
-    }
+    pageMetadata: generateDynamicMetadata(wrapQueriesWithLoadingProxy({}), {
+      pageRoute: "/music",
+      pagePath: "/music",
+      params: {},
+      query: {}
+    })
   }
 );
 

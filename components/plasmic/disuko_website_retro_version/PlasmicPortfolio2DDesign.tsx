@@ -68,16 +68,49 @@ import Multiwindow from "../../Multiwindow"; // plasmic-import: agRDam8zA0LH/com
 import { SliderWrapper } from "@plasmicpkgs/react-slick";
 import { sliderHelpers as SliderWrapper_Helpers } from "@plasmicpkgs/react-slick";
 import Window from "../../Window"; // plasmic-import: BWjgdOwFY_OO/component
-
-import { ThemeValue, useTheme } from "./PlasmicGlobalVariant__Theme"; // plasmic-import: 3K9IqsAFaaID/globalVariant
-import { useScreenVariants as useScreenVariantsdmuurUfQuA6N } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: DmuurUFQuA6N/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectcss
 import sty from "./PlasmicPortfolio2DDesign.module.css"; // plasmic-import: vD69cqR4XkX2/css
+
+const emptyProxy: any = new Proxy(() => "", {
+  get(_, prop) {
+    return prop === Symbol.toPrimitive ? () => "" : emptyProxy;
+  }
+});
+
+function wrapQueriesWithLoadingProxy($q: any): any {
+  return new Proxy($q, {
+    get(target, queryName) {
+      const query = target[queryName];
+      return !query || query.isLoading || !query.data ? emptyProxy : query;
+    }
+  });
+}
+
+export type PageCtx = {
+  pageRoute: string;
+  pagePath: string;
+  params: Record<string, string | string[] | undefined>;
+  query: Record<string, string | string[] | undefined>;
+};
+
+export function generateDynamicMetadata($q: any, $ctx: PageCtx) {
+  return {
+    title: "2D Design",
+
+    openGraph: {
+      title: "2D Design"
+    },
+    twitter: {
+      card: "summary" as const,
+      title: "2D Design"
+    }
+  };
+}
 
 createPlasmicElementProxy;
 
@@ -142,15 +175,13 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const currentUser = useCurrentUser?.() || {};
-
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
         path: "sliderCarousel.currentSlide",
         type: "private",
         variableType: "number",
-        initFunc: ({ $props, $state, $queries, $ctx }) => 0,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => 0,
 
         refName: "sliderCarousel",
         onMutate: generateOnMutateForSpec("currentSlide", SliderWrapper_Helpers)
@@ -158,32 +189,36 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
     ],
     [$props, $ctx, $refs]
   );
+
+  const globalVariants = _useGlobalVariants();
+
+  const currentUser = useCurrentUser?.() || {};
+
   const $state = useDollarState(stateSpecs, {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
-  const globalVariants = ensureGlobalVariants({
-    theme: useTheme(),
-    screen: useScreenVariantsdmuurUfQuA6N()
-  });
+  const pageMetadata = generateDynamicMetadata(
+    wrapQueriesWithLoadingProxy({}),
+    $ctx as PageCtx
+  );
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <React.Fragment>
       <Head>
         <meta name="twitter:card" content="summary" />
-        <title key="title">{PlasmicPortfolio2DDesign.pageMetadata.title}</title>
-        <meta
-          key="og:title"
-          property="og:title"
-          content={PlasmicPortfolio2DDesign.pageMetadata.title}
-        />
+        <title key="title">{pageMetadata.title}</title>
+        <meta key="og:title" property="og:title" content={pageMetadata.title} />
         <meta
           key="twitter:title"
-          name="twitter:title"
-          content={PlasmicPortfolio2DDesign.pageMetadata.title}
+          property="twitter:title"
+          content={pageMetadata.title}
         />
       </Head>
 
@@ -204,16 +239,9 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
             projectcss.root_reset,
             projectcss.plasmic_default_styles,
             projectcss.plasmic_mixins,
-            projectcss.plasmic_tokens,
-            plasmic_antd_5_hostless_css.plasmic_tokens,
-            plasmic_plasmic_rich_components_css.plasmic_tokens,
+            styleTokensClassNames,
             sty._3DDesign,
             {
-              [projectcss.global_theme_classic]: hasVariant(
-                globalVariants,
-                "theme",
-                "classic"
-              ),
               [sty._3DDesignglobal_theme_classic]: hasVariant(
                 globalVariants,
                 "theme",
@@ -303,24 +331,51 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
                 aspectRatio: undefined
               }}
             />
+          </div>
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__uh7K
+            )}
+          >
+            {"Personal Branding (2025)"}
+          </div>
+          <PlasmicImg__
+            alt={""}
+            className={classNames(sty.img__zn1El)}
+            displayHeight={"auto"}
+            displayMaxHeight={"none"}
+            displayMaxWidth={"100%"}
+            displayMinHeight={"0"}
+            displayMinWidth={"0"}
+            displayWidth={"100%"}
+            loading={"lazy"}
+            quality={75}
+            src={{
+              src: "/plasmic/disuko_website_retro_version/images/image102.png",
+              fullWidth: 1920,
+              fullHeight: 1280,
+              aspectRatio: undefined
+            }}
+          />
 
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__uh7K
-              )}
-            >
-              {"Logos, Stickers, etc."}
-            </div>
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__vVmed
+            )}
+          >
+            {"Logos, Stickers, etc."}
           </div>
           {(() => {
             const child$Props = {
               arrowColor: hasVariant(globalVariants, "screen", "mobileOnly")
                 ? "#404040"
                 : true
-                ? "#52224C"
-                : undefined,
+                  ? "#52224C"
+                  : undefined,
               beforeChange: async (...eventArgs: any) => {
                 generateStateOnChangePropForCodeComponents(
                   $state,
@@ -567,9 +622,9 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
                         }
                         loading={"eager"}
                         src={{
-                          src: "/plasmic/disuko_website_retro_version/images/image14.png",
-                          fullWidth: 2000,
-                          fullHeight: 2000,
+                          src: "/plasmic/disuko_website_retro_version/images/biteHandleIcon2025SmallPng.png",
+                          fullWidth: 480,
+                          fullHeight: 480,
                           aspectRatio: undefined
                         }}
                       />
@@ -1029,16 +1084,8 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
           >
             {"Posters"}
           </div>
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__ycdwN)}
-          >
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__hSgcn)}
-            >
+          <div className={classNames(projectcss.all, sty.freeBox__ycdwN)}>
+            <div className={classNames(projectcss.all, sty.freeBox__hSgcn)}>
               <PlasmicImg__
                 alt={""}
                 className={classNames(sty.img__fvEA)}
@@ -1049,6 +1096,7 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
                 displayMinWidth={"0"}
                 displayWidth={"620px"}
                 loading={"lazy"}
+                quality={50}
                 src={{
                   src: "/plasmic/disuko_website_retro_version/images/image30.png",
                   fullWidth: 4400,
@@ -1067,6 +1115,7 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
                 displayMinWidth={"0"}
                 displayWidth={"620px"}
                 loading={"lazy"}
+                quality={50}
                 src={{
                   src: "/plasmic/disuko_website_retro_version/images/image28.png",
                   fullWidth: 5400,
@@ -1074,12 +1123,8 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
                   aspectRatio: undefined
                 }}
               />
-            </Stack__>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__a7Amq)}
-            >
+            </div>
+            <div className={classNames(projectcss.all, sty.freeBox__a7Amq)}>
               <PlasmicImg__
                 alt={""}
                 className={classNames(sty.img___0ImVd)}
@@ -1090,6 +1135,7 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
                 displayMinWidth={"0"}
                 displayWidth={"620px"}
                 loading={"lazy"}
+                quality={50}
                 src={{
                   src: "/plasmic/disuko_website_retro_version/images/licavoliMyHouseDarkerPng.png",
                   fullWidth: 3300,
@@ -1108,6 +1154,7 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
                 displayMinWidth={"0"}
                 displayWidth={"620px"}
                 loading={"lazy"}
+                quality={50}
                 src={{
                   src: "/plasmic/disuko_website_retro_version/images/image39.png",
                   fullWidth: 1024,
@@ -1115,12 +1162,8 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
                   aspectRatio: undefined
                 }}
               />
-            </Stack__>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__zb6Km)}
-            >
+            </div>
+            <div className={classNames(projectcss.all, sty.freeBox__zb6Km)}>
               <PlasmicImg__
                 alt={""}
                 className={classNames(sty.img___5Kvd)}
@@ -1131,6 +1174,7 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
                 displayMinWidth={"0"}
                 displayWidth={"620%"}
                 loading={"lazy"}
+                quality={50}
                 src={{
                   src: "/plasmic/disuko_website_retro_version/images/image59.png",
                   fullWidth: 2478,
@@ -1138,7 +1182,7 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
                   aspectRatio: undefined
                 }}
               />
-            </Stack__>
+            </div>
             <div
               className={classNames(
                 projectcss.all,
@@ -1163,6 +1207,7 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
                   displayMinWidth={"0"}
                   displayWidth={"auto"}
                   loading={"lazy"}
+                  quality={50}
                   src={{
                     src: "/plasmic/disuko_website_retro_version/images/redPandaStudiosBrandGuideSeptember2023Png.png",
                     fullWidth: 2550,
@@ -1191,6 +1236,7 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
                   displayMinWidth={"0"}
                   displayWidth={"100%"}
                   loading={"lazy"}
+                  quality={50}
                   src={{
                     src: "/plasmic/disuko_website_retro_version/images/honeyTeaaaCardDarkPng.png",
                     fullWidth: 2400,
@@ -1320,13 +1366,9 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
             >
               {"Merch Design"}
             </div>
-          </Stack__>
+          </div>
           <div className={classNames(projectcss.all, sty.freeBox__qM0Gm)}>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__wAsNr)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__wAsNr)}>
               <Window
                 className={classNames("__wab_instance", sty.window__uNuOs)}
                 linkDestination={`/merch`}
@@ -1396,12 +1438,8 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
                   aspectRatio: undefined
                 }}
               />
-            </Stack__>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox___10XuP)}
-            >
+            </div>
+            <div className={classNames(projectcss.all, sty.freeBox___10XuP)}>
               <PlasmicImg__
                 alt={""}
                 className={classNames(sty.img___0XMzN)}
@@ -1455,7 +1493,7 @@ function PlasmicPortfolio2DDesign__RenderFunc(props: {
                   }}
                 />
               </div>
-            </Stack__>
+            </div>
           </div>
         </div>
       </div>
@@ -1504,7 +1542,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicPortfolio2DDesign__VariantsArgs;
     args?: PlasmicPortfolio2DDesign__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicPortfolio2DDesign__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicPortfolio2DDesign__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicPortfolio2DDesign__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
@@ -1589,13 +1629,12 @@ export const PlasmicPortfolio2DDesign = Object.assign(
     internalVariantProps: PlasmicPortfolio2DDesign__VariantProps,
     internalArgProps: PlasmicPortfolio2DDesign__ArgProps,
 
-    // Page metadata
-    pageMetadata: {
-      title: "2D Design",
-      description: "",
-      ogImageSrc: "",
-      canonical: ""
-    }
+    pageMetadata: generateDynamicMetadata(wrapQueriesWithLoadingProxy({}), {
+      pageRoute: "/2d-design",
+      pagePath: "/2d-design",
+      params: {},
+      query: {}
+    })
   }
 );
 

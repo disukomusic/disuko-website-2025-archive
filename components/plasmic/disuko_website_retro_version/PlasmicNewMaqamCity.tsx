@@ -69,13 +69,58 @@ import { AntdTabItem } from "@plasmicpkgs/antd5/skinny/registerTabs";
 import { AntdSingleCollapse } from "@plasmicpkgs/antd5/skinny/registerCollapse";
 import { singleCollapseHelpers as AntdSingleCollapse_Helpers } from "@plasmicpkgs/antd5/skinny/registerCollapse";
 import Footer from "../../Footer"; // plasmic-import: shKoGjSwLEEB/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectcss
 import sty from "./PlasmicNewMaqamCity.module.css"; // plasmic-import: -xYfq_7_R7j8/css
+
+const emptyProxy: any = new Proxy(() => "", {
+  get(_, prop) {
+    return prop === Symbol.toPrimitive ? () => "" : emptyProxy;
+  }
+});
+
+function wrapQueriesWithLoadingProxy($q: any): any {
+  return new Proxy($q, {
+    get(target, queryName) {
+      const query = target[queryName];
+      return !query || query.isLoading || !query.data ? emptyProxy : query;
+    }
+  });
+}
+
+export type PageCtx = {
+  pageRoute: string;
+  pagePath: string;
+  params: Record<string, string | string[] | undefined>;
+  query: Record<string, string | string[] | undefined>;
+};
+
+export function generateDynamicMetadata($q: any, $ctx: PageCtx) {
+  return {
+    title: "New Maqam City🌸",
+
+    openGraph: {
+      title: "New Maqam City🌸",
+
+      images: [
+        "https://site-assets.plasmic.app/f33b16e8e3629b301959c659f5c8f11d.jpg"
+      ]
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      title: "New Maqam City🌸",
+
+      images: [
+        "https://site-assets.plasmic.app/f33b16e8e3629b301959c659f5c8f11d.jpg"
+      ]
+    },
+    alternates: { canonical: "https://disuko.gay/newmaqamcity" }
+  };
+}
 
 createPlasmicElementProxy;
 
@@ -172,21 +217,19 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const currentUser = useCurrentUser?.() || {};
-
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
         path: "tabs.activeKey",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => "1"
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => "1"
       },
       {
         path: "collapse.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -194,7 +237,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse2.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -202,7 +245,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse3.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -210,7 +253,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse4.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -218,7 +261,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse5.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -226,7 +269,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse6.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -234,7 +277,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse7.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -242,13 +285,13 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "tabs2.activeKey",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => "1"
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => "1"
       },
       {
         path: "collapse8.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -256,7 +299,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse9.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -264,7 +307,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse10.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -272,7 +315,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse11.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => true,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => true,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -280,7 +323,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse12.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => true,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => true,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -288,7 +331,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse16.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -296,7 +339,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse17.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -304,7 +347,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse18.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -312,7 +355,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse19.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -320,7 +363,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse20.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -328,13 +371,13 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "tabs3.activeKey",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => "1"
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => "1"
       },
       {
         path: "collapse21.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -342,7 +385,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse22.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -350,7 +393,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse23.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -358,7 +401,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse24.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -366,7 +409,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse25.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -374,7 +417,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse26.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -382,7 +425,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse27.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -390,7 +433,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse28.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -398,13 +441,13 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "tabs4.activeKey",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => "1"
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => "1"
       },
       {
         path: "collapse30.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       },
@@ -412,50 +455,56 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
         path: "collapse31.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         onMutate: generateOnMutateForSpec("open", AntdSingleCollapse_Helpers)
       }
     ],
     [$props, $ctx, $refs]
   );
+
+  const globalVariants = _useGlobalVariants();
+
+  const currentUser = useCurrentUser?.() || {};
+
   const $state = useDollarState(stateSpecs, {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
+
+  const pageMetadata = generateDynamicMetadata(
+    wrapQueriesWithLoadingProxy({}),
+    $ctx as PageCtx
+  );
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <React.Fragment>
       <Head>
         <meta name="twitter:card" content="summary_large_image" />
-        <title key="title">{PlasmicNewMaqamCity.pageMetadata.title}</title>
-        <meta
-          key="og:title"
-          property="og:title"
-          content={PlasmicNewMaqamCity.pageMetadata.title}
-        />
+        <title key="title">{pageMetadata.title}</title>
+        <meta key="og:title" property="og:title" content={pageMetadata.title} />
         <meta
           key="twitter:title"
-          name="twitter:title"
-          content={PlasmicNewMaqamCity.pageMetadata.title}
+          property="twitter:title"
+          content={pageMetadata.title}
         />
 
         <meta
           key="og:image"
           property="og:image"
-          content={PlasmicNewMaqamCity.pageMetadata.ogImageSrc}
+          content={pageMetadata.ogImageSrc}
         />
         <meta
           key="twitter:image"
-          name="twitter:image"
-          content={PlasmicNewMaqamCity.pageMetadata.ogImageSrc}
+          property="twitter:image"
+          content={pageMetadata.ogImageSrc}
         />
-        <link
-          rel="canonical"
-          href={PlasmicNewMaqamCity.pageMetadata.canonical}
-        />
+        <link rel="canonical" href={pageMetadata.alternates?.canonical} />
       </Head>
 
       <style>{`
@@ -475,9 +524,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
             projectcss.root_reset,
             projectcss.plasmic_default_styles,
             projectcss.plasmic_mixins,
-            projectcss.plasmic_tokens,
-            plasmic_antd_5_hostless_css.plasmic_tokens,
-            plasmic_plasmic_rich_components_css.plasmic_tokens,
+            styleTokensClassNames,
             sty.root
           )}
         >
@@ -509,6 +556,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                           className={classNames(
                             projectcss.all,
                             projectcss.h1,
+                            projectcss.h1__x4VgG,
                             projectcss.__wab_text,
                             sty.h1__qSnWs
                           )}
@@ -535,6 +583,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                           className={classNames(
                             projectcss.all,
                             projectcss.h2,
+                            projectcss.h2__x4VgG,
                             projectcss.__wab_text,
                             sty.h2
                           )}
@@ -574,17 +623,14 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                 className={classNames(
                   projectcss.all,
                   projectcss.h1,
+                  projectcss.h1__x4VgG,
                   projectcss.__wab_text,
                   sty.h1__lRf75
                 )}
               >
                 {"1 - CONCEPT"}
               </h1>
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.columns__a7RdE)}
-              >
+              <div className={classNames(projectcss.all, sty.columns__a7RdE)}>
                 <div className={classNames(projectcss.all, sty.column__zlRPt)}>
                   <div
                     className={classNames(
@@ -604,7 +650,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                     videoId={"6F-ori0hmxs"}
                   />
                 </div>
-              </Stack__>
+              </div>
               <AntdTabs
                 data-plasmic-name={"tabs"}
                 data-plasmic-override={overrides.tabs}
@@ -648,7 +694,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                         <React.Fragment>
                           <span
                             className={
-                              "plasmic_default__all plasmic_default__span"
+                              "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                             }
                             style={{ fontWeight: 700 }}
                           >
@@ -711,7 +757,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                         <React.Fragment>
                           <span
                             className={
-                              "plasmic_default__all plasmic_default__span"
+                              "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                             }
                             style={{ fontWeight: 700 }}
                           >
@@ -770,7 +816,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                         <React.Fragment>
                           <span
                             className={
-                              "plasmic_default__all plasmic_default__span"
+                              "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                             }
                             style={{ fontWeight: 700 }}
                           >
@@ -799,7 +845,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                         <React.Fragment>
                           <span
                             className={
-                              "plasmic_default__all plasmic_default__span"
+                              "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                             }
                             style={{ fontWeight: 700 }}
                           >
@@ -846,7 +892,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                         <React.Fragment>
                           <span
                             className={
-                              "plasmic_default__all plasmic_default__span"
+                              "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                             }
                             style={{ fontWeight: 700 }}
                           >
@@ -893,7 +939,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                         <React.Fragment>
                           <span
                             className={
-                              "plasmic_default__all plasmic_default__span"
+                              "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                             }
                             style={{ fontWeight: 700 }}
                           >
@@ -922,7 +968,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                         <React.Fragment>
                           <span
                             className={
-                              "plasmic_default__all plasmic_default__span"
+                              "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                             }
                             style={{ fontWeight: 700 }}
                           >
@@ -951,7 +997,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                         <React.Fragment>
                           <span
                             className={
-                              "plasmic_default__all plasmic_default__span"
+                              "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                             }
                             style={{ fontWeight: 700 }}
                           >
@@ -999,7 +1045,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                         <React.Fragment>
                           <span
                             className={
-                              "plasmic_default__all plasmic_default__span"
+                              "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                             }
                             style={{ fontWeight: 700 }}
                           >
@@ -1023,7 +1069,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -1044,6 +1090,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -1098,7 +1145,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -1119,6 +1166,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse2",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -1173,7 +1221,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -1194,6 +1242,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse3",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -1248,7 +1297,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -1269,6 +1318,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse4",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -1314,7 +1364,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                         <React.Fragment>
                           <span
                             className={
-                              "plasmic_default__all plasmic_default__span"
+                              "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                             }
                             style={{ fontWeight: 700 }}
                           >
@@ -1341,7 +1391,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -1362,6 +1412,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse5",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -1416,7 +1467,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -1425,7 +1476,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                                 <React.Fragment>{""}</React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -1446,6 +1497,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse6",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -1500,7 +1552,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -1521,6 +1573,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse7",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -1619,17 +1672,14 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                 className={classNames(
                   projectcss.all,
                   projectcss.h1,
+                  projectcss.h1__x4VgG,
                   projectcss.__wab_text,
                   sty.h1__w0Hy
                 )}
               >
                 {"2 - FRAMEWORKS"}
               </h1>
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.columns__jwwhs)}
-              >
+              <div className={classNames(projectcss.all, sty.columns__jwwhs)}>
                 <div className={classNames(projectcss.all, sty.column__y9D7S)}>
                   <div
                     className={classNames(
@@ -1649,7 +1699,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                     videoId={"afVmFh0A62M"}
                   />
                 </div>
-              </Stack__>
+              </div>
               <AntdTabs
                 data-plasmic-name={"tabs2"}
                 data-plasmic-override={overrides.tabs2}
@@ -1735,7 +1785,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -1756,6 +1806,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse8",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -1828,7 +1879,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -1849,6 +1900,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse9",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -1921,7 +1973,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -1942,6 +1994,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse10",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -1993,7 +2046,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                                     <React.Fragment>
                                       <span
                                         className={
-                                          "plasmic_default__all plasmic_default__span"
+                                          "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                         }
                                         style={{ fontWeight: 700 }}
                                       >
@@ -2014,6 +2067,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                                   "collapse11",
                                   "open"
                                 ]),
+                                rotationAngle: 90,
                                 showArrow: true
                               };
                               initializeCodeComponentStates(
@@ -2068,7 +2122,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                                     <React.Fragment>
                                       <span
                                         className={
-                                          "plasmic_default__all plasmic_default__span"
+                                          "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                         }
                                         style={{ fontWeight: 700 }}
                                       >
@@ -2089,6 +2143,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                                   "collapse12",
                                   "open"
                                 ]),
+                                rotationAngle: 90,
                                 showArrow: true
                               };
                               initializeCodeComponentStates(
@@ -2176,7 +2231,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -2197,6 +2252,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse16",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -2251,7 +2307,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -2272,6 +2328,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse17",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -2356,7 +2413,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -2377,6 +2434,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse18",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -2431,7 +2489,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -2452,6 +2510,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse19",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -2506,7 +2565,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -2527,6 +2586,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse20",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -2612,17 +2672,14 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                 className={classNames(
                   projectcss.all,
                   projectcss.h1,
+                  projectcss.h1__x4VgG,
                   projectcss.__wab_text,
                   sty.h1__lei7O
                 )}
               >
                 {"3 - ITERATION"}
               </h1>
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.columns___1Rb2E)}
-              >
+              <div className={classNames(projectcss.all, sty.columns___1Rb2E)}>
                 <div className={classNames(projectcss.all, sty.column__rCgsf)}>
                   <div
                     className={classNames(
@@ -2642,7 +2699,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                     videoId={"afVmFh0A62M"}
                   />
                 </div>
-              </Stack__>
+              </div>
               <AntdTabs
                 data-plasmic-name={"tabs3"}
                 data-plasmic-override={overrides.tabs3}
@@ -2749,7 +2806,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -2770,6 +2827,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse21",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -2801,7 +2859,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontStyle: "italic" }}
                                 >
@@ -2844,7 +2902,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -2865,6 +2923,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse22",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -2896,7 +2955,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontStyle: "italic" }}
                                 >
@@ -2939,7 +2998,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -2960,6 +3019,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse23",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -2991,7 +3051,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontStyle: "italic" }}
                                 >
@@ -3032,7 +3092,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -3053,6 +3113,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse24",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -3084,7 +3145,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontStyle: "italic" }}
                                 >
@@ -3127,7 +3188,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -3148,6 +3209,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse25",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -3179,7 +3241,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontStyle: "italic" }}
                                 >
@@ -3253,7 +3315,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -3274,6 +3336,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse26",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -3328,7 +3391,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -3349,6 +3412,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse27",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -3403,7 +3467,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -3424,6 +3488,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse28",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -3509,17 +3574,14 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                 className={classNames(
                   projectcss.all,
                   projectcss.h1,
+                  projectcss.h1__x4VgG,
                   projectcss.__wab_text,
                   sty.h1__ohspc
                 )}
               >
                 {"4 - FINAL DEVELOPMENT"}
               </h1>
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.columns__noiHi)}
-              >
+              <div className={classNames(projectcss.all, sty.columns__noiHi)}>
                 <div className={classNames(projectcss.all, sty.column__eymcb)}>
                   <div
                     className={classNames(
@@ -3535,7 +3597,9 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                         }
                       </React.Fragment>
                       <span
-                        className={"plasmic_default__all plasmic_default__span"}
+                        className={
+                          "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
+                        }
                         style={{ fontStyle: "italic" }}
                       >
                         {"how "}
@@ -3567,7 +3631,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                     }}
                   />
                 </div>
-              </Stack__>
+              </div>
               <AntdTabs
                 data-plasmic-name={"tabs4"}
                 data-plasmic-override={overrides.tabs4}
@@ -3632,7 +3696,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -3653,6 +3717,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse31",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -3707,7 +3772,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                               <React.Fragment>
                                 <span
                                   className={
-                                    "plasmic_default__all plasmic_default__span"
+                                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
                                   }
                                   style={{ fontWeight: 700 }}
                                 >
@@ -3728,6 +3793,7 @@ function PlasmicNewMaqamCity__RenderFunc(props: {
                             "collapse30",
                             "open"
                           ]),
+                          rotationAngle: 90,
                           showArrow: true
                         };
                         initializeCodeComponentStates(
@@ -4107,7 +4173,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicNewMaqamCity__VariantsArgs;
     args?: PlasmicNewMaqamCity__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicNewMaqamCity__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicNewMaqamCity__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicNewMaqamCity__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
@@ -4225,14 +4293,12 @@ export const PlasmicNewMaqamCity = Object.assign(
     internalVariantProps: PlasmicNewMaqamCity__VariantProps,
     internalArgProps: PlasmicNewMaqamCity__ArgProps,
 
-    // Page metadata
-    pageMetadata: {
-      title: "New Maqam City🌸",
-      description: "",
-      ogImageSrc:
-        "https://site-assets.plasmic.app/f33b16e8e3629b301959c659f5c8f11d.jpg",
-      canonical: "https://disuko.gay/newmaqamcity"
-    }
+    pageMetadata: generateDynamicMetadata(wrapQueriesWithLoadingProxy({}), {
+      pageRoute: "/newmaqamcity",
+      pagePath: "/newmaqamcity",
+      params: {},
+      query: {}
+    })
   }
 );
 

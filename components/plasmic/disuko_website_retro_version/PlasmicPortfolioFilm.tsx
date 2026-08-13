@@ -65,16 +65,58 @@ import { usePlasmicDataSourceContext } from "@plasmicapp/data-sources-context";
 import Navbar from "../../Navbar"; // plasmic-import: 5THU1wffFibB/component
 import YouTube from "@plasmicpkgs/react-youtube";
 import WindowButton from "../../WindowButton"; // plasmic-import: KZYdo-R8GYAn/component
-
-import { ThemeValue, useTheme } from "./PlasmicGlobalVariant__Theme"; // plasmic-import: 3K9IqsAFaaID/globalVariant
-import { useScreenVariants as useScreenVariantsdmuurUfQuA6N } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: DmuurUFQuA6N/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectcss
 import sty from "./PlasmicPortfolioFilm.module.css"; // plasmic-import: on3V-1opBN4k/css
+
+const emptyProxy: any = new Proxy(() => "", {
+  get(_, prop) {
+    return prop === Symbol.toPrimitive ? () => "" : emptyProxy;
+  }
+});
+
+function wrapQueriesWithLoadingProxy($q: any): any {
+  return new Proxy($q, {
+    get(target, queryName) {
+      const query = target[queryName];
+      return !query || query.isLoading || !query.data ? emptyProxy : query;
+    }
+  });
+}
+
+export type PageCtx = {
+  pageRoute: string;
+  pagePath: string;
+  params: Record<string, string | string[] | undefined>;
+  query: Record<string, string | string[] | undefined>;
+};
+
+export function generateDynamicMetadata($q: any, $ctx: PageCtx) {
+  return {
+    title: "🌸Disuko's Film Portfolio",
+
+    openGraph: {
+      title: "🌸Disuko's Film Portfolio",
+
+      images: [
+        "https://site-assets.plasmic.app/f33b16e8e3629b301959c659f5c8f11d.jpg"
+      ]
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      title: "🌸Disuko's Film Portfolio",
+
+      images: [
+        "https://site-assets.plasmic.app/f33b16e8e3629b301959c659f5c8f11d.jpg"
+      ]
+    },
+    alternates: { canonical: "https://disuko.gay/film" }
+  };
+}
 
 createPlasmicElementProxy;
 
@@ -133,43 +175,40 @@ function PlasmicPortfolioFilm__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = _useGlobalVariants();
+
   const currentUser = useCurrentUser?.() || {};
 
-  const globalVariants = ensureGlobalVariants({
-    theme: useTheme(),
-    screen: useScreenVariantsdmuurUfQuA6N()
-  });
+  const pageMetadata = generateDynamicMetadata(
+    wrapQueriesWithLoadingProxy({}),
+    $ctx as PageCtx
+  );
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <React.Fragment>
       <Head>
         <meta name="twitter:card" content="summary_large_image" />
-        <title key="title">{PlasmicPortfolioFilm.pageMetadata.title}</title>
-        <meta
-          key="og:title"
-          property="og:title"
-          content={PlasmicPortfolioFilm.pageMetadata.title}
-        />
+        <title key="title">{pageMetadata.title}</title>
+        <meta key="og:title" property="og:title" content={pageMetadata.title} />
         <meta
           key="twitter:title"
-          name="twitter:title"
-          content={PlasmicPortfolioFilm.pageMetadata.title}
+          property="twitter:title"
+          content={pageMetadata.title}
         />
 
         <meta
           key="og:image"
           property="og:image"
-          content={PlasmicPortfolioFilm.pageMetadata.ogImageSrc}
+          content={pageMetadata.ogImageSrc}
         />
         <meta
           key="twitter:image"
-          name="twitter:image"
-          content={PlasmicPortfolioFilm.pageMetadata.ogImageSrc}
+          property="twitter:image"
+          content={pageMetadata.ogImageSrc}
         />
-        <link
-          rel="canonical"
-          href={PlasmicPortfolioFilm.pageMetadata.canonical}
-        />
+        <link rel="canonical" href={pageMetadata.alternates?.canonical} />
       </Head>
 
       <style>{`
@@ -189,9 +228,7 @@ function PlasmicPortfolioFilm__RenderFunc(props: {
             projectcss.root_reset,
             projectcss.plasmic_default_styles,
             projectcss.plasmic_mixins,
-            projectcss.plasmic_tokens,
-            plasmic_antd_5_hostless_css.plasmic_tokens,
-            plasmic_plasmic_rich_components_css.plasmic_tokens,
+            styleTokensClassNames,
             sty.root,
             {
               [sty.rootglobal_theme_classic]: hasVariant(
@@ -279,11 +316,7 @@ function PlasmicPortfolioFilm__RenderFunc(props: {
                 videoId={"Mjet_qw9yPs"}
               />
             </div>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox___15XOr)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox___15XOr)}>
               <div className={classNames(projectcss.all, sty.freeBox__ldHrG)}>
                 <div
                   className={classNames(
@@ -366,12 +399,8 @@ function PlasmicPortfolioFilm__RenderFunc(props: {
                   videoId={"5lbSvQbllUs"}
                 />
               </div>
-            </Stack__>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox___5LGiX)}
-            >
+            </div>
+            <div className={classNames(projectcss.all, sty.freeBox___5LGiX)}>
               <div className={classNames(projectcss.all, sty.freeBox___0VR80)}>
                 <div
                   className={classNames(
@@ -433,12 +462,8 @@ function PlasmicPortfolioFilm__RenderFunc(props: {
                 />
               </div>
               <div className={classNames(projectcss.all, sty.freeBox__tXOyE)} />
-            </Stack__>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox___2Jv9Y)}
-            >
+            </div>
+            <div className={classNames(projectcss.all, sty.freeBox___2Jv9Y)}>
               <div className={classNames(projectcss.all, sty.freeBox__bDQrz)}>
                 <YouTube
                   className={classNames("__wab_instance", sty.youTube__sLc1T)}
@@ -451,12 +476,8 @@ function PlasmicPortfolioFilm__RenderFunc(props: {
                   videoId={"yHNOJKyBp_4"}
                 />
               </div>
-            </Stack__>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__h9FKw)}
-            >
+            </div>
+            <div className={classNames(projectcss.all, sty.freeBox__h9FKw)}>
               <div className={classNames(projectcss.all, sty.freeBox__kR3NA)}>
                 <YouTube
                   className={classNames("__wab_instance", sty.youTube___37Wk0)}
@@ -469,7 +490,7 @@ function PlasmicPortfolioFilm__RenderFunc(props: {
                   videoId={"IbgGUF6DuZw"}
                 />
               </div>
-            </Stack__>
+            </div>
             <div
               className={classNames(
                 projectcss.all,
@@ -486,11 +507,7 @@ function PlasmicPortfolioFilm__RenderFunc(props: {
             >
               {"Visual Effects / Animation"}
             </div>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox___8HnN1)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox___8HnN1)}>
               <YouTube
                 className={classNames("__wab_instance", sty.youTube__xp5LW)}
                 videoId={"DLiNRjd395w"}
@@ -500,12 +517,8 @@ function PlasmicPortfolioFilm__RenderFunc(props: {
                 className={classNames("__wab_instance", sty.youTube__lzTyL)}
                 videoId={"UROiJOriRqE"}
               />
-            </Stack__>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__p3RQf)}
-            >
+            </div>
+            <div className={classNames(projectcss.all, sty.freeBox__p3RQf)}>
               <YouTube
                 className={classNames("__wab_instance", sty.youTube___5SiJ8)}
                 videoId={"LPWDiN1b5vE"}
@@ -515,7 +528,7 @@ function PlasmicPortfolioFilm__RenderFunc(props: {
                 className={classNames("__wab_instance", sty.youTube__uiKjy)}
                 videoId={"pegx7KEoYoA"}
               />
-            </Stack__>
+            </div>
           </div>
           <WindowButton
             className={classNames("__wab_instance", sty.windowButton__sf98Q)}
@@ -567,7 +580,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicPortfolioFilm__VariantsArgs;
     args?: PlasmicPortfolioFilm__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicPortfolioFilm__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicPortfolioFilm__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicPortfolioFilm__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
@@ -647,14 +662,12 @@ export const PlasmicPortfolioFilm = Object.assign(
     internalVariantProps: PlasmicPortfolioFilm__VariantProps,
     internalArgProps: PlasmicPortfolioFilm__ArgProps,
 
-    // Page metadata
-    pageMetadata: {
-      title: "🌸Disuko's Film Portfolio",
-      description: "",
-      ogImageSrc:
-        "https://site-assets.plasmic.app/f33b16e8e3629b301959c659f5c8f11d.jpg",
-      canonical: "https://disuko.gay/film"
-    }
+    pageMetadata: generateDynamicMetadata(wrapQueriesWithLoadingProxy({}), {
+      pageRoute: "/film",
+      pagePath: "/film",
+      params: {},
+      query: {}
+    })
   }
 );
 

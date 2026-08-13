@@ -67,17 +67,63 @@ import { AntdPopover } from "@plasmicpkgs/antd5/skinny/registerPopover";
 import WindowBlue from "../../WindowBlue"; // plasmic-import: QxkFplM-x8NR/component
 import Window from "../../Window"; // plasmic-import: BWjgdOwFY_OO/component
 import { Embed } from "@plasmicpkgs/plasmic-basic-components";
-
-import { useScreenVariants as useScreenVariantsdmuurUfQuA6N } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: DmuurUFQuA6N/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectcss
 import sty from "./PlasmicLinks.module.css"; // plasmic-import: 1AxjPUmLarmm/css
 
 import NounPixelHeart10989631SvgIcon from "./icons/PlasmicIcon__NounPixelHeart10989631Svg"; // plasmic-import: tvndHRt1AD9R/icon
+
+const emptyProxy: any = new Proxy(() => "", {
+  get(_, prop) {
+    return prop === Symbol.toPrimitive ? () => "" : emptyProxy;
+  }
+});
+
+function wrapQueriesWithLoadingProxy($q: any): any {
+  return new Proxy($q, {
+    get(target, queryName) {
+      const query = target[queryName];
+      return !query || query.isLoading || !query.data ? emptyProxy : query;
+    }
+  });
+}
+
+export type PageCtx = {
+  pageRoute: string;
+  pagePath: string;
+  params: Record<string, string | string[] | undefined>;
+  query: Record<string, string | string[] | undefined>;
+};
+
+export function generateDynamicMetadata($q: any, $ctx: PageCtx) {
+  return {
+    title: "disuko - links 🌸",
+    description:
+      "~social media platforms and other important links for the disuko youtube channel and streaming services.",
+    openGraph: {
+      title: "disuko - links 🌸",
+      description:
+        "~social media platforms and other important links for the disuko youtube channel and streaming services.",
+      images: [
+        "https://site-assets.plasmic.app/f33b16e8e3629b301959c659f5c8f11d.jpg"
+      ]
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      title: "disuko - links 🌸",
+      description:
+        "~social media platforms and other important links for the disuko youtube channel and streaming services.",
+      images: [
+        "https://site-assets.plasmic.app/f33b16e8e3629b301959c659f5c8f11d.jpg"
+      ]
+    },
+    alternates: { canonical: "https://disuko.gay/links" }
+  };
+}
 
 createPlasmicElementProxy;
 
@@ -142,71 +188,74 @@ function PlasmicLinks__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const currentUser = useCurrentUser?.() || {};
-
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
         path: "popover.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
   );
+
+  const globalVariants = _useGlobalVariants();
+
+  const currentUser = useCurrentUser?.() || {};
+
   const $state = useDollarState(stateSpecs, {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
-  const globalVariants = ensureGlobalVariants({
-    screen: useScreenVariantsdmuurUfQuA6N()
-  });
+  const pageMetadata = generateDynamicMetadata(
+    wrapQueriesWithLoadingProxy({}),
+    $ctx as PageCtx
+  );
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <React.Fragment>
       <Head>
         <meta name="twitter:card" content="summary_large_image" />
-        <title key="title">{PlasmicLinks.pageMetadata.title}</title>
-        <meta
-          key="og:title"
-          property="og:title"
-          content={PlasmicLinks.pageMetadata.title}
-        />
+        <title key="title">{pageMetadata.title}</title>
+        <meta key="og:title" property="og:title" content={pageMetadata.title} />
         <meta
           key="twitter:title"
-          name="twitter:title"
-          content={PlasmicLinks.pageMetadata.title}
+          property="twitter:title"
+          content={pageMetadata.title}
         />
         <meta
           key="description"
-          name="description"
-          content={PlasmicLinks.pageMetadata.description}
+          property="description"
+          content={pageMetadata.description}
         />
         <meta
           key="og:description"
           property="og:description"
-          content={PlasmicLinks.pageMetadata.description}
+          content={pageMetadata.description}
         />
         <meta
           key="twitter:description"
-          name="twitter:description"
-          content={PlasmicLinks.pageMetadata.description}
+          property="twitter:description"
+          content={pageMetadata.description}
         />
         <meta
           key="og:image"
           property="og:image"
-          content={PlasmicLinks.pageMetadata.ogImageSrc}
+          content={pageMetadata.ogImageSrc}
         />
         <meta
           key="twitter:image"
-          name="twitter:image"
-          content={PlasmicLinks.pageMetadata.ogImageSrc}
+          property="twitter:image"
+          content={pageMetadata.ogImageSrc}
         />
-        <link rel="canonical" href={PlasmicLinks.pageMetadata.canonical} />
+        <link rel="canonical" href={pageMetadata.alternates?.canonical} />
       </Head>
 
       <style>{`
@@ -226,9 +275,7 @@ function PlasmicLinks__RenderFunc(props: {
             projectcss.root_reset,
             projectcss.plasmic_default_styles,
             projectcss.plasmic_mixins,
-            projectcss.plasmic_tokens,
-            plasmic_antd_5_hostless_css.plasmic_tokens,
-            plasmic_plasmic_rich_components_css.plasmic_tokens,
+            styleTokensClassNames,
             sty.root
           )}
         >
@@ -248,9 +295,7 @@ function PlasmicLinks__RenderFunc(props: {
                 projectcss.root_reset,
                 projectcss.plasmic_default_styles,
                 projectcss.plasmic_mixins,
-                projectcss.plasmic_tokens,
-                plasmic_antd_5_hostless_css.plasmic_tokens,
-                plasmic_plasmic_rich_components_css.plasmic_tokens
+                styleTokensClassNames
               )}
               mouseEnterDelay={0}
               mouseLeaveDelay={0}
@@ -274,11 +319,9 @@ function PlasmicLinks__RenderFunc(props: {
               />
             </AntdPopover>
           </WindowButton>
-          <Stack__
-            as={"div"}
+          <div
             data-plasmic-name={"main"}
             data-plasmic-override={overrides.main}
-            hasGap={true}
             className={classNames(projectcss.all, sty.main)}
           >
             <PlasmicImg__
@@ -294,9 +337,9 @@ function PlasmicLinks__RenderFunc(props: {
               displayWidth={"auto"}
               loading={"lazy"}
               src={{
-                src: "/plasmic/disuko_website_retro_version/images/logo2023Png.png",
-                fullWidth: 2000,
-                fullHeight: 2000,
+                src: "/plasmic/disuko_website_retro_version/images/disukoLogo2025GradientSmalPng2.png",
+                fullWidth: 512,
+                fullHeight: 476,
                 aspectRatio: undefined
               }}
             />
@@ -318,7 +361,7 @@ function PlasmicLinks__RenderFunc(props: {
               )}
             >
               {
-                "Hi everyone! My name is Disuko. I'm a producer, DJ, and content creator!"
+                "Hi everyone! My name is Disuko. I'm a music producer, DJ, and content creator!"
               }
             </div>
             <div
@@ -326,11 +369,7 @@ function PlasmicLinks__RenderFunc(props: {
               data-plasmic-override={overrides.columns}
               className={classNames(projectcss.all, sty.columns)}
             >
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.column__lEeu1)}
-              >
+              <div className={classNames(projectcss.all, sty.column__lEeu1)}>
                 <WindowBlue
                   className={classNames("__wab_instance", sty.windowBlue__bEdW)}
                   linkDestination={
@@ -378,12 +417,8 @@ function PlasmicLinks__RenderFunc(props: {
                     {"Open!"}
                   </div>
                 </WindowBlue>
-              </Stack__>
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.column__vdXak)}
-              >
+              </div>
+              <div className={classNames(projectcss.all, sty.column__vdXak)}>
                 <Window
                   className={classNames("__wab_instance", sty.window__uBnKr)}
                   linkDestination={
@@ -466,10 +501,10 @@ function PlasmicLinks__RenderFunc(props: {
                   windowText={"Twitter"}
                   windowTitle={"Twitter"}
                 />
-              </Stack__>
+              </div>
               <div className={classNames(projectcss.all, sty.column__gz0D5)} />
             </div>
-          </Stack__>
+          </div>
           <Embed
             data-plasmic-name={"embedHtml"}
             data-plasmic-override={overrides.embedHtml}
@@ -528,7 +563,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicLinks__VariantsArgs;
     args?: PlasmicLinks__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicLinks__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicLinks__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicLinks__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
@@ -614,15 +651,12 @@ export const PlasmicLinks = Object.assign(
     internalVariantProps: PlasmicLinks__VariantProps,
     internalArgProps: PlasmicLinks__ArgProps,
 
-    // Page metadata
-    pageMetadata: {
-      title: "disuko - links 🌸",
-      description:
-        "~social media platforms and other important links for the disuko youtube channel and streaming services.",
-      ogImageSrc:
-        "https://site-assets.plasmic.app/f33b16e8e3629b301959c659f5c8f11d.jpg",
-      canonical: "https://disuko.gay/links"
-    }
+    pageMetadata: generateDynamicMetadata(wrapQueriesWithLoadingProxy({}), {
+      pageRoute: "/links",
+      pagePath: "/links",
+      params: {},
+      query: {}
+    })
   }
 );
 

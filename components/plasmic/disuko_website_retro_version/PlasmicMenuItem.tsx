@@ -62,11 +62,11 @@ import {
 import { BaseListBoxItem } from "@plasmicpkgs/react-aria/skinny/registerListBoxItem";
 import { BaseText } from "@plasmicpkgs/react-aria/skinny/registerText";
 import { BaseText as BaseText2 } from "@plasmicpkgs/react-aria/skinny/registerText";
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectcss
 import sty from "./PlasmicMenuItem.module.css"; // plasmic-import: YLVvc7dmfMyU/css
 
@@ -144,7 +144,11 @@ function PlasmicMenuItem__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = _useGlobalVariants();
+
   const currentUser = useCurrentUser?.() || {};
+
+  const styleTokensClassNames = _useStyleTokens();
 
   const [$ccVariants, setDollarCcVariants] = React.useState<
     Record<string, boolean>
@@ -179,20 +183,14 @@ function PlasmicMenuItem__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
-        plasmic_plasmic_rich_components_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
       id={args.value}
       plasmicUpdateVariant={updateVariant}
       textValue={args.label}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__nYz36)}
-      >
+      <div className={classNames(projectcss.all, sty.freeBox__nYz36)}>
         <BaseText
           data-plasmic-name={"ariaText"}
           data-plasmic-override={overrides.ariaText}
@@ -255,7 +253,7 @@ function PlasmicMenuItem__RenderFunc(props: {
             </div>
           </BaseText2>
         ) : null}
-      </Stack__>
+      </div>
     </BaseListBoxItem>
   ) as React.ReactElement | null;
 }
@@ -285,7 +283,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicMenuItem__VariantsArgs;
     args?: PlasmicMenuItem__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicMenuItem__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicMenuItem__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicMenuItem__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

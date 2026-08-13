@@ -15,7 +15,7 @@
   object-fit: cover;
   transition-property: transform;
   transition-duration: 0.1s;
-  transform: perspective(0px) translateX(0px) translateY(30px) translateZ(0px);
+  transform: perspective(0px) translate3d(0px, 30px, 0px);
   transform-origin: 0% 0%;
   backface-visibility: hidden;
   perspective: 0px;
@@ -35,5 +35,5 @@
   object-fit: cover;
 }
 .root:hover .img {
-  transform: perspective(0px) translateX(0px) translateY(10px) translateZ(0px);
+  transform: perspective(0px) translate3d(0px, 10px, 0px);
 }

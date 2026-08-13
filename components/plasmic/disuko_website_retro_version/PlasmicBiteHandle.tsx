@@ -65,15 +65,61 @@ import { usePlasmicDataSourceContext } from "@plasmicapp/data-sources-context";
 import Tilt from "@plasmicpkgs/react-parallax-tilt";
 import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
 import YouTube from "@plasmicpkgs/react-youtube";
-
-import { useScreenVariants as useScreenVariantsdmuurUfQuA6N } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: DmuurUFQuA6N/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectcss
 import sty from "./PlasmicBiteHandle.module.css"; // plasmic-import: -7tromDQ_KOz/css
+
+const emptyProxy: any = new Proxy(() => "", {
+  get(_, prop) {
+    return prop === Symbol.toPrimitive ? () => "" : emptyProxy;
+  }
+});
+
+function wrapQueriesWithLoadingProxy($q: any): any {
+  return new Proxy($q, {
+    get(target, queryName) {
+      const query = target[queryName];
+      return !query || query.isLoading || !query.data ? emptyProxy : query;
+    }
+  });
+}
+
+export type PageCtx = {
+  pageRoute: string;
+  pagePath: string;
+  params: Record<string, string | string[] | undefined>;
+  query: Record<string, string | string[] | undefined>;
+};
+
+export function generateDynamicMetadata($q: any, $ctx: PageCtx) {
+  return {
+    title: "BITE HANDLE 🔪",
+    description:
+      "Bite Handle is a balisong (butterfly knife) themed music event that features artists from the balisong community! ⚡",
+    openGraph: {
+      title: "BITE HANDLE 🔪",
+      description:
+        "Bite Handle is a balisong (butterfly knife) themed music event that features artists from the balisong community! ⚡",
+      images: [
+        "https://site-assets.plasmic.app/6a3d3f8eef3b8e74a57a99129001545b.jpg"
+      ]
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      title: "BITE HANDLE 🔪",
+      description:
+        "Bite Handle is a balisong (butterfly knife) themed music event that features artists from the balisong community! ⚡",
+      images: [
+        "https://site-assets.plasmic.app/6a3d3f8eef3b8e74a57a99129001545b.jpg"
+      ]
+    },
+    alternates: { canonical: "https://disuko.gay/bitehandlerave" }
+  };
+}
 
 createPlasmicElementProxy;
 
@@ -135,53 +181,54 @@ function PlasmicBiteHandle__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = _useGlobalVariants();
+
   const currentUser = useCurrentUser?.() || {};
 
-  const globalVariants = ensureGlobalVariants({
-    screen: useScreenVariantsdmuurUfQuA6N()
-  });
+  const pageMetadata = generateDynamicMetadata(
+    wrapQueriesWithLoadingProxy({}),
+    $ctx as PageCtx
+  );
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <React.Fragment>
       <Head>
         <meta name="twitter:card" content="summary_large_image" />
-        <title key="title">{PlasmicBiteHandle.pageMetadata.title}</title>
-        <meta
-          key="og:title"
-          property="og:title"
-          content={PlasmicBiteHandle.pageMetadata.title}
-        />
+        <title key="title">{pageMetadata.title}</title>
+        <meta key="og:title" property="og:title" content={pageMetadata.title} />
         <meta
           key="twitter:title"
-          name="twitter:title"
-          content={PlasmicBiteHandle.pageMetadata.title}
+          property="twitter:title"
+          content={pageMetadata.title}
         />
         <meta
           key="description"
-          name="description"
-          content={PlasmicBiteHandle.pageMetadata.description}
+          property="description"
+          content={pageMetadata.description}
         />
         <meta
           key="og:description"
           property="og:description"
-          content={PlasmicBiteHandle.pageMetadata.description}
+          content={pageMetadata.description}
         />
         <meta
           key="twitter:description"
-          name="twitter:description"
-          content={PlasmicBiteHandle.pageMetadata.description}
+          property="twitter:description"
+          content={pageMetadata.description}
         />
         <meta
           key="og:image"
           property="og:image"
-          content={PlasmicBiteHandle.pageMetadata.ogImageSrc}
+          content={pageMetadata.ogImageSrc}
         />
         <meta
           key="twitter:image"
-          name="twitter:image"
-          content={PlasmicBiteHandle.pageMetadata.ogImageSrc}
+          property="twitter:image"
+          content={pageMetadata.ogImageSrc}
         />
-        <link rel="canonical" href={PlasmicBiteHandle.pageMetadata.canonical} />
+        <link rel="canonical" href={pageMetadata.alternates?.canonical} />
       </Head>
 
       <style>{`
@@ -201,9 +248,7 @@ function PlasmicBiteHandle__RenderFunc(props: {
             projectcss.root_reset,
             projectcss.plasmic_default_styles,
             projectcss.plasmic_mixins,
-            projectcss.plasmic_tokens,
-            plasmic_antd_5_hostless_css.plasmic_tokens,
-            plasmic_plasmic_rich_components_css.plasmic_tokens,
+            styleTokensClassNames,
             sty.biteHandle
           )}
         >
@@ -282,10 +327,12 @@ function PlasmicBiteHandle__RenderFunc(props: {
                   className={classNames(
                     projectcss.all,
                     projectcss.a,
+                    projectcss.a__x4VgG,
                     sty.link__wzWo
                   )}
                   component={Link}
                   href={"https://discord.gg/77KYqFb846\t"}
+                  legacyBehavior={false}
                   platform={"nextjs"}
                   target={"_blank"}
                 >
@@ -313,10 +360,12 @@ function PlasmicBiteHandle__RenderFunc(props: {
                   className={classNames(
                     projectcss.all,
                     projectcss.a,
+                    projectcss.a__x4VgG,
                     sty.link__yrJh6
                   )}
                   component={Link}
                   href={"https://www.instagram.com/bitehandlerave/"}
+                  legacyBehavior={false}
                   platform={"nextjs"}
                   target={"_blank"}
                 >
@@ -344,10 +393,12 @@ function PlasmicBiteHandle__RenderFunc(props: {
                   className={classNames(
                     projectcss.all,
                     projectcss.a,
+                    projectcss.a__x4VgG,
                     sty.link__wuLt7
                   )}
                   component={Link}
                   href={"https://www.twitch.tv/bitehandlerave"}
+                  legacyBehavior={false}
                   platform={"nextjs"}
                   target={"_blank"}
                 >
@@ -375,10 +426,12 @@ function PlasmicBiteHandle__RenderFunc(props: {
                   className={classNames(
                     projectcss.all,
                     projectcss.a,
+                    projectcss.a__x4VgG,
                     sty.link__bukkZ
                   )}
                   component={Link}
                   href={"https://www.youtube.com/@bitehandlerave"}
+                  legacyBehavior={false}
                   platform={"nextjs"}
                   target={"_blank"}
                 >
@@ -438,7 +491,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicBiteHandle__VariantsArgs;
     args?: PlasmicBiteHandle__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicBiteHandle__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicBiteHandle__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicBiteHandle__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
@@ -521,15 +576,12 @@ export const PlasmicBiteHandle = Object.assign(
     internalVariantProps: PlasmicBiteHandle__VariantProps,
     internalArgProps: PlasmicBiteHandle__ArgProps,
 
-    // Page metadata
-    pageMetadata: {
-      title: "BITE HANDLE 🔪",
-      description:
-        "Bite Handle is a balisong (butterfly knife) themed music event that features artists from the balisong community! ⚡",
-      ogImageSrc:
-        "https://site-assets.plasmic.app/6a3d3f8eef3b8e74a57a99129001545b.jpg",
-      canonical: "https://disuko.gay/bitehandlerave"
-    }
+    pageMetadata: generateDynamicMetadata(wrapQueriesWithLoadingProxy({}), {
+      pageRoute: "/bitehandlerave",
+      pagePath: "/bitehandlerave",
+      params: {},
+      query: {}
+    })
   }
 );
 

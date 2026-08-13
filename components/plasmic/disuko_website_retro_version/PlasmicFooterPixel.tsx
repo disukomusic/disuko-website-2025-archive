@@ -59,12 +59,11 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import { useScreenVariants as useScreenVariantsdmuurUfQuA6N } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: DmuurUFQuA6N/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectcss
 import sty from "./PlasmicFooterPixel.module.css"; // plasmic-import: GKHfm0W5wVuv/css
 
@@ -129,11 +128,11 @@ function PlasmicFooterPixel__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = _useGlobalVariants();
+
   const currentUser = useCurrentUser?.() || {};
 
-  const globalVariants = ensureGlobalVariants({
-    screen: useScreenVariantsdmuurUfQuA6N()
-  });
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <div
@@ -146,26 +145,28 @@ function PlasmicFooterPixel__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
-        plasmic_plasmic_rich_components_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
     >
-      <Stack__
-        as={"div"}
+      <div
         data-plasmic-name={"columns"}
         data-plasmic-override={overrides.columns}
-        hasGap={true}
         className={classNames(projectcss.all, sty.columns)}
       >
         <div className={classNames(projectcss.all, sty.column__dcmGr)}>
           <PlasmicLink__
             data-plasmic-name={"disuko"}
             data-plasmic-override={overrides.disuko}
-            className={classNames(projectcss.all, projectcss.a, sty.disuko)}
+            className={classNames(
+              projectcss.all,
+              projectcss.a,
+              projectcss.a__x4VgG,
+              sty.disuko
+            )}
             component={Link}
             href={`/`}
+            legacyBehavior={false}
             platform={"nextjs"}
             target={"_blank"}
           >
@@ -203,7 +204,9 @@ function PlasmicFooterPixel__RenderFunc(props: {
             >
               <React.Fragment>
                 <span
-                  className={"plasmic_default__all plasmic_default__span"}
+                  className={
+                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
+                  }
                   style={{ fontWeight: 400 }}
                 >
                   {"website \u00a9 disuko & "}
@@ -214,17 +217,21 @@ function PlasmicFooterPixel__RenderFunc(props: {
                     className={classNames(
                       projectcss.all,
                       projectcss.a,
+                      projectcss.a__x4VgG,
                       projectcss.__wab_text,
                       projectcss.plasmic_default__inline,
                       sty.link__cAAi
                     )}
                     component={Link}
                     href={"https://redpandamedia.net"}
+                    legacyBehavior={false}
                     platform={"nextjs"}
                   >
                     <React.Fragment>
                       <span
-                        className={"plasmic_default__all plasmic_default__span"}
+                        className={
+                          "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
+                        }
                         style={{ fontWeight: 400 }}
                       >
                         {"Red Panda Studios"}
@@ -234,7 +241,9 @@ function PlasmicFooterPixel__RenderFunc(props: {
                 }
                 <React.Fragment>{""}</React.Fragment>
                 <span
-                  className={"plasmic_default__all plasmic_default__span"}
+                  className={
+                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
+                  }
                   style={{ fontWeight: 400 }}
                 >
                   {" 2023"}
@@ -245,10 +254,12 @@ function PlasmicFooterPixel__RenderFunc(props: {
               className={classNames(
                 projectcss.all,
                 projectcss.a,
+                projectcss.a__x4VgG,
                 sty.link___13BKz
               )}
               component={Link}
               href={"https://www.ohhey.gay/gay-gives"}
+              legacyBehavior={false}
               platform={"nextjs"}
             >
               <PlasmicImg__
@@ -286,12 +297,14 @@ function PlasmicFooterPixel__RenderFunc(props: {
                   className={classNames(
                     projectcss.all,
                     projectcss.a,
+                    projectcss.a__x4VgG,
                     projectcss.__wab_text,
                     projectcss.plasmic_default__inline,
                     sty.link__dhsma
                   )}
                   component={Link}
                   href={"https://github.com/konradkalemba/tabler-icons-react"}
+                  legacyBehavior={false}
                   platform={"nextjs"}
                 >
                   {"tabler"}
@@ -301,7 +314,7 @@ function PlasmicFooterPixel__RenderFunc(props: {
             </React.Fragment>
           </div>
         </div>
-      </Stack__>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
@@ -333,7 +346,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicFooterPixel__VariantsArgs;
     args?: PlasmicFooterPixel__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicFooterPixel__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicFooterPixel__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicFooterPixel__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

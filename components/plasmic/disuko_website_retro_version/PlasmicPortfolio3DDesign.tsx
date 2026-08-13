@@ -69,16 +69,58 @@ import { Video } from "@plasmicpkgs/plasmic-basic-components";
 import Window from "../../Window"; // plasmic-import: BWjgdOwFY_OO/component
 import { SliderWrapper } from "@plasmicpkgs/react-slick";
 import { sliderHelpers as SliderWrapper_Helpers } from "@plasmicpkgs/react-slick";
-
-import { ThemeValue, useTheme } from "./PlasmicGlobalVariant__Theme"; // plasmic-import: 3K9IqsAFaaID/globalVariant
-import { useScreenVariants as useScreenVariantsdmuurUfQuA6N } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: DmuurUFQuA6N/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectcss
 import sty from "./PlasmicPortfolio3DDesign.module.css"; // plasmic-import: 3GOrKOgLh0ga/css
+
+const emptyProxy: any = new Proxy(() => "", {
+  get(_, prop) {
+    return prop === Symbol.toPrimitive ? () => "" : emptyProxy;
+  }
+});
+
+function wrapQueriesWithLoadingProxy($q: any): any {
+  return new Proxy($q, {
+    get(target, queryName) {
+      const query = target[queryName];
+      return !query || query.isLoading || !query.data ? emptyProxy : query;
+    }
+  });
+}
+
+export type PageCtx = {
+  pageRoute: string;
+  pagePath: string;
+  params: Record<string, string | string[] | undefined>;
+  query: Record<string, string | string[] | undefined>;
+};
+
+export function generateDynamicMetadata($q: any, $ctx: PageCtx) {
+  return {
+    title: "3D Design",
+    description: '3D Design portfolio of Angelo "Disuko" Licavoli',
+    openGraph: {
+      title: "3D Design",
+      description: '3D Design portfolio of Angelo "Disuko" Licavoli',
+      images: [
+        "https://site-assets.plasmic.app/f33b16e8e3629b301959c659f5c8f11d.jpg"
+      ]
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      title: "3D Design",
+      description: '3D Design portfolio of Angelo "Disuko" Licavoli',
+      images: [
+        "https://site-assets.plasmic.app/f33b16e8e3629b301959c659f5c8f11d.jpg"
+      ]
+    },
+    alternates: { canonical: "https://disuko.gay/3d-design" }
+  };
+}
 
 createPlasmicElementProxy;
 
@@ -96,6 +138,8 @@ export type PlasmicPortfolio3DDesign__OverridesType = {
   _3DDesign?: Flex__<"div">;
   navbar?: Flex__<typeof Navbar>;
   windowButton?: Flex__<typeof WindowButton>;
+  characters?: Flex__<"div">;
+  imageWindow?: Flex__<typeof ImageWindow>;
   imageWindow20?: Flex__<"div">;
   imageWindow21?: Flex__<"div">;
   imageWindow16?: Flex__<"div">;
@@ -114,7 +158,13 @@ export type PlasmicPortfolio3DDesign__OverridesType = {
   imageWindow23?: Flex__<"div">;
   imageWindow34?: Flex__<"div">;
   imageWindow35?: Flex__<"div">;
+  environment?: Flex__<"div">;
   imageWindow13?: Flex__<"div">;
+  imageWindow47?: Flex__<"div">;
+  imageWindow48?: Flex__<"div">;
+  imageWindow49?: Flex__<"div">;
+  imageWindow46?: Flex__<"div">;
+  productRenders?: Flex__<"div">;
   realisticProductRenders?: Flex__<"div">;
   imageWindow25?: Flex__<"div">;
   imageWindow26?: Flex__<"div">;
@@ -129,9 +179,18 @@ export type PlasmicPortfolio3DDesign__OverridesType = {
   stylizedProductRenders?: Flex__<"div">;
   imageWindow14?: Flex__<"div">;
   imageWindow15?: Flex__<"div">;
-  imageWindow?: Flex__<"div">;
-  imageWindow2?: Flex__<"div">;
-  imageWindow3?: Flex__<"div">;
+  cadAndPrinting?: Flex__<"div">;
+  imageWindow19?: Flex__<"div">;
+  imageWindow42?: Flex__<"div">;
+  imageWindow36?: Flex__<"div">;
+  imageWindow41?: Flex__<"div">;
+  imageWindow39?: Flex__<"div">;
+  imageWindow45?: Flex__<"div">;
+  imageWindow40?: Flex__<"div">;
+  imageWindow43?: Flex__<"div">;
+  imageWindow44?: Flex__<"div">;
+  imageWindow37?: Flex__<"div">;
+  imageWindow38?: Flex__<"div">;
   cad2?: Flex__<typeof SliderWrapper>;
   cad?: Flex__<typeof SliderWrapper>;
 };
@@ -177,15 +236,13 @@ function PlasmicPortfolio3DDesign__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const currentUser = useCurrentUser?.() || {};
-
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
         path: "cad.currentSlide",
         type: "private",
         variableType: "number",
-        initFunc: ({ $props, $state, $queries, $ctx }) => 0,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => 0,
 
         refName: "cad",
         onMutate: generateOnMutateForSpec("currentSlide", SliderWrapper_Helpers)
@@ -194,7 +251,7 @@ function PlasmicPortfolio3DDesign__RenderFunc(props: {
         path: "cad2.currentSlide",
         type: "private",
         variableType: "number",
-        initFunc: ({ $props, $state, $queries, $ctx }) => 0,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => 0,
 
         refName: "cad2",
         onMutate: generateOnMutateForSpec("currentSlide", SliderWrapper_Helpers)
@@ -202,62 +259,63 @@ function PlasmicPortfolio3DDesign__RenderFunc(props: {
     ],
     [$props, $ctx, $refs]
   );
+
+  const globalVariants = _useGlobalVariants();
+
+  const currentUser = useCurrentUser?.() || {};
+
   const $state = useDollarState(stateSpecs, {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
-  const globalVariants = ensureGlobalVariants({
-    theme: useTheme(),
-    screen: useScreenVariantsdmuurUfQuA6N()
-  });
+  const pageMetadata = generateDynamicMetadata(
+    wrapQueriesWithLoadingProxy({}),
+    $ctx as PageCtx
+  );
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <React.Fragment>
       <Head>
         <meta name="twitter:card" content="summary_large_image" />
-        <title key="title">{PlasmicPortfolio3DDesign.pageMetadata.title}</title>
-        <meta
-          key="og:title"
-          property="og:title"
-          content={PlasmicPortfolio3DDesign.pageMetadata.title}
-        />
+        <title key="title">{pageMetadata.title}</title>
+        <meta key="og:title" property="og:title" content={pageMetadata.title} />
         <meta
           key="twitter:title"
-          name="twitter:title"
-          content={PlasmicPortfolio3DDesign.pageMetadata.title}
+          property="twitter:title"
+          content={pageMetadata.title}
         />
         <meta
           key="description"
-          name="description"
-          content={PlasmicPortfolio3DDesign.pageMetadata.description}
+          property="description"
+          content={pageMetadata.description}
         />
         <meta
           key="og:description"
           property="og:description"
-          content={PlasmicPortfolio3DDesign.pageMetadata.description}
+          content={pageMetadata.description}
         />
         <meta
           key="twitter:description"
-          name="twitter:description"
-          content={PlasmicPortfolio3DDesign.pageMetadata.description}
+          property="twitter:description"
+          content={pageMetadata.description}
         />
         <meta
           key="og:image"
           property="og:image"
-          content={PlasmicPortfolio3DDesign.pageMetadata.ogImageSrc}
+          content={pageMetadata.ogImageSrc}
         />
         <meta
           key="twitter:image"
-          name="twitter:image"
-          content={PlasmicPortfolio3DDesign.pageMetadata.ogImageSrc}
+          property="twitter:image"
+          content={pageMetadata.ogImageSrc}
         />
-        <link
-          rel="canonical"
-          href={PlasmicPortfolio3DDesign.pageMetadata.canonical}
-        />
+        <link rel="canonical" href={pageMetadata.alternates?.canonical} />
       </Head>
 
       <style>{`
@@ -266,356 +324,118 @@ function PlasmicPortfolio3DDesign__RenderFunc(props: {
         }
       `}</style>
 
-      <div
-        data-plasmic-name={"_3DDesign"}
-        data-plasmic-override={overrides._3DDesign}
-        data-plasmic-root={true}
-        data-plasmic-for-node={forNode}
-        className={classNames(
-          projectcss.all,
-          projectcss.root_reset,
-          projectcss.plasmic_default_styles,
-          projectcss.plasmic_mixins,
-          projectcss.plasmic_tokens,
-          plasmic_antd_5_hostless_css.plasmic_tokens,
-          plasmic_plasmic_rich_components_css.plasmic_tokens,
-          sty._3DDesign,
-          {
-            [projectcss.global_theme_classic]: hasVariant(
-              globalVariants,
-              "theme",
-              "classic"
-            ),
-            [sty._3DDesignglobal_theme_classic]: hasVariant(
-              globalVariants,
-              "theme",
-              "classic"
-            )
-          }
-        )}
-      >
-        <Navbar
-          data-plasmic-name={"navbar"}
-          data-plasmic-override={overrides.navbar}
-          className={classNames("__wab_instance", sty.navbar)}
-        />
-
-        <WindowButton
-          data-plasmic-name={"windowButton"}
-          data-plasmic-override={overrides.windowButton}
-          className={classNames("__wab_instance", sty.windowButton)}
-          link={`/portfolio`}
-        >
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__eAa7U
-            )}
-          >
-            {"<- Back To Portfolio"}
-          </div>
-        </WindowButton>
-        <div className={classNames(projectcss.all, sty.freeBox__rhhmw)}>
-          <PlasmicImg__
-            alt={""}
-            className={classNames(sty.img___2UtR)}
-            displayHeight={
-              hasVariant(globalVariants, "screen", "mobileOnly")
-                ? "100%"
-                : "155px"
-            }
-            displayMaxHeight={"none"}
-            displayMaxWidth={"100%"}
-            displayMinHeight={"0"}
-            displayMinWidth={"0"}
-            displayWidth={"auto"}
-            loading={"lazy"}
-            src={{
-              src: "/plasmic/disuko_website_retro_version/images/_3DdesignPng.png",
-              fullWidth: 1467,
-              fullHeight: 566,
-              aspectRatio: undefined
-            }}
-          />
-        </div>
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__t4YO)}
-        >
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__v6MMb,
-              {
-                [sty.textglobal_theme_classic__v6MMbeNktM]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              }
-            )}
-          >
-            {"Characters"}
-          </div>
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__xdhwT,
-              {
-                [sty.textglobal_theme_classic__xdhwTeNktM]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              }
-            )}
-          >
+      <div className={projectcss.plasmic_page_wrapper}>
+        <div
+          data-plasmic-name={"_3DDesign"}
+          data-plasmic-override={overrides._3DDesign}
+          data-plasmic-root={true}
+          data-plasmic-for-node={forNode}
+          className={classNames(
+            projectcss.all,
+            projectcss.root_reset,
+            projectcss.plasmic_default_styles,
+            projectcss.plasmic_mixins,
+            styleTokensClassNames,
+            sty._3DDesign,
             {
-              '"Disuko Avatar" - Digital Self Portrait and VRChat Community Labs '
+              [sty._3DDesignglobal_theme_classic]: hasVariant(
+                globalVariants,
+                "theme",
+                "classic"
+              )
             }
-          </div>
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__uYv16)}
-          >
-            <ImageWindow
-              className={classNames("__wab_instance", sty.imageWindow__yAKlO, {
-                [sty.imageWindowglobal_theme_classic__yAKlOeNktM]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              })}
-            />
+          )}
+        >
+          <Navbar
+            data-plasmic-name={"navbar"}
+            data-plasmic-override={overrides.navbar}
+            className={classNames("__wab_instance", sty.navbar)}
+          />
 
-            <div
-              data-plasmic-name={"imageWindow20"}
-              data-plasmic-override={overrides.imageWindow20}
-              className={classNames(projectcss.all, sty.imageWindow20, {
-                [sty.imageWindow20global_theme_classic]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              })}
-            >
-              <PlasmicImg__
-                alt={""}
-                className={classNames(sty.img__pc40T, {
-                  [sty.imgglobal_theme_classic__pc40TeNktM]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
-                })}
-                displayHeight={"338px"}
-                displayMaxHeight={"none"}
-                displayMaxWidth={"none"}
-                displayMinHeight={"0"}
-                displayMinWidth={"0"}
-                displayWidth={"100%"}
-                loading={"lazy"}
-                src={{
-                  src: "/plasmic/disuko_website_retro_version/images/image94.png",
-                  fullWidth: 533,
-                  fullHeight: 607,
-                  aspectRatio: undefined
-                }}
-              />
-            </div>
-            <div
-              data-plasmic-name={"imageWindow21"}
-              data-plasmic-override={overrides.imageWindow21}
-              className={classNames(projectcss.all, sty.imageWindow21, {
-                [sty.imageWindow21global_theme_classic]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              })}
-            >
-              <PlasmicImg__
-                alt={""}
-                className={classNames(sty.img__cJMuQ, {
-                  [sty.imgglobal_theme_classic__cJMuQeNktM]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
-                })}
-                displayHeight={"338px"}
-                displayMaxHeight={"none"}
-                displayMaxWidth={"none"}
-                displayMinHeight={"0"}
-                displayMinWidth={"0"}
-                displayWidth={"100%"}
-                loading={"lazy"}
-                src={{
-                  src: "/plasmic/disuko_website_retro_version/images/image67.gif",
-                  fullWidth: 600,
-                  fullHeight: 338,
-                  aspectRatio: undefined
-                }}
-              />
-            </div>
-          </Stack__>
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__uZack,
-              {
-                [sty.textglobal_theme_classic__uZackeNktM]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              }
-            )}
+          <WindowButton
+            data-plasmic-name={"windowButton"}
+            data-plasmic-override={overrides.windowButton}
+            className={classNames("__wab_instance", sty.windowButton)}
+            link={`/portfolio`}
           >
-            <React.Fragment>
-              <React.Fragment>{'"N3ko Band" - '}</React.Fragment>
-              {
-                <PlasmicLink__
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.a,
-                    projectcss.__wab_text,
-                    projectcss.plasmic_default__inline,
-                    sty.link__tVOiA
-                  )}
-                  component={Link}
-                  href={"https://on3ko.lol"}
-                  platform={"nextjs"}
-                >
-                  {"On3ko Webcomic"}
-                </PlasmicLink__>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__eAa7U
+              )}
+            >
+              {"<- Back To Portfolio"}
+            </div>
+          </WindowButton>
+          <div className={classNames(projectcss.all, sty.freeBox__rhhmw)}>
+            <PlasmicImg__
+              alt={""}
+              className={classNames(sty.img___2UtR)}
+              displayHeight={
+                hasVariant(globalVariants, "screen", "mobileOnly")
+                  ? "100%"
+                  : "155px"
               }
-              <React.Fragment>{""}</React.Fragment>
-            </React.Fragment>
+              displayMaxHeight={"none"}
+              displayMaxWidth={"100%"}
+              displayMinHeight={"0"}
+              displayMinWidth={"0"}
+              displayWidth={"auto"}
+              loading={"lazy"}
+              src={{
+                src: "/plasmic/disuko_website_retro_version/images/_3DdesignPng.png",
+                fullWidth: 1467,
+                fullHeight: 566,
+                aspectRatio: undefined
+              }}
+            />
           </div>
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__wQfv)}
+          <div
+            data-plasmic-name={"characters"}
+            data-plasmic-override={overrides.characters}
+            className={classNames(projectcss.all, sty.characters)}
           >
-            <div className={classNames(projectcss.all, sty.freeBox___4SfFa)}>
-              <div
-                data-plasmic-name={"imageWindow16"}
-                data-plasmic-override={overrides.imageWindow16}
-                className={classNames(projectcss.all, sty.imageWindow16, {
-                  [sty.imageWindow16global_theme_classic]: hasVariant(
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__v6MMb,
+                {
+                  [sty.textglobal_theme_classic__v6MMbeNktM]: hasVariant(
                     globalVariants,
                     "theme",
                     "classic"
                   )
-                })}
-              >
-                <PlasmicImg__
-                  alt={""}
-                  className={classNames(sty.img__h9Ao, {
-                    [sty.imgglobal_theme_classic__h9AoENktM]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                  displayHeight={"338px"}
-                  displayMaxHeight={"none"}
-                  displayMaxWidth={"none"}
-                  displayMinHeight={"0"}
-                  displayMinWidth={"0"}
-                  displayWidth={"100%"}
-                  loading={"lazy"}
-                  src={{
-                    src: "/plasmic/disuko_website_retro_version/images/image68.gif",
-                    fullWidth: 256,
-                    fullHeight: 256,
-                    aspectRatio: undefined
-                  }}
-                />
-              </div>
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__kTz9,
-                  {
-                    [sty.textglobal_theme_classic__kTz9ENktM]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  }
-                )}
-              >
-                {"On3ko"}
-              </div>
+                }
+              )}
+            >
+              {"Characters"}
             </div>
-            <div className={classNames(projectcss.all, sty.freeBox__bqwdv)}>
-              <div
-                data-plasmic-name={"imageWindow17"}
-                data-plasmic-override={overrides.imageWindow17}
-                className={classNames(projectcss.all, sty.imageWindow17, {
-                  [sty.imageWindow17global_theme_classic]: hasVariant(
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__xdhwT,
+                {
+                  [sty.textglobal_theme_classic__xdhwTeNktM]: hasVariant(
                     globalVariants,
                     "theme",
                     "classic"
                   )
-                })}
-              >
-                <PlasmicImg__
-                  alt={""}
-                  className={classNames(sty.img__kJrGa, {
-                    [sty.imgglobal_theme_classic__kJrGaeNktM]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                  displayHeight={"338px"}
-                  displayMaxHeight={"none"}
-                  displayMaxWidth={"none"}
-                  displayMinHeight={"0"}
-                  displayMinWidth={"0"}
-                  displayWidth={"100%"}
-                  loading={"lazy"}
-                  src={{
-                    src: "/plasmic/disuko_website_retro_version/images/emon3Ko0031Png.png",
-                    fullWidth: 256,
-                    fullHeight: 256,
-                    aspectRatio: undefined
-                  }}
-                />
-              </div>
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__lgpwa,
-                  {
-                    [sty.textglobal_theme_classic__lgpwAeNktM]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  }
-                )}
-              >
-                {"Emon3ko"}
-              </div>
+                }
+              )}
+            >
+              {
+                '"Disuko Avatar" - Digital Self Portrait and VRChat Community Labs '
+              }
             </div>
-            <div className={classNames(projectcss.all, sty.freeBox__i8Co4)}>
-              <div
-                data-plasmic-name={"imageWindow18"}
-                data-plasmic-override={overrides.imageWindow18}
-                className={classNames(projectcss.all, sty.imageWindow18, {
-                  [sty.imageWindow18global_theme_classic]: hasVariant(
+            <div className={classNames(projectcss.all, sty.freeBox__uYv16)}>
+              <ImageWindow
+                data-plasmic-name={"imageWindow"}
+                data-plasmic-override={overrides.imageWindow}
+                className={classNames("__wab_instance", sty.imageWindow, {
+                  [sty.imageWindowglobal_theme_classic]: hasVariant(
                     globalVariants,
                     "theme",
                     "classic"
@@ -624,51 +444,27 @@ function PlasmicPortfolio3DDesign__RenderFunc(props: {
               >
                 <PlasmicImg__
                   alt={""}
-                  className={classNames(sty.img___42Pff, {
-                    [sty.imgglobal_theme_classic___42PfFeNktM]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
+                  className={classNames(sty.img__gqbzI)}
                   displayHeight={"338px"}
                   displayMaxHeight={"none"}
                   displayMaxWidth={"none"}
                   displayMinHeight={"0"}
                   displayMinWidth={"0"}
-                  displayWidth={"100%"}
+                  displayWidth={"auto"}
                   loading={"lazy"}
                   src={{
-                    src: "/plasmic/disuko_website_retro_version/images/image95.png",
+                    src: "/plasmic/disuko_website_retro_version/images/characterIconPng.png",
                     fullWidth: 1024,
                     fullHeight: 1024,
                     aspectRatio: undefined
                   }}
                 />
-              </div>
+              </ImageWindow>
               <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__iKjaE,
-                  {
-                    [sty.textglobal_theme_classic__iKjaEeNktM]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  }
-                )}
-              >
-                {"Edgen3ko"}
-              </div>
-            </div>
-            <div className={classNames(projectcss.all, sty.freeBox___8PwuM)}>
-              <div
-                data-plasmic-name={"imageWindow22"}
-                data-plasmic-override={overrides.imageWindow22}
-                className={classNames(projectcss.all, sty.imageWindow22, {
-                  [sty.imageWindow22global_theme_classic]: hasVariant(
+                data-plasmic-name={"imageWindow20"}
+                data-plasmic-override={overrides.imageWindow20}
+                className={classNames(projectcss.all, sty.imageWindow20, {
+                  [sty.imageWindow20global_theme_classic]: hasVariant(
                     globalVariants,
                     "theme",
                     "classic"
@@ -677,8 +473,8 @@ function PlasmicPortfolio3DDesign__RenderFunc(props: {
               >
                 <PlasmicImg__
                   alt={""}
-                  className={classNames(sty.img__gEqZm, {
-                    [sty.imgglobal_theme_classic__gEqZmeNktM]: hasVariant(
+                  className={classNames(sty.img__pc40T, {
+                    [sty.imgglobal_theme_classic__pc40TeNktM]: hasVariant(
                       globalVariants,
                       "theme",
                       "classic"
@@ -692,77 +488,18 @@ function PlasmicPortfolio3DDesign__RenderFunc(props: {
                   displayWidth={"100%"}
                   loading={"lazy"}
                   src={{
-                    src: "/plasmic/disuko_website_retro_version/images/image97.png",
-                    fullWidth: 512,
-                    fullHeight: 512,
+                    src: "/plasmic/disuko_website_retro_version/images/image94.png",
+                    fullWidth: 533,
+                    fullHeight: 607,
                     aspectRatio: undefined
                   }}
                 />
               </div>
               <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__ahjsw,
-                  {
-                    [sty.textglobal_theme_classic__ahjsweNktM]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  }
-                )}
-              >
-                {"Shyn3ko"}
-              </div>
-            </div>
-          </Stack__>
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text___2Sk7M,
-              {
-                [sty.textglobal_theme_classic___2Sk7MeNktM]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              }
-            )}
-          >
-            <React.Fragment>
-              <React.Fragment>{'"Diko" - '}</React.Fragment>
-              {
-                <PlasmicLink__
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.a,
-                    projectcss.__wab_text,
-                    projectcss.plasmic_default__inline,
-                    sty.link__kr7C6
-                  )}
-                  component={Link}
-                  href={"https://redpandastudios.net"}
-                  platform={"nextjs"}
-                >
-                  {"PANDAMONIUM: Diko Dating Sim (Red Panda Studios)"}
-                </PlasmicLink__>
-              }
-              <React.Fragment>{""}</React.Fragment>
-            </React.Fragment>
-          </div>
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.columns__dav6A)}
-          >
-            <div className={classNames(projectcss.all, sty.column__oii6R)}>
-              <div
-                data-plasmic-name={"imageWindow4"}
-                data-plasmic-override={overrides.imageWindow4}
-                className={classNames(projectcss.all, sty.imageWindow4, {
-                  [sty.imageWindow4global_theme_classic]: hasVariant(
+                data-plasmic-name={"imageWindow21"}
+                data-plasmic-override={overrides.imageWindow21}
+                className={classNames(projectcss.all, sty.imageWindow21, {
+                  [sty.imageWindow21global_theme_classic]: hasVariant(
                     globalVariants,
                     "theme",
                     "classic"
@@ -771,8 +508,8 @@ function PlasmicPortfolio3DDesign__RenderFunc(props: {
               >
                 <PlasmicImg__
                   alt={""}
-                  className={classNames(sty.img__hdYm, {
-                    [sty.imgglobal_theme_classic__hdYMeNktM]: hasVariant(
+                  className={classNames(sty.img__cJMuQ, {
+                    [sty.imgglobal_theme_classic__cJMuQeNktM]: hasVariant(
                       globalVariants,
                       "theme",
                       "classic"
@@ -783,615 +520,275 @@ function PlasmicPortfolio3DDesign__RenderFunc(props: {
                   displayMaxWidth={"none"}
                   displayMinHeight={"0"}
                   displayMinWidth={"0"}
-                  displayWidth={"auto"}
+                  displayWidth={"100%"}
                   loading={"lazy"}
                   src={{
-                    src: "/plasmic/disuko_website_retro_version/images/image79.png",
-                    fullWidth: 512,
-                    fullHeight: 512,
+                    src: "/plasmic/disuko_website_retro_version/images/image67.gif",
+                    fullWidth: 600,
+                    fullHeight: 338,
                     aspectRatio: undefined
                   }}
                 />
               </div>
             </div>
-            <div className={classNames(projectcss.all, sty.column___4KmMg)}>
-              <div
-                data-plasmic-name={"imageWindow5"}
-                data-plasmic-override={overrides.imageWindow5}
-                className={classNames(projectcss.all, sty.imageWindow5, {
-                  [sty.imageWindow5global_theme_classic]: hasVariant(
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__uZack,
+                {
+                  [sty.textglobal_theme_classic__uZackeNktM]: hasVariant(
                     globalVariants,
                     "theme",
                     "classic"
                   )
-                })}
-              >
-                <PlasmicImg__
-                  alt={""}
-                  className={classNames(sty.img__mgQa, {
-                    [sty.imgglobal_theme_classic__mgQaENktM]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                  displayHeight={"338px"}
-                  displayMaxHeight={"none"}
-                  displayMaxWidth={"none"}
-                  displayMinHeight={"0"}
-                  displayMinWidth={"0"}
-                  displayWidth={"auto"}
-                  loading={"lazy"}
-                  src={{
-                    src: "/plasmic/disuko_website_retro_version/images/image84.png",
-                    fullWidth: 553,
-                    fullHeight: 550,
-                    aspectRatio: undefined
-                  }}
-                />
-              </div>
-            </div>
-            <div className={classNames(projectcss.all, sty.column__lea2)}>
-              <div
-                data-plasmic-name={"imageWindow10"}
-                data-plasmic-override={overrides.imageWindow10}
-                className={classNames(projectcss.all, sty.imageWindow10, {
-                  [sty.imageWindow10global_theme_classic]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
-                })}
-              >
-                <PlasmicImg__
-                  alt={""}
-                  className={classNames(sty.img__zm2Bx, {
-                    [sty.imgglobal_theme_classic__zm2BXeNktM]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                  displayHeight={"338px"}
-                  displayMaxHeight={"none"}
-                  displayMaxWidth={"none"}
-                  displayMinHeight={"0"}
-                  displayMinWidth={"0"}
-                  displayWidth={"auto"}
-                  loading={"lazy"}
-                  src={{
-                    src: "/plasmic/disuko_website_retro_version/images/image87.png",
-                    fullWidth: 1919,
-                    fullHeight: 1044,
-                    aspectRatio: undefined
-                  }}
-                />
-              </div>
-            </div>
-          </Stack__>
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__i4MX,
-              {
-                [sty.textglobal_theme_classic__i4MXeNktM]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              }
-            )}
-          >
-            <React.Fragment>
-              <React.Fragment>{'"Shiku" - '}</React.Fragment>
-              {
-                <PlasmicLink__
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.a,
-                    projectcss.__wab_text,
-                    projectcss.plasmic_default__inline,
-                    sty.link__dG53Z
-                  )}
-                  component={Link}
-                  href={"https://redpandastudios.net"}
-                  platform={"nextjs"}
-                >
-                  {"PANDAMONIUM: Diko Dating Sim (Red Panda Studios)"}
-                </PlasmicLink__>
-              }
-              <React.Fragment>{""}</React.Fragment>
-            </React.Fragment>
-          </div>
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.columns___5DrSp)}
-          >
-            <div className={classNames(projectcss.all, sty.column__sAdlN)}>
-              <div
-                data-plasmic-name={"imageWindow6"}
-                data-plasmic-override={overrides.imageWindow6}
-                className={classNames(projectcss.all, sty.imageWindow6, {
-                  [sty.imageWindow6global_theme_classic]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
-                })}
-              >
-                <PlasmicImg__
-                  alt={""}
-                  className={classNames(sty.img__gDmct, {
-                    [sty.imgglobal_theme_classic__gDmcteNktM]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                  displayHeight={"338px"}
-                  displayMaxHeight={"none"}
-                  displayMaxWidth={"none"}
-                  displayMinHeight={"0"}
-                  displayMinWidth={"0"}
-                  displayWidth={"auto"}
-                  loading={"lazy"}
-                  src={{
-                    src: "/plasmic/disuko_website_retro_version/images/image82.png",
-                    fullWidth: 512,
-                    fullHeight: 512,
-                    aspectRatio: undefined
-                  }}
-                />
-              </div>
-            </div>
-            <div className={classNames(projectcss.all, sty.column__lsydF)}>
-              <div
-                data-plasmic-name={"imageWindow7"}
-                data-plasmic-override={overrides.imageWindow7}
-                className={classNames(projectcss.all, sty.imageWindow7, {
-                  [sty.imageWindow7global_theme_classic]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
-                })}
-              >
-                <PlasmicImg__
-                  alt={""}
-                  className={classNames(sty.img__m7DyF, {
-                    [sty.imgglobal_theme_classic__m7DyFeNktM]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                  displayHeight={"338px"}
-                  displayMaxHeight={"none"}
-                  displayMaxWidth={"none"}
-                  displayMinHeight={"0"}
-                  displayMinWidth={"0"}
-                  displayWidth={"auto"}
-                  loading={"lazy"}
-                  src={{
-                    src: "/plasmic/disuko_website_retro_version/images/image83.png",
-                    fullWidth: 553,
-                    fullHeight: 550,
-                    aspectRatio: undefined
-                  }}
-                />
-              </div>
-            </div>
-            <div className={classNames(projectcss.all, sty.column___14QkM)}>
-              <div
-                data-plasmic-name={"imageWindow11"}
-                data-plasmic-override={overrides.imageWindow11}
-                className={classNames(projectcss.all, sty.imageWindow11, {
-                  [sty.imageWindow11global_theme_classic]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
-                })}
-              >
-                <PlasmicImg__
-                  alt={""}
-                  className={classNames(sty.img___1Nn48, {
-                    [sty.imgglobal_theme_classic___1Nn48ENktM]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                  displayHeight={"338px"}
-                  displayMaxHeight={"none"}
-                  displayMaxWidth={"none"}
-                  displayMinHeight={"0"}
-                  displayMinWidth={"0"}
-                  displayWidth={"auto"}
-                  loading={"lazy"}
-                  src={{
-                    src: "/plasmic/disuko_website_retro_version/images/image88.png",
-                    fullWidth: 1919,
-                    fullHeight: 1046,
-                    aspectRatio: undefined
-                  }}
-                />
-              </div>
-            </div>
-          </Stack__>
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text___9W6WW,
-              {
-                [sty.textglobal_theme_classic___9W6WWeNktM]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              }
-            )}
-          >
-            <React.Fragment>
+                }
+              )}
+            >
               <React.Fragment>
-                {'"Customizable Racoon Player" - '}
+                <React.Fragment>{'"N3ko Band" - '}</React.Fragment>
+                {
+                  <PlasmicLink__
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.a,
+                      projectcss.a__x4VgG,
+                      projectcss.__wab_text,
+                      projectcss.plasmic_default__inline,
+                      sty.link__tVOiA
+                    )}
+                    component={Link}
+                    href={"https://on3ko.lol"}
+                    legacyBehavior={false}
+                    platform={"nextjs"}
+                  >
+                    {"On3ko Webcomic"}
+                  </PlasmicLink__>
+                }
+                <React.Fragment>{""}</React.Fragment>
               </React.Fragment>
-              {
-                <PlasmicLink__
+            </div>
+            <div className={classNames(projectcss.all, sty.freeBox__wQfv)}>
+              <div className={classNames(projectcss.all, sty.freeBox___4SfFa)}>
+                <div
+                  data-plasmic-name={"imageWindow16"}
+                  data-plasmic-override={overrides.imageWindow16}
+                  className={classNames(projectcss.all, sty.imageWindow16, {
+                    [sty.imageWindow16global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__h9Ao, {
+                      [sty.imgglobal_theme_classic__h9AoENktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                    displayHeight={"338px"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"none"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"100%"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image68.gif",
+                      fullWidth: 256,
+                      fullHeight: 256,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+                <div
                   className={classNames(
                     projectcss.all,
-                    projectcss.a,
                     projectcss.__wab_text,
-                    projectcss.plasmic_default__inline,
-                    sty.link__pFqzV
+                    sty.text__kTz9,
+                    {
+                      [sty.textglobal_theme_classic__kTz9ENktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    }
                   )}
-                  component={Link}
-                  href={"https://redpandastudios.net"}
-                  platform={"nextjs"}
                 >
-                  {"PANDAMONIUM: Diko Dating Sim (Red Panda Studios)"}
-                </PlasmicLink__>
-              }
-              <React.Fragment>{""}</React.Fragment>
-            </React.Fragment>
-          </div>
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.columns___7Tm1J)}
-          >
-            <div className={classNames(projectcss.all, sty.column__uzjPo)}>
-              <div
-                data-plasmic-name={"imageWindow8"}
-                data-plasmic-override={overrides.imageWindow8}
-                className={classNames(projectcss.all, sty.imageWindow8, {
-                  [sty.imageWindow8global_theme_classic]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
-                })}
-              >
-                <PlasmicImg__
-                  alt={""}
-                  className={classNames(sty.img__tuJzi, {
-                    [sty.imgglobal_theme_classic__tuJzieNktM]: hasVariant(
+                  {"On3ko"}
+                </div>
+              </div>
+              <div className={classNames(projectcss.all, sty.freeBox__bqwdv)}>
+                <div
+                  data-plasmic-name={"imageWindow17"}
+                  data-plasmic-override={overrides.imageWindow17}
+                  className={classNames(projectcss.all, sty.imageWindow17, {
+                    [sty.imageWindow17global_theme_classic]: hasVariant(
                       globalVariants,
                       "theme",
                       "classic"
                     )
                   })}
-                  displayHeight={"338px"}
-                  displayMaxHeight={"none"}
-                  displayMaxWidth={"none"}
-                  displayMinHeight={"0"}
-                  displayMinWidth={"0"}
-                  displayWidth={"100%"}
-                  loading={"lazy"}
-                  src={{
-                    src: "/plasmic/disuko_website_retro_version/images/image85.png",
-                    fullWidth: 512,
-                    fullHeight: 512,
-                    aspectRatio: undefined
-                  }}
-                />
-              </div>
-            </div>
-            <div className={classNames(projectcss.all, sty.column__hDsFp)}>
-              <div
-                data-plasmic-name={"imageWindow9"}
-                data-plasmic-override={overrides.imageWindow9}
-                className={classNames(projectcss.all, sty.imageWindow9, {
-                  [sty.imageWindow9global_theme_classic]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
-                })}
-              >
-                <PlasmicImg__
-                  alt={""}
-                  className={classNames(sty.img__exKe8, {
-                    [sty.imgglobal_theme_classic__exKe8ENktM]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                  displayHeight={"338px"}
-                  displayMaxHeight={"none"}
-                  displayMaxWidth={"none"}
-                  displayMinHeight={"0"}
-                  displayMinWidth={"0"}
-                  displayWidth={"100%"}
-                  loading={"lazy"}
-                  src={{
-                    src: "/plasmic/disuko_website_retro_version/images/image89.png",
-                    fullWidth: 512,
-                    fullHeight: 512,
-                    aspectRatio: undefined
-                  }}
-                />
-              </div>
-            </div>
-            <div className={classNames(projectcss.all, sty.column___1LcGv)}>
-              <div
-                data-plasmic-name={"imageWindow12"}
-                data-plasmic-override={overrides.imageWindow12}
-                className={classNames(projectcss.all, sty.imageWindow12, {
-                  [sty.imageWindow12global_theme_classic]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
-                })}
-              >
-                <PlasmicImg__
-                  alt={""}
-                  className={classNames(sty.img__t9VfW, {
-                    [sty.imgglobal_theme_classic__t9VfWeNktM]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                  displayHeight={"338px"}
-                  displayMaxHeight={"none"}
-                  displayMaxWidth={"none"}
-                  displayMinHeight={"0"}
-                  displayMinWidth={"0"}
-                  displayWidth={"100%"}
-                  loading={"lazy"}
-                  src={{
-                    src: "/plasmic/disuko_website_retro_version/images/image90.png",
-                    fullWidth: 512,
-                    fullHeight: 512,
-                    aspectRatio: undefined
-                  }}
-                />
-              </div>
-            </div>
-          </Stack__>
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__pggBm,
-              {
-                [sty.textglobal_theme_classic__pggBMeNktM]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              }
-            )}
-          >
-            {'"Robo-Dealer" - Poker Film Short Film Character'}
-          </div>
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.columns__iUCzZ)}
-          >
-            <div className={classNames(projectcss.all, sty.column__a5YjJ)}>
-              <div
-                data-plasmic-name={"imageWindow23"}
-                data-plasmic-override={overrides.imageWindow23}
-                className={classNames(projectcss.all, sty.imageWindow23, {
-                  [sty.imageWindow23global_theme_classic]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
-                })}
-              >
-                <Video
-                  autoPlay={true}
-                  className={classNames("__wab_instance", sty.htmlVideo__usWux)}
-                  controls={false}
-                  loop={true}
-                  muted={true}
-                  src={
-                    "https://cdn.redpandastudios.net/characters/robodealer/robodealer.mov"
-                  }
-                />
-              </div>
-            </div>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.column___7MpB)}
-            >
-              <div
-                data-plasmic-name={"imageWindow34"}
-                data-plasmic-override={overrides.imageWindow34}
-                className={classNames(projectcss.all, sty.imageWindow34, {
-                  [sty.imageWindow34global_theme_classic]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
-                })}
-              >
-                <Video
-                  autoPlay={true}
-                  className={classNames("__wab_instance", sty.htmlVideo__g2Cr0)}
-                  controls={false}
-                  loop={true}
-                  muted={true}
-                  src={
-                    "https://cdn.redpandastudios.net/characters/robodealer/robodeals.mp4"
-                  }
-                />
-              </div>
-              <div
-                data-plasmic-name={"imageWindow35"}
-                data-plasmic-override={overrides.imageWindow35}
-                className={classNames(projectcss.all, sty.imageWindow35, {
-                  [sty.imageWindow35global_theme_classic]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
-                })}
-              >
-                <Video
-                  autoPlay={true}
-                  className={classNames(
-                    "__wab_instance",
-                    sty.htmlVideo___3AcPj
-                  )}
-                  controls={false}
-                  loop={true}
-                  muted={true}
-                  src={
-                    "https://cdn.redpandastudios.net/characters/robodealer/RoboSpill.mp4"
-                  }
-                />
-              </div>
-            </Stack__>
-          </Stack__>
-        </Stack__>
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__yjyJc)}
-        >
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__cZqKj,
-              {
-                [sty.textglobal_theme_classic__cZqKJeNktM]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              }
-            )}
-          >
-            {"Game Environment/Props"}
-          </div>
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__lBJn,
-              {
-                [sty.textglobal_theme_classic__lBJNeNktM]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              }
-            )}
-          >
-            <React.Fragment>
-              <React.Fragment>{'"Le Chunk E Chonks Office" - '}</React.Fragment>
-              {
-                <PlasmicLink__
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__kJrGa, {
+                      [sty.imgglobal_theme_classic__kJrGaeNktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                    displayHeight={"338px"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"none"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"100%"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/emon3Ko0031Png.png",
+                      fullWidth: 256,
+                      fullHeight: 256,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+                <div
                   className={classNames(
                     projectcss.all,
-                    projectcss.a,
                     projectcss.__wab_text,
-                    projectcss.plasmic_default__inline,
-                    sty.link__bm2Iq
+                    sty.text__lgpwa,
+                    {
+                      [sty.textglobal_theme_classic__lgpwAeNktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    }
                   )}
-                  component={Link}
-                  href={"https://redpandastudios.net"}
-                  platform={"nextjs"}
                 >
-                  {"PANDAMONIUM: Diko Dating Sim (Red Panda Studios)"}
-                </PlasmicLink__>
-              }
-              <React.Fragment>{""}</React.Fragment>
-            </React.Fragment>
-          </div>
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.columns__bjVlK)}
-          >
-            <div className={classNames(projectcss.all, sty.column__wsWJk)}>
-              <div
-                data-plasmic-name={"imageWindow13"}
-                data-plasmic-override={overrides.imageWindow13}
-                className={classNames(projectcss.all, sty.imageWindow13, {
-                  [sty.imageWindow13global_theme_classic]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
-                })}
-              >
-                <PlasmicImg__
-                  alt={""}
-                  className={classNames(sty.img__ysJDv, {
-                    [sty.imgglobal_theme_classic__ysJDveNktM]: hasVariant(
+                  {"Emon3ko"}
+                </div>
+              </div>
+              <div className={classNames(projectcss.all, sty.freeBox__i8Co4)}>
+                <div
+                  data-plasmic-name={"imageWindow18"}
+                  data-plasmic-override={overrides.imageWindow18}
+                  className={classNames(projectcss.all, sty.imageWindow18, {
+                    [sty.imageWindow18global_theme_classic]: hasVariant(
                       globalVariants,
                       "theme",
                       "classic"
                     )
                   })}
-                  displayHeight={"auto"}
-                  displayMaxHeight={"none"}
-                  displayMaxWidth={"none"}
-                  displayMinHeight={"0"}
-                  displayMinWidth={"0"}
-                  displayWidth={"100%"}
-                  loading={"lazy"}
-                  src={{
-                    src: "/plasmic/disuko_website_retro_version/images/ezgifComOptimizeGif.gif",
-                    fullWidth: 1920,
-                    fullHeight: 1080,
-                    aspectRatio: undefined
-                  }}
-                />
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img___42Pff, {
+                      [sty.imgglobal_theme_classic___42PfFeNktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                    displayHeight={"338px"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"none"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"100%"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image95.png",
+                      fullWidth: 1024,
+                      fullHeight: 1024,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__iKjaE,
+                    {
+                      [sty.textglobal_theme_classic__iKjaEeNktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    }
+                  )}
+                >
+                  {"Edgen3ko"}
+                </div>
+              </div>
+              <div className={classNames(projectcss.all, sty.freeBox___8PwuM)}>
+                <div
+                  data-plasmic-name={"imageWindow22"}
+                  data-plasmic-override={overrides.imageWindow22}
+                  className={classNames(projectcss.all, sty.imageWindow22, {
+                    [sty.imageWindow22global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__gEqZm, {
+                      [sty.imgglobal_theme_classic__gEqZmeNktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                    displayHeight={"338px"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"none"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"100%"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image97.png",
+                      fullWidth: 512,
+                      fullHeight: 512,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__ahjsw,
+                    {
+                      [sty.textglobal_theme_classic__ahjsweNktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    }
+                  )}
+                >
+                  {"Shyn3ko"}
+                </div>
               </div>
             </div>
-          </Stack__>
-        </Stack__>
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__fSznd)}
-        >
-          <div
-            data-plasmic-name={"realisticProductRenders"}
-            data-plasmic-override={overrides.realisticProductRenders}
-            className={classNames(projectcss.all, sty.realisticProductRenders)}
-          >
             <div
               className={classNames(
                 projectcss.all,
                 projectcss.__wab_text,
-                sty.text___6Ws2X,
+                sty.text___2Sk7M,
                 {
-                  [sty.textglobal_theme_classic___6Ws2XeNktM]: hasVariant(
+                  [sty.textglobal_theme_classic___2Sk7MeNktM]: hasVariant(
                     globalVariants,
                     "theme",
                     "classic"
@@ -1399,15 +796,149 @@ function PlasmicPortfolio3DDesign__RenderFunc(props: {
                 }
               )}
             >
-              {"Realistic Product Renders"}
+              <React.Fragment>
+                <React.Fragment>{'"Diko" - '}</React.Fragment>
+                {
+                  <PlasmicLink__
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.a,
+                      projectcss.a__x4VgG,
+                      projectcss.__wab_text,
+                      projectcss.plasmic_default__inline,
+                      sty.link__kr7C6
+                    )}
+                    component={Link}
+                    href={"https://redpandastudios.net"}
+                    legacyBehavior={false}
+                    platform={"nextjs"}
+                  >
+                    {"PANDAMONIUM: Dimensional Dating Sim (Red Panda Studios)"}
+                  </PlasmicLink__>
+                }
+                <React.Fragment>{""}</React.Fragment>
+              </React.Fragment>
+            </div>
+            <div className={classNames(projectcss.all, sty.columns__dav6A)}>
+              <div className={classNames(projectcss.all, sty.column__oii6R)}>
+                <div
+                  data-plasmic-name={"imageWindow4"}
+                  data-plasmic-override={overrides.imageWindow4}
+                  className={classNames(projectcss.all, sty.imageWindow4, {
+                    [sty.imageWindow4global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__hdYm, {
+                      [sty.imgglobal_theme_classic__hdYMeNktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                    displayHeight={"338px"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"none"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image79.png",
+                      fullWidth: 512,
+                      fullHeight: 512,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+              <div className={classNames(projectcss.all, sty.column___4KmMg)}>
+                <div
+                  data-plasmic-name={"imageWindow5"}
+                  data-plasmic-override={overrides.imageWindow5}
+                  className={classNames(projectcss.all, sty.imageWindow5, {
+                    [sty.imageWindow5global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__mgQa, {
+                      [sty.imgglobal_theme_classic__mgQaENktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                    displayHeight={"338px"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"none"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image84.png",
+                      fullWidth: 553,
+                      fullHeight: 550,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+              <div className={classNames(projectcss.all, sty.column__lea2)}>
+                <div
+                  data-plasmic-name={"imageWindow10"}
+                  data-plasmic-override={overrides.imageWindow10}
+                  className={classNames(projectcss.all, sty.imageWindow10, {
+                    [sty.imageWindow10global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__zm2Bx, {
+                      [sty.imgglobal_theme_classic__zm2BXeNktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                    displayHeight={"338px"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"none"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/dikoIceCreamFlavorGif.gif",
+                      fullWidth: 854,
+                      fullHeight: 480,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
             </div>
             <div
               className={classNames(
                 projectcss.all,
                 projectcss.__wab_text,
-                sty.text___0Jbq9,
+                sty.text__i4MX,
                 {
-                  [sty.textglobal_theme_classic___0Jbq9ENktM]: hasVariant(
+                  [sty.textglobal_theme_classic__i4MXeNktM]: hasVariant(
                     globalVariants,
                     "theme",
                     "classic"
@@ -1415,351 +946,149 @@ function PlasmicPortfolio3DDesign__RenderFunc(props: {
                 }
               )}
             >
-              {
-                '"Bobasong V2" - Promotional Material for my Create With Nabalis 2025 Design Balisong Competition Submission\nGot second place out of >100 entries!'
-              }
-            </div>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.columns__fEyYv)}
-            >
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.column__qW6N9)}
-              >
-                <div
-                  data-plasmic-name={"imageWindow25"}
-                  data-plasmic-override={overrides.imageWindow25}
-                  className={classNames(projectcss.all, sty.imageWindow25, {
-                    [sty.imageWindow25global_theme_classic]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                >
-                  <Video
-                    autoPlay={true}
-                    className={classNames(
-                      "__wab_instance",
-                      sty.htmlVideo__wYeVn
-                    )}
-                    controls={false}
-                    loop={true}
-                    muted={true}
-                    playsInline={true}
-                    src={"https://cdn.redpandastudios.net/bobasong/slide1.mp4"}
-                  />
-                </div>
-                <div
-                  data-plasmic-name={"imageWindow26"}
-                  data-plasmic-override={overrides.imageWindow26}
-                  className={classNames(projectcss.all, sty.imageWindow26, {
-                    [sty.imageWindow26global_theme_classic]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                >
-                  <Video
-                    autoPlay={true}
-                    className={classNames(
-                      "__wab_instance",
-                      sty.htmlVideo___4Hgws
-                    )}
-                    controls={false}
-                    loop={true}
-                    muted={true}
-                    playsInline={true}
-                    src={"https://cdn.redpandastudios.net/bobasong/slide3.mp4"}
-                  />
-                </div>
-              </Stack__>
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.column__oxtQm)}
-              >
-                <div
-                  data-plasmic-name={"imageWindow24"}
-                  data-plasmic-override={overrides.imageWindow24}
-                  className={classNames(projectcss.all, sty.imageWindow24, {
-                    [sty.imageWindow24global_theme_classic]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                >
-                  <Video
-                    autoPlay={true}
-                    className={classNames(
-                      "__wab_instance",
-                      sty.htmlVideo__z7QPs
-                    )}
-                    controls={false}
-                    loop={true}
-                    muted={true}
-                    playsInline={true}
-                    src={"https://cdn.redpandastudios.net/bobasong/slide2.mp4"}
-                  />
-                </div>
-                <div
-                  data-plasmic-name={"imageWindow27"}
-                  data-plasmic-override={overrides.imageWindow27}
-                  className={classNames(projectcss.all, sty.imageWindow27, {
-                    [sty.imageWindow27global_theme_classic]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                >
-                  <Video
-                    autoPlay={true}
-                    className={classNames(
-                      "__wab_instance",
-                      sty.htmlVideo__my1Yh
-                    )}
-                    controls={false}
-                    loop={true}
-                    muted={true}
-                    playsInline={true}
-                    src={"https://cdn.redpandastudios.net/bobasong/slide4.mp4"}
-                  />
-                </div>
-              </Stack__>
-            </Stack__>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.columns__dnvy7)}
-            >
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.column__zkyA1)}
-              >
-                <div
-                  data-plasmic-name={"imageWindow28"}
-                  data-plasmic-override={overrides.imageWindow28}
-                  className={classNames(projectcss.all, sty.imageWindow28, {
-                    [sty.imageWindow28global_theme_classic]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                >
-                  <PlasmicImg__
-                    alt={""}
-                    className={classNames(sty.img__xMaky)}
-                    displayHeight={"auto"}
-                    displayMaxHeight={"none"}
-                    displayMaxWidth={"100%"}
-                    displayMinHeight={"0"}
-                    displayMinWidth={"0"}
-                    displayWidth={"auto"}
-                    loading={"lazy"}
-                    src={{
-                      src: "/plasmic/disuko_website_retro_version/images/image98.png",
-                      fullWidth: 2048,
-                      fullHeight: 2048,
-                      aspectRatio: undefined
-                    }}
-                  />
-                </div>
-                <div
-                  data-plasmic-name={"imageWindow29"}
-                  data-plasmic-override={overrides.imageWindow29}
-                  className={classNames(projectcss.all, sty.imageWindow29, {
-                    [sty.imageWindow29global_theme_classic]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                >
-                  <PlasmicImg__
-                    alt={""}
-                    className={classNames(sty.img__sScXl)}
-                    displayHeight={"auto"}
-                    displayMaxHeight={"none"}
-                    displayMaxWidth={"100%"}
-                    displayMinHeight={"0"}
-                    displayMinWidth={"0"}
-                    displayWidth={"auto"}
-                    loading={"lazy"}
-                    src={{
-                      src: "/plasmic/disuko_website_retro_version/images/strawberryPng.png",
-                      fullWidth: 2048,
-                      fullHeight: 2048,
-                      aspectRatio: undefined
-                    }}
-                  />
-                </div>
-              </Stack__>
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.column___46WeS)}
-              >
-                <div
-                  data-plasmic-name={"imageWindow30"}
-                  data-plasmic-override={overrides.imageWindow30}
-                  className={classNames(projectcss.all, sty.imageWindow30, {
-                    [sty.imageWindow30global_theme_classic]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                >
-                  <PlasmicImg__
-                    alt={""}
-                    className={classNames(sty.img__uaP)}
-                    displayHeight={"auto"}
-                    displayMaxHeight={"none"}
-                    displayMaxWidth={"100%"}
-                    displayMinHeight={"0"}
-                    displayMinWidth={"0"}
-                    displayWidth={"auto"}
-                    loading={"lazy"}
-                    src={{
-                      src: "/plasmic/disuko_website_retro_version/images/cottonCandyPng.png",
-                      fullWidth: 2048,
-                      fullHeight: 2048,
-                      aspectRatio: undefined
-                    }}
-                  />
-                </div>
-                <div
-                  data-plasmic-name={"imageWindow32"}
-                  data-plasmic-override={overrides.imageWindow32}
-                  className={classNames(projectcss.all, sty.imageWindow32, {
-                    [sty.imageWindow32global_theme_classic]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                >
-                  <PlasmicImg__
-                    alt={""}
-                    className={classNames(sty.img__tchI)}
-                    displayHeight={"auto"}
-                    displayMaxHeight={"none"}
-                    displayMaxWidth={"100%"}
-                    displayMinHeight={"0"}
-                    displayMinWidth={"0"}
-                    displayWidth={"auto"}
-                    loading={"lazy"}
-                    src={{
-                      src: "/plasmic/disuko_website_retro_version/images/sunsetPng.png",
-                      fullWidth: 2048,
-                      fullHeight: 2048,
-                      aspectRatio: undefined
-                    }}
-                  />
-                </div>
-              </Stack__>
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.column__eqAvS)}
-              >
-                <div
-                  data-plasmic-name={"imageWindow31"}
-                  data-plasmic-override={overrides.imageWindow31}
-                  className={classNames(projectcss.all, sty.imageWindow31, {
-                    [sty.imageWindow31global_theme_classic]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                >
-                  <PlasmicImg__
-                    alt={""}
-                    className={classNames(sty.img__cZfYd)}
-                    displayHeight={"auto"}
-                    displayMaxHeight={"none"}
-                    displayMaxWidth={"100%"}
-                    displayMinHeight={"0"}
-                    displayMinWidth={"0"}
-                    displayWidth={"auto"}
-                    loading={"lazy"}
-                    src={{
-                      src: "/plasmic/disuko_website_retro_version/images/matchaPng.png",
-                      fullWidth: 2048,
-                      fullHeight: 2048,
-                      aspectRatio: undefined
-                    }}
-                  />
-                </div>
-                <div
-                  data-plasmic-name={"imageWindow33"}
-                  data-plasmic-override={overrides.imageWindow33}
-                  className={classNames(projectcss.all, sty.imageWindow33, {
-                    [sty.imageWindow33global_theme_classic]: hasVariant(
-                      globalVariants,
-                      "theme",
-                      "classic"
-                    )
-                  })}
-                >
-                  <PlasmicImg__
-                    alt={""}
-                    className={classNames(sty.img___1H5LY)}
-                    displayHeight={"auto"}
-                    displayMaxHeight={"none"}
-                    displayMaxWidth={"100%"}
-                    displayMinHeight={"0"}
-                    displayMinWidth={"0"}
-                    displayWidth={"auto"}
-                    loading={"lazy"}
-                    src={{
-                      src: "/plasmic/disuko_website_retro_version/images/taroPng.png",
-                      fullWidth: 2048,
-                      fullHeight: 2048,
-                      aspectRatio: undefined
-                    }}
-                  />
-                </div>
-              </Stack__>
-            </Stack__>
-          </div>
-          <div
-            data-plasmic-name={"stylizedProductRenders"}
-            data-plasmic-override={overrides.stylizedProductRenders}
-            className={classNames(projectcss.all, sty.stylizedProductRenders)}
-          >
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__mPs1J,
+              <React.Fragment>
+                <React.Fragment>{'"Shiku" - '}</React.Fragment>
                 {
-                  [sty.textglobal_theme_classic__mPs1JeNktM]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
+                  <PlasmicLink__
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.a,
+                      projectcss.a__x4VgG,
+                      projectcss.__wab_text,
+                      projectcss.plasmic_default__inline,
+                      sty.link__dG53Z
+                    )}
+                    component={Link}
+                    href={"https://redpandastudios.net"}
+                    legacyBehavior={false}
+                    platform={"nextjs"}
+                  >
+                    {"PANDAMONIUM: Dimensional Dating Sim (Red Panda Studios)"}
+                  </PlasmicLink__>
                 }
-              )}
-            >
-              {"Stylized Product Renders"}
+                <React.Fragment>{""}</React.Fragment>
+              </React.Fragment>
+            </div>
+            <div className={classNames(projectcss.all, sty.columns___5DrSp)}>
+              <div className={classNames(projectcss.all, sty.column__sAdlN)}>
+                <div
+                  data-plasmic-name={"imageWindow6"}
+                  data-plasmic-override={overrides.imageWindow6}
+                  className={classNames(projectcss.all, sty.imageWindow6, {
+                    [sty.imageWindow6global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__gDmct, {
+                      [sty.imgglobal_theme_classic__gDmcteNktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                    displayHeight={"338px"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"none"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image82.png",
+                      fullWidth: 512,
+                      fullHeight: 512,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+              <div className={classNames(projectcss.all, sty.column__lsydF)}>
+                <div
+                  data-plasmic-name={"imageWindow7"}
+                  data-plasmic-override={overrides.imageWindow7}
+                  className={classNames(projectcss.all, sty.imageWindow7, {
+                    [sty.imageWindow7global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__m7DyF, {
+                      [sty.imgglobal_theme_classic__m7DyFeNktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                    displayHeight={"338px"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"none"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image83.png",
+                      fullWidth: 553,
+                      fullHeight: 550,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+              <div className={classNames(projectcss.all, sty.column___14QkM)}>
+                <div
+                  data-plasmic-name={"imageWindow11"}
+                  data-plasmic-override={overrides.imageWindow11}
+                  className={classNames(projectcss.all, sty.imageWindow11, {
+                    [sty.imageWindow11global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img___1Nn48, {
+                      [sty.imgglobal_theme_classic___1Nn48ENktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                    displayHeight={"338px"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"none"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/shikuCowboyGif.gif",
+                      fullWidth: 854,
+                      fullHeight: 480,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
             </div>
             <div
               className={classNames(
                 projectcss.all,
                 projectcss.__wab_text,
-                sty.text__vt2Fw,
+                sty.text___9W6WW,
                 {
-                  [sty.textglobal_theme_classic__vt2FweNktM]: hasVariant(
+                  [sty.textglobal_theme_classic___9W6WWeNktM]: hasVariant(
                     globalVariants,
                     "theme",
                     "classic"
@@ -1769,55 +1098,1750 @@ function PlasmicPortfolio3DDesign__RenderFunc(props: {
             >
               <React.Fragment>
                 <React.Fragment>
-                  {'"Balisong Oil Designs" - Promotional Material for'}
+                  {'"Customizable Racoon Player" - '}
                 </React.Fragment>
                 {
                   <PlasmicLink__
                     className={classNames(
                       projectcss.all,
                       projectcss.a,
+                      projectcss.a__x4VgG,
                       projectcss.__wab_text,
                       projectcss.plasmic_default__inline,
-                      sty.link__i8Cm4
+                      sty.link__pFqzV
                     )}
                     component={Link}
-                    href={"https://carbonhoneyoil.com"}
+                    href={"https://redpandastudios.net"}
+                    legacyBehavior={false}
                     platform={"nextjs"}
                   >
-                    {" Carbon Honey"}
+                    {"PANDAMONIUM: Dimensional Dating Sim (Red Panda Studios)"}
                   </PlasmicLink__>
                 }
-                <React.Fragment>{" and "}</React.Fragment>
+                <React.Fragment>{""}</React.Fragment>
+              </React.Fragment>
+            </div>
+            <div className={classNames(projectcss.all, sty.columns___7Tm1J)}>
+              <div className={classNames(projectcss.all, sty.column__uzjPo)}>
+                <div
+                  data-plasmic-name={"imageWindow8"}
+                  data-plasmic-override={overrides.imageWindow8}
+                  className={classNames(projectcss.all, sty.imageWindow8, {
+                    [sty.imageWindow8global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__tuJzi, {
+                      [sty.imgglobal_theme_classic__tuJzieNktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                    displayHeight={"338px"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"none"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"100%"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image85.png",
+                      fullWidth: 512,
+                      fullHeight: 512,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+              <div className={classNames(projectcss.all, sty.column__hDsFp)}>
+                <div
+                  data-plasmic-name={"imageWindow9"}
+                  data-plasmic-override={overrides.imageWindow9}
+                  className={classNames(projectcss.all, sty.imageWindow9, {
+                    [sty.imageWindow9global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__exKe8, {
+                      [sty.imgglobal_theme_classic__exKe8ENktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                    displayHeight={"338px"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"none"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"100%"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image89.png",
+                      fullWidth: 512,
+                      fullHeight: 512,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+              <div className={classNames(projectcss.all, sty.column___1LcGv)}>
+                <div
+                  data-plasmic-name={"imageWindow12"}
+                  data-plasmic-override={overrides.imageWindow12}
+                  className={classNames(projectcss.all, sty.imageWindow12, {
+                    [sty.imageWindow12global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__t9VfW, {
+                      [sty.imgglobal_theme_classic__t9VfWeNktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                    displayHeight={"338px"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"none"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"100%"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image90.png",
+                      fullWidth: 512,
+                      fullHeight: 512,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__pggBm,
+                {
+                  [sty.textglobal_theme_classic__pggBMeNktM]: hasVariant(
+                    globalVariants,
+                    "theme",
+                    "classic"
+                  )
+                }
+              )}
+            >
+              {'"Robo-Dealer" - Poker Film Short Film Character'}
+            </div>
+            <div className={classNames(projectcss.all, sty.columns__iUCzZ)}>
+              <div className={classNames(projectcss.all, sty.column__a5YjJ)}>
+                <div
+                  data-plasmic-name={"imageWindow23"}
+                  data-plasmic-override={overrides.imageWindow23}
+                  className={classNames(projectcss.all, sty.imageWindow23, {
+                    [sty.imageWindow23global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <Video
+                    autoPlay={true}
+                    className={classNames(
+                      "__wab_instance",
+                      sty.htmlVideo__usWux
+                    )}
+                    controls={true}
+                    loop={true}
+                    muted={true}
+                    src={
+                      "https://cdn.suko.pet/characters/robodealer/robodealer.mov"
+                    }
+                  />
+                </div>
+              </div>
+              <div className={classNames(projectcss.all, sty.column___7MpB)}>
+                <div
+                  data-plasmic-name={"imageWindow34"}
+                  data-plasmic-override={overrides.imageWindow34}
+                  className={classNames(projectcss.all, sty.imageWindow34, {
+                    [sty.imageWindow34global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <Video
+                    autoPlay={true}
+                    className={classNames(
+                      "__wab_instance",
+                      sty.htmlVideo__g2Cr0
+                    )}
+                    controls={true}
+                    loop={true}
+                    muted={true}
+                    src={
+                      "https://cdn.suko.pet/characters/robodealer/robodeals.mp4"
+                    }
+                  />
+                </div>
+                <div
+                  data-plasmic-name={"imageWindow35"}
+                  data-plasmic-override={overrides.imageWindow35}
+                  className={classNames(projectcss.all, sty.imageWindow35, {
+                    [sty.imageWindow35global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <Video
+                    autoPlay={true}
+                    className={classNames(
+                      "__wab_instance",
+                      sty.htmlVideo___3AcPj
+                    )}
+                    controls={true}
+                    loop={true}
+                    muted={true}
+                    src={
+                      "https://cdn.suko.pet/characters/robodealer/RoboSpill.mp4"
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            data-plasmic-name={"environment"}
+            data-plasmic-override={overrides.environment}
+            className={classNames(projectcss.all, sty.environment)}
+          >
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__cZqKj,
+                {
+                  [sty.textglobal_theme_classic__cZqKJeNktM]: hasVariant(
+                    globalVariants,
+                    "theme",
+                    "classic"
+                  )
+                }
+              )}
+            >
+              {"Game Environment/Props"}
+            </div>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__lBJn,
+                {
+                  [sty.textglobal_theme_classic__lBJNeNktM]: hasVariant(
+                    globalVariants,
+                    "theme",
+                    "classic"
+                  )
+                }
+              )}
+            >
+              <React.Fragment>
+                <React.Fragment>
+                  {'"Interdimensional Ice Cream Parlor" - '}
+                </React.Fragment>
                 {
                   <PlasmicLink__
                     className={classNames(
                       projectcss.all,
                       projectcss.a,
+                      projectcss.a__x4VgG,
                       projectcss.__wab_text,
                       projectcss.plasmic_default__inline,
-                      sty.link__l58Xb
+                      sty.link__bm2Iq
                     )}
                     component={Link}
-                    href={"https://www.instagram.com/canto.group/"}
+                    href={"https://redpandastudios.net"}
+                    legacyBehavior={false}
                     platform={"nextjs"}
                   >
-                    {"Canto Group"}
+                    {"PANDAMONIUM: Dimensional Dating Sim (Red Panda Studios)"}
                   </PlasmicLink__>
                 }
-                <React.Fragment>{" Balisong Oil"}</React.Fragment>
+                <React.Fragment>{""}</React.Fragment>
               </React.Fragment>
             </div>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.columns__wiO8G)}
-            >
-              <div className={classNames(projectcss.all, sty.column__wht3I)}>
+            <div className={classNames(projectcss.all, sty.columns__bjVlK)}>
+              <div className={classNames(projectcss.all, sty.column__wsWJk)}>
                 <div
-                  data-plasmic-name={"imageWindow14"}
-                  data-plasmic-override={overrides.imageWindow14}
-                  className={classNames(projectcss.all, sty.imageWindow14, {
-                    [sty.imageWindow14global_theme_classic]: hasVariant(
+                  data-plasmic-name={"imageWindow13"}
+                  data-plasmic-override={overrides.imageWindow13}
+                  className={classNames(projectcss.all, sty.imageWindow13, {
+                    [sty.imageWindow13global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__ysJDv, {
+                      [sty.imgglobal_theme_classic__ysJDveNktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                    displayHeight={"auto"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"none"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"100%"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/iceCream1FixedPng.png",
+                      fullWidth: 1920,
+                      fullHeight: 1080,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+              <div className={classNames(projectcss.all, sty.column__aan7F)}>
+                <div
+                  data-plasmic-name={"imageWindow47"}
+                  data-plasmic-override={overrides.imageWindow47}
+                  className={classNames(projectcss.all, sty.imageWindow47, {
+                    [sty.imageWindow47global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__tpqZt, {
+                      [sty.imgglobal_theme_classic__tpqZteNktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                    displayHeight={"auto"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"none"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"100%"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/iceCream2FixedPng.png",
+                      fullWidth: 1920,
+                      fullHeight: 1080,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className={classNames(projectcss.all, sty.columns__rZd9E)}>
+              <div className={classNames(projectcss.all, sty.column__vvdgF)}>
+                <div
+                  data-plasmic-name={"imageWindow48"}
+                  data-plasmic-override={overrides.imageWindow48}
+                  className={classNames(projectcss.all, sty.imageWindow48, {
+                    [sty.imageWindow48global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__yMzzd, {
+                      [sty.imgglobal_theme_classic__yMzzDeNktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                    displayHeight={"auto"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"none"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"100%"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/exploreEnvironmentGif2.gif",
+                      fullWidth: 854,
+                      fullHeight: 480,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__jqPsC,
+                {
+                  [sty.textglobal_theme_classic__jqPsCeNktM]: hasVariant(
+                    globalVariants,
+                    "theme",
+                    "classic"
+                  )
+                }
+              )}
+            >
+              <React.Fragment>
+                <React.Fragment>{'"Intro Bathroom" - '}</React.Fragment>
+                {
+                  <PlasmicLink__
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.a,
+                      projectcss.a__x4VgG,
+                      projectcss.__wab_text,
+                      projectcss.plasmic_default__inline,
+                      sty.link__rGn9T
+                    )}
+                    component={Link}
+                    href={"https://redpandastudios.net"}
+                    legacyBehavior={false}
+                    platform={"nextjs"}
+                  >
+                    {"PANDAMONIUM: Dimensional Dating Sim (Red Panda Studios)"}
+                  </PlasmicLink__>
+                }
+                <React.Fragment>{""}</React.Fragment>
+              </React.Fragment>
+            </div>
+            <div className={classNames(projectcss.all, sty.columns__tHxwP)}>
+              <div className={classNames(projectcss.all, sty.column___886Lp)}>
+                <div
+                  data-plasmic-name={"imageWindow49"}
+                  data-plasmic-override={overrides.imageWindow49}
+                  className={classNames(projectcss.all, sty.imageWindow49, {
+                    [sty.imageWindow49global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img___1K4Lg, {
+                      [sty.imgglobal_theme_classic___1K4LgeNktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                    displayHeight={"auto"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"none"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"100%"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/bathroomGif.gif",
+                      fullWidth: 854,
+                      fullHeight: 480,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__agtNk,
+                {
+                  [sty.textglobal_theme_classic__agtNKeNktM]: hasVariant(
+                    globalVariants,
+                    "theme",
+                    "classic"
+                  )
+                }
+              )}
+            >
+              <React.Fragment>
+                <React.Fragment>
+                  {'"Le Chunk E Chonks Office" - '}
+                </React.Fragment>
+                {
+                  <PlasmicLink__
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.a,
+                      projectcss.a__x4VgG,
+                      projectcss.__wab_text,
+                      projectcss.plasmic_default__inline,
+                      sty.link__kCKoL
+                    )}
+                    component={Link}
+                    href={"https://redpandastudios.net"}
+                    legacyBehavior={false}
+                    platform={"nextjs"}
+                  >
+                    {"PANDAMONIUM: Diko Dating Sim (Red Panda Studios)"}
+                  </PlasmicLink__>
+                }
+                <React.Fragment>{""}</React.Fragment>
+              </React.Fragment>
+            </div>
+            <div className={classNames(projectcss.all, sty.columns__p5HIy)}>
+              <div className={classNames(projectcss.all, sty.column__afCoF)}>
+                <div
+                  data-plasmic-name={"imageWindow46"}
+                  data-plasmic-override={overrides.imageWindow46}
+                  className={classNames(projectcss.all, sty.imageWindow46, {
+                    [sty.imageWindow46global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__ce9O2, {
+                      [sty.imgglobal_theme_classic__ce9O2ENktM]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                    displayHeight={"auto"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"none"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"100%"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/ezgifComOptimizeGif.gif",
+                      fullWidth: 1920,
+                      fullHeight: 1080,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            data-plasmic-name={"productRenders"}
+            data-plasmic-override={overrides.productRenders}
+            className={classNames(projectcss.all, sty.productRenders)}
+          >
+            <div
+              data-plasmic-name={"realisticProductRenders"}
+              data-plasmic-override={overrides.realisticProductRenders}
+              className={classNames(
+                projectcss.all,
+                sty.realisticProductRenders
+              )}
+            >
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text___6Ws2X,
+                  {
+                    [sty.textglobal_theme_classic___6Ws2XeNktM]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  }
+                )}
+              >
+                {"Realistic Product Renders"}
+              </div>
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text___0Jbq9,
+                  {
+                    [sty.textglobal_theme_classic___0Jbq9ENktM]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  }
+                )}
+              >
+                {
+                  '"Bobasong V2" - Promotional Material for my Create With Nabalis 2025 Design Balisong Competition Submission\nGot second place out of >100 entries!'
+                }
+              </div>
+              <div className={classNames(projectcss.all, sty.columns__fEyYv)}>
+                <div className={classNames(projectcss.all, sty.column__qW6N9)}>
+                  <div
+                    data-plasmic-name={"imageWindow25"}
+                    data-plasmic-override={overrides.imageWindow25}
+                    className={classNames(projectcss.all, sty.imageWindow25, {
+                      [sty.imageWindow25global_theme_classic]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                  >
+                    <Video
+                      autoPlay={true}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.htmlVideo__wYeVn
+                      )}
+                      controls={false}
+                      loop={true}
+                      muted={true}
+                      playsInline={true}
+                      src={"https://cdn.suko.pet/bobasong/slide1.mp4"}
+                    />
+                  </div>
+                  <div
+                    data-plasmic-name={"imageWindow26"}
+                    data-plasmic-override={overrides.imageWindow26}
+                    className={classNames(projectcss.all, sty.imageWindow26, {
+                      [sty.imageWindow26global_theme_classic]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                  >
+                    <Video
+                      autoPlay={true}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.htmlVideo___4Hgws
+                      )}
+                      controls={false}
+                      loop={true}
+                      muted={true}
+                      playsInline={true}
+                      src={"https://cdn.suko.pet/bobasong/slide3.mp4"}
+                    />
+                  </div>
+                </div>
+                <div className={classNames(projectcss.all, sty.column__oxtQm)}>
+                  <div
+                    data-plasmic-name={"imageWindow24"}
+                    data-plasmic-override={overrides.imageWindow24}
+                    className={classNames(projectcss.all, sty.imageWindow24, {
+                      [sty.imageWindow24global_theme_classic]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                  >
+                    <Video
+                      autoPlay={true}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.htmlVideo__z7QPs
+                      )}
+                      controls={false}
+                      loop={true}
+                      muted={true}
+                      playsInline={true}
+                      src={"https://cdn.suko.pet/bobasong/slide2.mp4"}
+                    />
+                  </div>
+                  <div
+                    data-plasmic-name={"imageWindow27"}
+                    data-plasmic-override={overrides.imageWindow27}
+                    className={classNames(projectcss.all, sty.imageWindow27, {
+                      [sty.imageWindow27global_theme_classic]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                  >
+                    <Video
+                      autoPlay={true}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.htmlVideo__my1Yh
+                      )}
+                      controls={false}
+                      loop={true}
+                      muted={true}
+                      playsInline={true}
+                      src={"https://cdn.suko.pet/bobasong/slide4.mp4"}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className={classNames(projectcss.all, sty.columns__dnvy7)}>
+                <div className={classNames(projectcss.all, sty.column__zkyA1)}>
+                  <div
+                    data-plasmic-name={"imageWindow28"}
+                    data-plasmic-override={overrides.imageWindow28}
+                    className={classNames(projectcss.all, sty.imageWindow28, {
+                      [sty.imageWindow28global_theme_classic]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                  >
+                    <PlasmicImg__
+                      alt={""}
+                      className={classNames(sty.img__xMaky)}
+                      displayHeight={"auto"}
+                      displayMaxHeight={"none"}
+                      displayMaxWidth={"100%"}
+                      displayMinHeight={"0"}
+                      displayMinWidth={"0"}
+                      displayWidth={"auto"}
+                      loading={"lazy"}
+                      src={{
+                        src: "/plasmic/disuko_website_retro_version/images/image98.png",
+                        fullWidth: 2048,
+                        fullHeight: 2048,
+                        aspectRatio: undefined
+                      }}
+                    />
+                  </div>
+                  <div
+                    data-plasmic-name={"imageWindow29"}
+                    data-plasmic-override={overrides.imageWindow29}
+                    className={classNames(projectcss.all, sty.imageWindow29, {
+                      [sty.imageWindow29global_theme_classic]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                  >
+                    <PlasmicImg__
+                      alt={""}
+                      className={classNames(sty.img__sScXl)}
+                      displayHeight={"auto"}
+                      displayMaxHeight={"none"}
+                      displayMaxWidth={"100%"}
+                      displayMinHeight={"0"}
+                      displayMinWidth={"0"}
+                      displayWidth={"auto"}
+                      loading={"lazy"}
+                      src={{
+                        src: "/plasmic/disuko_website_retro_version/images/strawberryPng.png",
+                        fullWidth: 2048,
+                        fullHeight: 2048,
+                        aspectRatio: undefined
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className={classNames(projectcss.all, sty.column___46WeS)}>
+                  <div
+                    data-plasmic-name={"imageWindow30"}
+                    data-plasmic-override={overrides.imageWindow30}
+                    className={classNames(projectcss.all, sty.imageWindow30, {
+                      [sty.imageWindow30global_theme_classic]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                  >
+                    <PlasmicImg__
+                      alt={""}
+                      className={classNames(sty.img__uaP)}
+                      displayHeight={"auto"}
+                      displayMaxHeight={"none"}
+                      displayMaxWidth={"100%"}
+                      displayMinHeight={"0"}
+                      displayMinWidth={"0"}
+                      displayWidth={"auto"}
+                      loading={"lazy"}
+                      src={{
+                        src: "/plasmic/disuko_website_retro_version/images/cottonCandyPng.png",
+                        fullWidth: 2048,
+                        fullHeight: 2048,
+                        aspectRatio: undefined
+                      }}
+                    />
+                  </div>
+                  <div
+                    data-plasmic-name={"imageWindow32"}
+                    data-plasmic-override={overrides.imageWindow32}
+                    className={classNames(projectcss.all, sty.imageWindow32, {
+                      [sty.imageWindow32global_theme_classic]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                  >
+                    <PlasmicImg__
+                      alt={""}
+                      className={classNames(sty.img__tchI)}
+                      displayHeight={"auto"}
+                      displayMaxHeight={"none"}
+                      displayMaxWidth={"100%"}
+                      displayMinHeight={"0"}
+                      displayMinWidth={"0"}
+                      displayWidth={"auto"}
+                      loading={"lazy"}
+                      src={{
+                        src: "/plasmic/disuko_website_retro_version/images/sunsetPng.png",
+                        fullWidth: 2048,
+                        fullHeight: 2048,
+                        aspectRatio: undefined
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className={classNames(projectcss.all, sty.column__eqAvS)}>
+                  <div
+                    data-plasmic-name={"imageWindow31"}
+                    data-plasmic-override={overrides.imageWindow31}
+                    className={classNames(projectcss.all, sty.imageWindow31, {
+                      [sty.imageWindow31global_theme_classic]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                  >
+                    <PlasmicImg__
+                      alt={""}
+                      className={classNames(sty.img__cZfYd)}
+                      displayHeight={"auto"}
+                      displayMaxHeight={"none"}
+                      displayMaxWidth={"100%"}
+                      displayMinHeight={"0"}
+                      displayMinWidth={"0"}
+                      displayWidth={"auto"}
+                      loading={"lazy"}
+                      src={{
+                        src: "/plasmic/disuko_website_retro_version/images/matchaPng.png",
+                        fullWidth: 2048,
+                        fullHeight: 2048,
+                        aspectRatio: undefined
+                      }}
+                    />
+                  </div>
+                  <div
+                    data-plasmic-name={"imageWindow33"}
+                    data-plasmic-override={overrides.imageWindow33}
+                    className={classNames(projectcss.all, sty.imageWindow33, {
+                      [sty.imageWindow33global_theme_classic]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                  >
+                    <PlasmicImg__
+                      alt={""}
+                      className={classNames(sty.img___1H5LY)}
+                      displayHeight={"auto"}
+                      displayMaxHeight={"none"}
+                      displayMaxWidth={"100%"}
+                      displayMinHeight={"0"}
+                      displayMinWidth={"0"}
+                      displayWidth={"auto"}
+                      loading={"lazy"}
+                      src={{
+                        src: "/plasmic/disuko_website_retro_version/images/taroPng.png",
+                        fullWidth: 2048,
+                        fullHeight: 2048,
+                        aspectRatio: undefined
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              data-plasmic-name={"stylizedProductRenders"}
+              data-plasmic-override={overrides.stylizedProductRenders}
+              className={classNames(projectcss.all, sty.stylizedProductRenders)}
+            >
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__mPs1J,
+                  {
+                    [sty.textglobal_theme_classic__mPs1JeNktM]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  }
+                )}
+              >
+                {"Stylized Product Renders"}
+              </div>
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__vt2Fw,
+                  {
+                    [sty.textglobal_theme_classic__vt2FweNktM]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  }
+                )}
+              >
+                <React.Fragment>
+                  <React.Fragment>
+                    {'"Balisong Oil Designs" - Promotional Material for'}
+                  </React.Fragment>
+                  {
+                    <PlasmicLink__
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.a,
+                        projectcss.a__x4VgG,
+                        projectcss.__wab_text,
+                        projectcss.plasmic_default__inline,
+                        sty.link__i8Cm4
+                      )}
+                      component={Link}
+                      href={"https://carbonhoneyoil.com"}
+                      legacyBehavior={false}
+                      platform={"nextjs"}
+                    >
+                      {" Carbon Honey"}
+                    </PlasmicLink__>
+                  }
+                  <React.Fragment>{" and "}</React.Fragment>
+                  {
+                    <PlasmicLink__
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.a,
+                        projectcss.a__x4VgG,
+                        projectcss.__wab_text,
+                        projectcss.plasmic_default__inline,
+                        sty.link__l58Xb
+                      )}
+                      component={Link}
+                      href={"https://www.instagram.com/canto.group/"}
+                      legacyBehavior={false}
+                      platform={"nextjs"}
+                    >
+                      {"Canto Group"}
+                    </PlasmicLink__>
+                  }
+                  <React.Fragment>{" Balisong Oil"}</React.Fragment>
+                </React.Fragment>
+              </div>
+              <div className={classNames(projectcss.all, sty.columns__wiO8G)}>
+                <div className={classNames(projectcss.all, sty.column__wht3I)}>
+                  <div
+                    data-plasmic-name={"imageWindow14"}
+                    data-plasmic-override={overrides.imageWindow14}
+                    className={classNames(projectcss.all, sty.imageWindow14, {
+                      [sty.imageWindow14global_theme_classic]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                  >
+                    <div
+                      className={classNames(projectcss.all, sty.freeBox__h5UrX)}
+                    >
+                      <Video
+                        autoPlay={true}
+                        className={classNames(
+                          "__wab_instance",
+                          sty.htmlVideo___6C3Ib
+                        )}
+                        controls={false}
+                        loop={true}
+                        muted={true}
+                        playsInline={true}
+                        src={"https://cdn.suko.pet/carbonhoney.mp4"}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className={classNames(projectcss.all, sty.column___429)}>
+                  <div
+                    data-plasmic-name={"imageWindow15"}
+                    data-plasmic-override={overrides.imageWindow15}
+                    className={classNames(projectcss.all, sty.imageWindow15, {
+                      [sty.imageWindow15global_theme_classic]: hasVariant(
+                        globalVariants,
+                        "theme",
+                        "classic"
+                      )
+                    })}
+                  >
+                    <Video
+                      autoPlay={true}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.htmlVideo__cpf9C
+                      )}
+                      controls={false}
+                      loop={true}
+                      muted={true}
+                      playsInline={true}
+                      src={"https://cdn.suko.pet/CantoRender0001-0750.mp4"}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__l9NJu,
+                {
+                  [sty.textglobal_theme_classic__l9NJueNktM]: hasVariant(
+                    globalVariants,
+                    "theme",
+                    "classic"
+                  )
+                }
+              )}
+            >
+              {"Easel Renders"}
+            </div>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__bgqRg,
+                {
+                  [sty.textglobal_theme_classic__bgqRGeNktM]: hasVariant(
+                    globalVariants,
+                    "theme",
+                    "classic"
+                  )
+                }
+              )}
+            >
+              {
+                "Created for a vertically mounted display installation in the Chatham University Library."
+              }
+            </div>
+            <div className={classNames(projectcss.all, sty.freeBox__lmIi2)}>
+              <div className={classNames(projectcss.all, sty.freeBox__eowsj)}>
+                <Window
+                  className={classNames("__wab_instance", sty.window__qkSdZ)}
+                  windowImage={
+                    <Video
+                      autoPlay={true}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.htmlVideo__sW6S
+                      )}
+                      controls={false}
+                      loop={true}
+                      muted={true}
+                      playsInline={true}
+                      src={"https://cdn.suko.pet/animestreet0001-0360.mp4"}
+                    />
+                  }
+                  windowText={"Pastel Street"}
+                  windowTitle={"Easel Render"}
+                />
+
+                <Window
+                  className={classNames("__wab_instance", sty.window__nbokm)}
+                  windowImage={
+                    <Video
+                      autoPlay={true}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.htmlVideo__wwwcL
+                      )}
+                      controls={false}
+                      loop={true}
+                      muted={true}
+                      playsInline={true}
+                      src={"https://cdn.suko.pet/SmartiesRender0001-0999.mp4"}
+                    />
+                  }
+                  windowText={"Smarties"}
+                  windowTitle={"Easel Render"}
+                />
+              </div>
+              <div className={classNames(projectcss.all, sty.freeBox___1FTxE)}>
+                <Window
+                  className={classNames("__wab_instance", sty.window__hyfBk)}
+                  windowImage={
+                    <Video
+                      autoPlay={true}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.htmlVideo__tWzsK
+                      )}
+                      controls={false}
+                      loop={true}
+                      muted={true}
+                      playsInline={true}
+                      src={"https://cdn.suko.pet/NautRender0001-0500.mp4"}
+                    />
+                  }
+                  windowText={"Space Nautilus Balisong"}
+                  windowTitle={"Easel Render"}
+                />
+
+                <Window
+                  className={classNames("__wab_instance", sty.window__zUeqR)}
+                  windowImage={
+                    <Video
+                      autoPlay={true}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.htmlVideo___4PtuZ
+                      )}
+                      controls={false}
+                      loop={true}
+                      muted={true}
+                      playsInline={true}
+                      src={
+                        "https://cdn.suko.pet/RamuneLightLabelRender0001-0750.mp4"
+                      }
+                    />
+                  }
+                  windowText={"Blueberry Ramune"}
+                  windowTitle={"Easel Render"}
+                />
+              </div>
+              <div className={classNames(projectcss.all, sty.freeBox__vXtFs)}>
+                <Window
+                  className={classNames("__wab_instance", sty.window__nwxc)}
+                  windowImage={
+                    <Video
+                      autoPlay={true}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.htmlVideo__us9SH
+                      )}
+                      controls={false}
+                      loop={true}
+                      muted={true}
+                      playsInline={true}
+                      src={"https://cdn.suko.pet/CakePop0001-0250.mp4"}
+                    />
+                  }
+                  windowText={"Kawaii Cake Pop"}
+                  windowTitle={"Easel Render"}
+                />
+
+                <Window
+                  className={classNames("__wab_instance", sty.window__uPusq)}
+                  windowImage={
+                    <Video
+                      autoPlay={true}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.htmlVideo__bkaZh
+                      )}
+                      controls={false}
+                      loop={true}
+                      muted={true}
+                      playsInline={true}
+                      src={"https://cdn.suko.pet/MilkRender.mov"}
+                    />
+                  }
+                  windowText={"Strawberry Milk"}
+                  windowTitle={"Easel Render"}
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            data-plasmic-name={"cadAndPrinting"}
+            data-plasmic-override={overrides.cadAndPrinting}
+            className={classNames(projectcss.all, sty.cadAndPrinting)}
+          >
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__zOvZc,
+                {
+                  [sty.textglobal_theme_classic__zOvZCeNktM]: hasVariant(
+                    globalVariants,
+                    "theme",
+                    "classic"
+                  )
+                }
+              )}
+            >
+              {"CAD & 3D Printing"}
+            </div>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text___0XH1W,
+                {
+                  [sty.textglobal_theme_classic___0XH1WeNktM]: hasVariant(
+                    globalVariants,
+                    "theme",
+                    "classic"
+                  )
+                }
+              )}
+            >
+              <React.Fragment>
+                <span
+                  className={
+                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
+                  }
+                  style={{ fontWeight: 700 }}
+                >
+                  {"ON3KO CRT Heads"}
+                </span>
+                <React.Fragment>{" - Cosplay Headpieces for "}</React.Fragment>
+                {
+                  <PlasmicLink__
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.a,
+                      projectcss.a__x4VgG,
+                      projectcss.__wab_text,
+                      projectcss.plasmic_default__inline,
+                      sty.link__zlCwl
+                    )}
+                    component={Link}
+                    href={"https://on3ko.lol"}
+                    legacyBehavior={false}
+                    platform={"nextjs"}
+                  >
+                    {"live electronic music performance"}
+                  </PlasmicLink__>
+                }
+                <React.Fragment>
+                  {
+                    ". Inspired by 90s internet! Designed in Autodesk Fusion and manufactured with Bambu 3D Printers."
+                  }
+                </React.Fragment>
+              </React.Fragment>
+            </div>
+            <div className={classNames(projectcss.all, sty.columns__lResH)}>
+              <div className={classNames(projectcss.all, sty.column__jglq4)}>
+                <div
+                  data-plasmic-name={"imageWindow19"}
+                  data-plasmic-override={overrides.imageWindow19}
+                  className={classNames(projectcss.all, sty.imageWindow19, {
+                    [sty.imageWindow19global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__ztBjx)}
+                    displayHeight={"auto"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"100%"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image110.png",
+                      fullWidth: 705,
+                      fullHeight: 685,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+                <div
+                  data-plasmic-name={"imageWindow42"}
+                  data-plasmic-override={overrides.imageWindow42}
+                  className={classNames(projectcss.all, sty.imageWindow42, {
+                    [sty.imageWindow42global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__rnGet)}
+                    displayHeight={"auto"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"100%"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image111.png",
+                      fullWidth: 628,
+                      fullHeight: 582,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+              <div className={classNames(projectcss.all, sty.column__frkPr)}>
+                <div
+                  data-plasmic-name={"imageWindow36"}
+                  data-plasmic-override={overrides.imageWindow36}
+                  className={classNames(projectcss.all, sty.imageWindow36, {
+                    [sty.imageWindow36global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__ofLb0)}
+                    displayHeight={"100%"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"100%"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/mirrorpicJpg.jpg",
+                      fullWidth: 512,
+                      fullHeight: 683,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className={classNames(projectcss.all, sty.columns__jktLi)}>
+              <div className={classNames(projectcss.all, sty.column__po30)}>
+                <div
+                  data-plasmic-name={"imageWindow41"}
+                  data-plasmic-override={overrides.imageWindow41}
+                  className={classNames(projectcss.all, sty.imageWindow41, {
+                    [sty.imageWindow41global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__exPt)}
+                    displayHeight={"auto"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"100%"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"100%"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/on3KoPosterJpg4.jpg",
+                      fullWidth: 1024,
+                      fullHeight: 1024,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__tChvJ,
+                {
+                  [sty.textglobal_theme_classic__tChvJeNktM]: hasVariant(
+                    globalVariants,
+                    "theme",
+                    "classic"
+                  )
+                }
+              )}
+            >
+              <React.Fragment>
+                <span
+                  className={
+                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
+                  }
+                  style={{ fontWeight: 700 }}
+                >
+                  {"asdfscope "}
+                </span>
+                <React.Fragment>
+                  {"- Digital Multitool Prototype"}
+                </React.Fragment>
+              </React.Fragment>
+            </div>
+            <div className={classNames(projectcss.all, sty.columns__cxHqj)}>
+              <div className={classNames(projectcss.all, sty.column__tnKv)}>
+                <div
+                  data-plasmic-name={"imageWindow39"}
+                  data-plasmic-override={overrides.imageWindow39}
+                  className={classNames(projectcss.all, sty.imageWindow39, {
+                    [sty.imageWindow39global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__qqIj4)}
+                    displayHeight={"100%"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"100%"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image113.png",
+                      fullWidth: 703,
+                      fullHeight: 511,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+                <div
+                  data-plasmic-name={"imageWindow45"}
+                  data-plasmic-override={overrides.imageWindow45}
+                  className={classNames(projectcss.all, sty.imageWindow45, {
+                    [sty.imageWindow45global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img___7HQD)}
+                    displayHeight={"100%"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"100%"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"100%"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image115.png",
+                      fullWidth: 536,
+                      fullHeight: 788,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+              <div className={classNames(projectcss.all, sty.column__hkvr)}>
+                <div
+                  data-plasmic-name={"imageWindow40"}
+                  data-plasmic-override={overrides.imageWindow40}
+                  className={classNames(projectcss.all, sty.imageWindow40, {
+                    [sty.imageWindow40global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__yd9Lj)}
+                    displayHeight={"100%"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"100%"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image114.png",
+                      fullWidth: 3024,
+                      fullHeight: 4032,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__ilkSl,
+                {
+                  [sty.textglobal_theme_classic__ilkSleNktM]: hasVariant(
+                    globalVariants,
+                    "theme",
+                    "classic"
+                  )
+                }
+              )}
+            >
+              <React.Fragment>
+                <span
+                  className={
+                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
+                  }
+                  style={{ fontWeight: 700 }}
+                >
+                  {"DIGIDECK (WIP)"}
+                </span>
+                <React.Fragment>
+                  {
+                    ' - Cyberdeck Computer constructed from e-waste and 3d printed frames/brackets. Created for con showcases representing the game "'
+                  }
+                </React.Fragment>
+                {
+                  <PlasmicLink__
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.a,
+                      projectcss.a__x4VgG,
+                      projectcss.__wab_text,
+                      projectcss.plasmic_default__inline,
+                      sty.link__kvZNi
+                    )}
+                    component={Link}
+                    href={"https://digidive.live"}
+                    legacyBehavior={false}
+                    platform={"nextjs"}
+                  >
+                    {"Digidive LIVE"}
+                  </PlasmicLink__>
+                }
+                <React.Fragment>{'" by '}</React.Fragment>
+                {
+                  <PlasmicLink__
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.a,
+                      projectcss.a__x4VgG,
+                      projectcss.__wab_text,
+                      projectcss.plasmic_default__inline,
+                      sty.link___1Vd87
+                    )}
+                    component={Link}
+                    href={"https://redpandastudios.net"}
+                    legacyBehavior={false}
+                    platform={"nextjs"}
+                  >
+                    {"Red Panda Studios"}
+                  </PlasmicLink__>
+                }
+                <React.Fragment>{""}</React.Fragment>
+              </React.Fragment>
+            </div>
+            <div className={classNames(projectcss.all, sty.columns___5ZJwq)}>
+              <div className={classNames(projectcss.all, sty.column___4Wnkx)}>
+                <div
+                  data-plasmic-name={"imageWindow43"}
+                  data-plasmic-override={overrides.imageWindow43}
+                  className={classNames(projectcss.all, sty.imageWindow43, {
+                    [sty.imageWindow43global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__hbNn4)}
+                    displayHeight={"auto"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"100%"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image103.png",
+                      fullWidth: 3024,
+                      fullHeight: 4032,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+              <div className={classNames(projectcss.all, sty.column___7FiLe)}>
+                <div
+                  data-plasmic-name={"imageWindow44"}
+                  data-plasmic-override={overrides.imageWindow44}
+                  className={classNames(projectcss.all, sty.imageWindow44, {
+                    [sty.imageWindow44global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__vwI7R)}
+                    displayHeight={"100%"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"100%"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image104.png",
+                      fullWidth: 785,
+                      fullHeight: 826,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__izoh,
+                {
+                  [sty.textglobal_theme_classic__izohENktM]: hasVariant(
+                    globalVariants,
+                    "theme",
+                    "classic"
+                  )
+                }
+              )}
+            >
+              <React.Fragment>
+                <span
+                  className={
+                    "plasmic_default__all plasmic_default__span plasmic_default__span__x4VgG"
+                  }
+                  style={{ fontWeight: 700 }}
+                >
+                  {"Studio Tunes Music Player"}
+                </span>
+                <React.Fragment>
+                  {
+                    " - Raspberry Pi & Arduino powered music player for the Chatham Immersive Media Studio"
+                  }
+                </React.Fragment>
+              </React.Fragment>
+            </div>
+            <div className={classNames(projectcss.all, sty.columns__m6Dj)}>
+              <div className={classNames(projectcss.all, sty.column__xmML)}>
+                <div
+                  data-plasmic-name={"imageWindow37"}
+                  data-plasmic-override={overrides.imageWindow37}
+                  className={classNames(projectcss.all, sty.imageWindow37, {
+                    [sty.imageWindow37global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__gl71T)}
+                    displayHeight={"100%"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"100%"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"auto"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image105.png",
+                      fullWidth: 852,
+                      fullHeight: 684,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+              <div className={classNames(projectcss.all, sty.column___9QPh)}>
+                <div
+                  data-plasmic-name={"imageWindow38"}
+                  data-plasmic-override={overrides.imageWindow38}
+                  className={classNames(projectcss.all, sty.imageWindow38, {
+                    [sty.imageWindow38global_theme_classic]: hasVariant(
+                      globalVariants,
+                      "theme",
+                      "classic"
+                    )
+                  })}
+                >
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__dgJmf)}
+                    displayHeight={"auto"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"100%"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"100%"}
+                    loading={"lazy"}
+                    src={{
+                      src: "/plasmic/disuko_website_retro_version/images/image109.png",
+                      fullWidth: 3024,
+                      fullHeight: 3024,
+                      aspectRatio: undefined
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className={classNames(projectcss.all, sty.columns__gR1Cg)}>
+              <div className={classNames(projectcss.all, sty.column__ki8I7)}>
+                <div
+                  className={classNames(projectcss.all, sty.freeBox__rFRe6, {
+                    [sty.freeBoxglobal_theme_classic__rFRe6ENktM]: hasVariant(
                       globalVariants,
                       "theme",
                       "classic"
@@ -1825,788 +2849,384 @@ function PlasmicPortfolio3DDesign__RenderFunc(props: {
                   })}
                 >
                   <div
-                    className={classNames(projectcss.all, sty.freeBox__h5UrX)}
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__hxj9E,
+                      {
+                        [sty.textglobal_theme_classic__hxj9EeNktM]: hasVariant(
+                          globalVariants,
+                          "theme",
+                          "classic"
+                        )
+                      }
+                    )}
                   >
-                    <Video
-                      autoPlay={true}
-                      className={classNames(
-                        "__wab_instance",
-                        sty.htmlVideo___6C3Ib
-                      )}
-                      controls={false}
-                      loop={true}
-                      muted={true}
-                      playsInline={true}
-                      src={"https://cdn.redpandastudios.net/carbonhoney.mp4"}
-                    />
+                    {"The Boba-song V2 Butterfly Knife Trainer"}
                   </div>
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text___19TbC,
+                      {
+                        [sty.textglobal_theme_classic___19TbCeNktM]: hasVariant(
+                          globalVariants,
+                          "theme",
+                          "classic"
+                        )
+                      }
+                    )}
+                  >
+                    {'"Create With Nabalis" Contest Top 10 of 100 Submissions'}
+                  </div>
+                  {(() => {
+                    const child$Props = {
+                      arrowColor: true ? "#AF3386" : undefined,
+                      beforeChange: async (...eventArgs: any) => {
+                        generateStateOnChangePropForCodeComponents(
+                          $state,
+                          "currentSlide",
+                          ["cad2", "currentSlide"],
+                          SliderWrapper_Helpers
+                        ).apply(null, eventArgs);
+                      },
+                      centerMode: true,
+                      className: classNames("__wab_instance", sty.cad2),
+                      initialSlide: generateStateValueProp($state, [
+                        "cad2",
+                        "currentSlide"
+                      ]),
+                      ref: ref => {
+                        $refs["cad2"] = ref;
+                      },
+                      sliderScopeClassName: sty["cad2__slider"]
+                    };
+                    initializeCodeComponentStates(
+                      $state,
+                      [
+                        {
+                          name: "currentSlide",
+                          plasmicStateName: "cad2.currentSlide"
+                        }
+                      ],
+                      [],
+                      SliderWrapper_Helpers ?? {},
+                      child$Props
+                    );
+
+                    return (
+                      <SliderWrapper
+                        data-plasmic-name={"cad2"}
+                        data-plasmic-override={overrides.cad2}
+                        {...child$Props}
+                      >
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            sty.freeBox__xQsMi
+                          )}
+                        >
+                          <PlasmicImg__
+                            alt={""}
+                            className={classNames(sty.img__jsDkk)}
+                            displayHeight={"400px"}
+                            displayMaxHeight={"none"}
+                            displayMaxWidth={"none"}
+                            displayMinHeight={"0"}
+                            displayMinWidth={"0"}
+                            displayWidth={"100%"}
+                            src={{
+                              src: "/plasmic/disuko_website_retro_version/images/mainImage2Png.png",
+                              fullWidth: 1080,
+                              fullHeight: 1080,
+                              aspectRatio: undefined
+                            }}
+                          />
+                        </div>
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            sty.freeBox__nIyBf
+                          )}
+                        >
+                          <PlasmicImg__
+                            alt={""}
+                            className={classNames(sty.img__yHQwz)}
+                            displayHeight={"400px"}
+                            displayMaxHeight={"none"}
+                            displayMaxWidth={"none"}
+                            displayMinHeight={"0"}
+                            displayMinWidth={"0"}
+                            displayWidth={"100%"}
+                            src={{
+                              src: "/plasmic/disuko_website_retro_version/images/notableFeaturesPng.png",
+                              fullWidth: 1080,
+                              fullHeight: 1080,
+                              aspectRatio: undefined
+                            }}
+                          />
+                        </div>
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            sty.freeBox___6P13G
+                          )}
+                        >
+                          <PlasmicImg__
+                            alt={""}
+                            className={classNames(sty.img___8YT3K)}
+                            displayHeight={"400px"}
+                            displayMaxHeight={"none"}
+                            displayMaxWidth={"none"}
+                            displayMinHeight={"0"}
+                            displayMinWidth={"0"}
+                            displayWidth={"100%"}
+                            src={{
+                              src: "/plasmic/disuko_website_retro_version/images/colorConceptsPng.png",
+                              fullWidth: 1080,
+                              fullHeight: 1080,
+                              aspectRatio: undefined
+                            }}
+                          />
+                        </div>
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            sty.freeBox__w4N5A
+                          )}
+                        >
+                          <PlasmicImg__
+                            alt={""}
+                            className={classNames(sty.img__gZao0)}
+                            displayHeight={"400px"}
+                            displayMaxHeight={"none"}
+                            displayMaxWidth={"none"}
+                            displayMinHeight={"0"}
+                            displayMinWidth={"0"}
+                            displayWidth={"100%"}
+                            src={{
+                              src: "/plasmic/disuko_website_retro_version/images/screenshot20240311163819Png.png",
+                              fullWidth: 1522,
+                              fullHeight: 895,
+                              aspectRatio: undefined
+                            }}
+                          />
+                        </div>
+                      </SliderWrapper>
+                    );
+                  })()}
                 </div>
               </div>
-              <div className={classNames(projectcss.all, sty.column___429)}>
+              <div className={classNames(projectcss.all, sty.column__mO2Vl)}>
                 <div
-                  data-plasmic-name={"imageWindow15"}
-                  data-plasmic-override={overrides.imageWindow15}
-                  className={classNames(projectcss.all, sty.imageWindow15, {
-                    [sty.imageWindow15global_theme_classic]: hasVariant(
+                  className={classNames(projectcss.all, sty.freeBox__lu5Mk, {
+                    [sty.freeBoxglobal_theme_classic__lu5MKeNktM]: hasVariant(
                       globalVariants,
                       "theme",
                       "classic"
                     )
                   })}
                 >
-                  <Video
-                    autoPlay={true}
+                  <div
                     className={classNames(
-                      "__wab_instance",
-                      sty.htmlVideo__cpf9C
-                    )}
-                    controls={false}
-                    loop={true}
-                    muted={true}
-                    playsInline={true}
-                    src={
-                      "https://cdn.redpandastudios.net/CantoRender0001-0750.mp4"
-                    }
-                  />
-                </div>
-              </div>
-            </Stack__>
-          </div>
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__l9NJu,
-              {
-                [sty.textglobal_theme_classic__l9NJueNktM]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              }
-            )}
-          >
-            {"Easel Renders"}
-          </div>
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__bgqRg,
-              {
-                [sty.textglobal_theme_classic__bgqRGeNktM]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              }
-            )}
-          >
-            {
-              "Created for a vertically mounted display installation in the Chatham University Library."
-            }
-          </div>
-          <div className={classNames(projectcss.all, sty.freeBox__lmIi2)}>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__eowsj)}
-            >
-              <Window
-                className={classNames("__wab_instance", sty.window__qkSdZ)}
-                windowImage={
-                  <Video
-                    autoPlay={true}
-                    className={classNames(
-                      "__wab_instance",
-                      sty.htmlVideo__sW6S
-                    )}
-                    controls={false}
-                    loop={true}
-                    muted={true}
-                    playsInline={true}
-                    src={
-                      "https://cdn.redpandastudios.net/animestreet0001-0360.mp4"
-                    }
-                  />
-                }
-                windowText={"Pastel Street"}
-                windowTitle={"Easel Render"}
-              />
-
-              <Window
-                className={classNames("__wab_instance", sty.window__nbokm)}
-                windowImage={
-                  <Video
-                    autoPlay={true}
-                    className={classNames(
-                      "__wab_instance",
-                      sty.htmlVideo__wwwcL
-                    )}
-                    controls={false}
-                    loop={true}
-                    muted={true}
-                    playsInline={true}
-                    src={
-                      "https://cdn.redpandastudios.net/SmartiesRender0001-0999.mp4"
-                    }
-                  />
-                }
-                windowText={"Smarties"}
-                windowTitle={"Easel Render"}
-              />
-            </Stack__>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox___1FTxE)}
-            >
-              <Window
-                className={classNames("__wab_instance", sty.window__hyfBk)}
-                windowImage={
-                  <Video
-                    autoPlay={true}
-                    className={classNames(
-                      "__wab_instance",
-                      sty.htmlVideo__tWzsK
-                    )}
-                    controls={false}
-                    loop={true}
-                    muted={true}
-                    playsInline={true}
-                    src={
-                      "https://cdn.redpandastudios.net/NautRender0001-0500.mp4"
-                    }
-                  />
-                }
-                windowText={"Space Nautilus Balisong"}
-                windowTitle={"Easel Render"}
-              />
-
-              <Window
-                className={classNames("__wab_instance", sty.window__zUeqR)}
-                windowImage={
-                  <Video
-                    autoPlay={true}
-                    className={classNames(
-                      "__wab_instance",
-                      sty.htmlVideo___4PtuZ
-                    )}
-                    controls={false}
-                    loop={true}
-                    muted={true}
-                    playsInline={true}
-                    src={
-                      "https://cdn.redpandastudios.net/RamuneLightLabelRender0001-0750.mp4"
-                    }
-                  />
-                }
-                windowText={"Blueberry Ramune"}
-                windowTitle={"Easel Render"}
-              />
-            </Stack__>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__vXtFs)}
-            >
-              <Window
-                className={classNames("__wab_instance", sty.window__nwxc)}
-                windowImage={
-                  <Video
-                    autoPlay={true}
-                    className={classNames(
-                      "__wab_instance",
-                      sty.htmlVideo__us9SH
-                    )}
-                    controls={false}
-                    loop={true}
-                    muted={true}
-                    playsInline={true}
-                    src={"https://cdn.redpandastudios.net/CakePop0001-0250.mp4"}
-                  />
-                }
-                windowText={"Kawaii Cake Pop"}
-                windowTitle={"Easel Render"}
-              />
-
-              <Window
-                className={classNames("__wab_instance", sty.window__uPusq)}
-                windowImage={
-                  <Video
-                    autoPlay={true}
-                    className={classNames(
-                      "__wab_instance",
-                      sty.htmlVideo__bkaZh
-                    )}
-                    controls={false}
-                    loop={true}
-                    muted={true}
-                    playsInline={true}
-                    src={"https://cdn.redpandastudios.net/MilkRender.mov"}
-                  />
-                }
-                windowText={"Strawberry Milk"}
-                windowTitle={"Easel Render"}
-              />
-            </Stack__>
-          </div>
-        </Stack__>
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__rL1)}
-        >
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__wzKkh,
-              {
-                [sty.textglobal_theme_classic__wzKkheNktM]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              }
-            )}
-          >
-            {"Characters"}
-          </div>
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__isLqW)}
-          >
-            <div
-              data-plasmic-name={"imageWindow"}
-              data-plasmic-override={overrides.imageWindow}
-              className={classNames(projectcss.all, sty.imageWindow, {
-                [sty.imageWindowglobal_theme_classic]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              })}
-            >
-              <PlasmicImg__
-                alt={""}
-                className={classNames(sty.img___3OVyV, {
-                  [sty.imgglobal_theme_classic___3OVyVeNktM]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
-                })}
-                displayHeight={"338px"}
-                displayMaxHeight={"none"}
-                displayMaxWidth={"none"}
-                displayMinHeight={"0"}
-                displayMinWidth={"0"}
-                displayWidth={"auto"}
-                loading={"lazy"}
-                src={{
-                  src: "/plasmic/disuko_website_retro_version/images/image67.gif",
-                  fullWidth: 600,
-                  fullHeight: 338,
-                  aspectRatio: undefined
-                }}
-              />
-            </div>
-            <div
-              data-plasmic-name={"imageWindow2"}
-              data-plasmic-override={overrides.imageWindow2}
-              className={classNames(projectcss.all, sty.imageWindow2, {
-                [sty.imageWindow2global_theme_classic]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              })}
-            >
-              <PlasmicImg__
-                alt={""}
-                className={classNames(sty.img__uRg3H, {
-                  [sty.imgglobal_theme_classic__uRg3HeNktM]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
-                })}
-                displayHeight={"338px"}
-                displayMaxHeight={"none"}
-                displayMaxWidth={"none"}
-                displayMinHeight={"0"}
-                displayMinWidth={"0"}
-                displayWidth={
-                  hasVariant(globalVariants, "screen", "mobileOnly")
-                    ? "100%"
-                    : "auto"
-                }
-                loading={"lazy"}
-                src={{
-                  src: "/plasmic/disuko_website_retro_version/images/licavoliSherbPoseTransparentPng.png",
-                  fullWidth: 426,
-                  fullHeight: 621,
-                  aspectRatio: undefined
-                }}
-              />
-            </div>
-            <div
-              data-plasmic-name={"imageWindow3"}
-              data-plasmic-override={overrides.imageWindow3}
-              className={classNames(projectcss.all, sty.imageWindow3, {
-                [sty.imageWindow3global_theme_classic]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              })}
-            >
-              <PlasmicImg__
-                alt={""}
-                className={classNames(sty.img__yFmFd, {
-                  [sty.imgglobal_theme_classic__yFmFDeNktM]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
-                })}
-                displayHeight={"338px"}
-                displayMaxHeight={"none"}
-                displayMaxWidth={"none"}
-                displayMinHeight={"0"}
-                displayMinWidth={"0"}
-                displayWidth={"auto"}
-                loading={"lazy"}
-                src={{
-                  src: "/plasmic/disuko_website_retro_version/images/image68.gif",
-                  fullWidth: 256,
-                  fullHeight: 256,
-                  aspectRatio: undefined
-                }}
-              />
-            </div>
-          </Stack__>
-        </Stack__>
-        <div className={classNames(projectcss.all, sty.freeBox__d2Fcp)}>
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__zOvZc,
-              {
-                [sty.textglobal_theme_classic__zOvZCeNktM]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              }
-            )}
-          >
-            {"CAD & 3D Printing"}
-          </div>
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.columns__gR1Cg)}
-          >
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.column__ki8I7)}
-            >
-              <div
-                className={classNames(projectcss.all, sty.freeBox__rFRe6, {
-                  [sty.freeBoxglobal_theme_classic__rFRe6ENktM]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
-                })}
-              >
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__hxj9E,
-                    {
-                      [sty.textglobal_theme_classic__hxj9EeNktM]: hasVariant(
-                        globalVariants,
-                        "theme",
-                        "classic"
-                      )
-                    }
-                  )}
-                >
-                  {"The Boba-song V2 Butterfly Knife Trainer"}
-                </div>
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text___19TbC,
-                    {
-                      [sty.textglobal_theme_classic___19TbCeNktM]: hasVariant(
-                        globalVariants,
-                        "theme",
-                        "classic"
-                      )
-                    }
-                  )}
-                >
-                  {'"Create With Nabalis" Contest Top 10 of 100 Submissions'}
-                </div>
-                {(() => {
-                  const child$Props = {
-                    arrowColor: true ? "#AF3386" : undefined,
-                    beforeChange: async (...eventArgs: any) => {
-                      generateStateOnChangePropForCodeComponents(
-                        $state,
-                        "currentSlide",
-                        ["cad2", "currentSlide"],
-                        SliderWrapper_Helpers
-                      ).apply(null, eventArgs);
-                    },
-                    centerMode: true,
-                    className: classNames("__wab_instance", sty.cad2),
-                    initialSlide: generateStateValueProp($state, [
-                      "cad2",
-                      "currentSlide"
-                    ]),
-                    ref: ref => {
-                      $refs["cad2"] = ref;
-                    },
-                    sliderScopeClassName: sty["cad2__slider"]
-                  };
-                  initializeCodeComponentStates(
-                    $state,
-                    [
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__lr6B8,
                       {
-                        name: "currentSlide",
-                        plasmicStateName: "cad2.currentSlide"
+                        [sty.textglobal_theme_classic__lr6B8ENktM]: hasVariant(
+                          globalVariants,
+                          "theme",
+                          "classic"
+                        )
                       }
-                    ],
-                    [],
-                    SliderWrapper_Helpers ?? {},
-                    child$Props
-                  );
-
-                  return (
-                    <SliderWrapper
-                      data-plasmic-name={"cad2"}
-                      data-plasmic-override={overrides.cad2}
-                      {...child$Props}
-                    >
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          sty.freeBox__xQsMi
-                        )}
-                      >
-                        <PlasmicImg__
-                          alt={""}
-                          className={classNames(sty.img__jsDkk)}
-                          displayHeight={"400px"}
-                          displayMaxHeight={"none"}
-                          displayMaxWidth={"none"}
-                          displayMinHeight={"0"}
-                          displayMinWidth={"0"}
-                          displayWidth={"100%"}
-                          src={{
-                            src: "/plasmic/disuko_website_retro_version/images/mainImage2Png.png",
-                            fullWidth: 1080,
-                            fullHeight: 1080,
-                            aspectRatio: undefined
-                          }}
-                        />
-                      </div>
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          sty.freeBox__nIyBf
-                        )}
-                      >
-                        <PlasmicImg__
-                          alt={""}
-                          className={classNames(sty.img__yHQwz)}
-                          displayHeight={"400px"}
-                          displayMaxHeight={"none"}
-                          displayMaxWidth={"none"}
-                          displayMinHeight={"0"}
-                          displayMinWidth={"0"}
-                          displayWidth={"100%"}
-                          src={{
-                            src: "/plasmic/disuko_website_retro_version/images/notableFeaturesPng.png",
-                            fullWidth: 1080,
-                            fullHeight: 1080,
-                            aspectRatio: undefined
-                          }}
-                        />
-                      </div>
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          sty.freeBox___6P13G
-                        )}
-                      >
-                        <PlasmicImg__
-                          alt={""}
-                          className={classNames(sty.img___8YT3K)}
-                          displayHeight={"400px"}
-                          displayMaxHeight={"none"}
-                          displayMaxWidth={"none"}
-                          displayMinHeight={"0"}
-                          displayMinWidth={"0"}
-                          displayWidth={"100%"}
-                          src={{
-                            src: "/plasmic/disuko_website_retro_version/images/colorConceptsPng.png",
-                            fullWidth: 1080,
-                            fullHeight: 1080,
-                            aspectRatio: undefined
-                          }}
-                        />
-                      </div>
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          sty.freeBox__w4N5A
-                        )}
-                      >
-                        <PlasmicImg__
-                          alt={""}
-                          className={classNames(sty.img__gZao0)}
-                          displayHeight={"400px"}
-                          displayMaxHeight={"none"}
-                          displayMaxWidth={"none"}
-                          displayMinHeight={"0"}
-                          displayMinWidth={"0"}
-                          displayWidth={"100%"}
-                          src={{
-                            src: "/plasmic/disuko_website_retro_version/images/screenshot20240311163819Png.png",
-                            fullWidth: 1522,
-                            fullHeight: 895,
-                            aspectRatio: undefined
-                          }}
-                        />
-                      </div>
-                    </SliderWrapper>
-                  );
-                })()}
-              </div>
-            </Stack__>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.column__mO2Vl)}
-            >
-              <div
-                className={classNames(projectcss.all, sty.freeBox__lu5Mk, {
-                  [sty.freeBoxglobal_theme_classic__lu5MKeNktM]: hasVariant(
-                    globalVariants,
-                    "theme",
-                    "classic"
-                  )
-                })}
-              >
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__lr6B8,
-                    {
-                      [sty.textglobal_theme_classic__lr6B8ENktM]: hasVariant(
-                        globalVariants,
-                        "theme",
-                        "classic"
-                      )
-                    }
-                  )}
-                >
-                  {"Disuko Rhythm Game Console"}
-                </div>
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__hoyqU,
-                    {
-                      [sty.textglobal_theme_classic__hoyqUeNktM]: hasVariant(
-                        globalVariants,
-                        "theme",
-                        "classic"
-                      )
-                    }
-                  )}
-                >
-                  {
-                    "Project for the Chatham University Immersive Media Studio Space"
-                  }
-                </div>
-                {(() => {
-                  const child$Props = {
-                    arrowColor: true ? "#AF3386" : undefined,
-                    arrows: true,
-                    autoplay: false,
-                    beforeChange: async (...eventArgs: any) => {
-                      generateStateOnChangePropForCodeComponents(
-                        $state,
-                        "currentSlide",
-                        ["cad", "currentSlide"],
-                        SliderWrapper_Helpers
-                      ).apply(null, eventArgs);
-                    },
-                    centerMode: false,
-                    className: classNames("__wab_instance", sty.cad),
-                    initialSlide: generateStateValueProp($state, [
-                      "cad",
-                      "currentSlide"
-                    ]),
-                    ref: ref => {
-                      $refs["cad"] = ref;
-                    },
-                    sliderScopeClassName: sty["cad__slider"]
-                  };
-                  initializeCodeComponentStates(
-                    $state,
-                    [
+                    )}
+                  >
+                    {"Disuko Rhythm Game Console"}
+                  </div>
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__hoyqU,
                       {
-                        name: "currentSlide",
-                        plasmicStateName: "cad.currentSlide"
+                        [sty.textglobal_theme_classic__hoyqUeNktM]: hasVariant(
+                          globalVariants,
+                          "theme",
+                          "classic"
+                        )
                       }
-                    ],
-                    [],
-                    SliderWrapper_Helpers ?? {},
-                    child$Props
-                  );
+                    )}
+                  >
+                    {
+                      "Project for the Chatham University Immersive Media Studio Space"
+                    }
+                  </div>
+                  {(() => {
+                    const child$Props = {
+                      arrowColor: true ? "#AF3386" : undefined,
+                      arrows: true,
+                      autoplay: false,
+                      beforeChange: async (...eventArgs: any) => {
+                        generateStateOnChangePropForCodeComponents(
+                          $state,
+                          "currentSlide",
+                          ["cad", "currentSlide"],
+                          SliderWrapper_Helpers
+                        ).apply(null, eventArgs);
+                      },
+                      centerMode: false,
+                      className: classNames("__wab_instance", sty.cad),
+                      initialSlide: generateStateValueProp($state, [
+                        "cad",
+                        "currentSlide"
+                      ]),
+                      ref: ref => {
+                        $refs["cad"] = ref;
+                      },
+                      sliderScopeClassName: sty["cad__slider"]
+                    };
+                    initializeCodeComponentStates(
+                      $state,
+                      [
+                        {
+                          name: "currentSlide",
+                          plasmicStateName: "cad.currentSlide"
+                        }
+                      ],
+                      [],
+                      SliderWrapper_Helpers ?? {},
+                      child$Props
+                    );
 
-                  return (
-                    <SliderWrapper
-                      data-plasmic-name={"cad"}
-                      data-plasmic-override={overrides.cad}
-                      {...child$Props}
-                    >
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          sty.freeBox__hjAjT
-                        )}
+                    return (
+                      <SliderWrapper
+                        data-plasmic-name={"cad"}
+                        data-plasmic-override={overrides.cad}
+                        {...child$Props}
                       >
-                        <PlasmicImg__
-                          alt={""}
-                          className={classNames(sty.img__pqmqf)}
-                          displayHeight={"400px"}
-                          displayMaxHeight={"none"}
-                          displayMaxWidth={"none"}
-                          displayMinHeight={"0"}
-                          displayMinWidth={"0"}
-                          displayWidth={"auto"}
-                          src={{
-                            src: "/plasmic/disuko_website_retro_version/images/consoleShellWipJpg.jpg",
-                            fullWidth: 800,
-                            fullHeight: 600,
-                            aspectRatio: undefined
-                          }}
-                        />
-
                         <div
                           className={classNames(
                             projectcss.all,
-                            projectcss.__wab_text,
-                            sty.text__wWj1O,
-                            {
-                              [sty.textglobal_theme_classic__wWj1OeNktM]:
-                                hasVariant(globalVariants, "theme", "classic")
-                            }
+                            sty.freeBox__hjAjT
                           )}
                         >
-                          {
-                            "Designing a shell for a mini rhythm game console in fusion 360."
-                          }
-                        </div>
-                      </div>
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          sty.freeBox__cwDp4
-                        )}
-                      >
-                        <PlasmicImg__
-                          alt={""}
-                          className={classNames(sty.img__y1Xfh)}
-                          displayHeight={"400px"}
-                          displayMaxHeight={"none"}
-                          displayMaxWidth={"none"}
-                          displayMinHeight={"0"}
-                          displayMinWidth={"0"}
-                          displayWidth={"auto"}
-                          src={{
-                            src: "/plasmic/disuko_website_retro_version/images/consoleShellPrintsJpg.jpg",
-                            fullWidth: 800,
-                            fullHeight: 600,
-                            aspectRatio: undefined
-                          }}
-                        />
+                          <PlasmicImg__
+                            alt={""}
+                            className={classNames(sty.img__pqmqf)}
+                            displayHeight={"400px"}
+                            displayMaxHeight={"none"}
+                            displayMaxWidth={"none"}
+                            displayMinHeight={"0"}
+                            displayMinWidth={"0"}
+                            displayWidth={"auto"}
+                            src={{
+                              src: "/plasmic/disuko_website_retro_version/images/consoleShellWipJpg.jpg",
+                              fullWidth: 800,
+                              fullHeight: 600,
+                              aspectRatio: undefined
+                            }}
+                          />
 
+                          <div
+                            className={classNames(
+                              projectcss.all,
+                              projectcss.__wab_text,
+                              sty.text__wWj1O,
+                              {
+                                [sty.textglobal_theme_classic__wWj1OeNktM]:
+                                  hasVariant(globalVariants, "theme", "classic")
+                              }
+                            )}
+                          >
+                            {
+                              "Designing a shell for a mini rhythm game console in fusion 360."
+                            }
+                          </div>
+                        </div>
                         <div
                           className={classNames(
                             projectcss.all,
-                            projectcss.__wab_text,
-                            sty.text__qNSh7,
-                            {
-                              [sty.textglobal_theme_classic__qNSh7ENktM]:
-                                hasVariant(globalVariants, "theme", "classic")
-                            }
+                            sty.freeBox__cwDp4
                           )}
                         >
-                          {
-                            "Iterating with prototypes to fit electronic components."
-                          }
-                        </div>
-                      </div>
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          sty.freeBox__idNuc
-                        )}
-                      >
-                        <PlasmicImg__
-                          alt={""}
-                          className={classNames(sty.img__mZbTl)}
-                          displayHeight={"400px"}
-                          displayMaxHeight={"none"}
-                          displayMaxWidth={"none"}
-                          displayMinHeight={"0"}
-                          displayMinWidth={"0"}
-                          displayWidth={"100%"}
-                          src={{
-                            src: "/plasmic/disuko_website_retro_version/images/disukoRhythmGameSp24Jpg.jpg",
-                            fullWidth: 1080,
-                            fullHeight: 1080,
-                            aspectRatio: undefined
-                          }}
-                        />
+                          <PlasmicImg__
+                            alt={""}
+                            className={classNames(sty.img__y1Xfh)}
+                            displayHeight={"400px"}
+                            displayMaxHeight={"none"}
+                            displayMaxWidth={"none"}
+                            displayMinHeight={"0"}
+                            displayMinWidth={"0"}
+                            displayWidth={"auto"}
+                            src={{
+                              src: "/plasmic/disuko_website_retro_version/images/consoleShellPrintsJpg.jpg",
+                              fullWidth: 800,
+                              fullHeight: 600,
+                              aspectRatio: undefined
+                            }}
+                          />
 
+                          <div
+                            className={classNames(
+                              projectcss.all,
+                              projectcss.__wab_text,
+                              sty.text__qNSh7,
+                              {
+                                [sty.textglobal_theme_classic__qNSh7ENktM]:
+                                  hasVariant(globalVariants, "theme", "classic")
+                              }
+                            )}
+                          >
+                            {
+                              "Iterating with prototypes to fit electronic components."
+                            }
+                          </div>
+                        </div>
                         <div
                           className={classNames(
                             projectcss.all,
-                            projectcss.__wab_text,
-                            sty.text__oP1K,
-                            {
-                              [sty.textglobal_theme_classic__oP1KENktM]:
-                                hasVariant(globalVariants, "theme", "classic")
-                            }
+                            sty.freeBox__idNuc
                           )}
                         >
-                          {"The final console!"}
+                          <PlasmicImg__
+                            alt={""}
+                            className={classNames(sty.img__mZbTl)}
+                            displayHeight={"400px"}
+                            displayMaxHeight={"none"}
+                            displayMaxWidth={"none"}
+                            displayMinHeight={"0"}
+                            displayMinWidth={"0"}
+                            displayWidth={"100%"}
+                            src={{
+                              src: "/plasmic/disuko_website_retro_version/images/disukoRhythmGameSp24Jpg.jpg",
+                              fullWidth: 1080,
+                              fullHeight: 1080,
+                              aspectRatio: undefined
+                            }}
+                          />
+
+                          <div
+                            className={classNames(
+                              projectcss.all,
+                              projectcss.__wab_text,
+                              sty.text__oP1K,
+                              {
+                                [sty.textglobal_theme_classic__oP1KENktM]:
+                                  hasVariant(globalVariants, "theme", "classic")
+                              }
+                            )}
+                          >
+                            {"The final console!"}
+                          </div>
                         </div>
-                      </div>
-                    </SliderWrapper>
-                  );
-                })()}
+                      </SliderWrapper>
+                    );
+                  })()}
+                </div>
               </div>
-            </Stack__>
-          </Stack__>
+            </div>
+          </div>
         </div>
       </div>
     </React.Fragment>
@@ -2618,6 +3238,8 @@ const PlasmicDescendants = {
     "_3DDesign",
     "navbar",
     "windowButton",
+    "characters",
+    "imageWindow",
     "imageWindow20",
     "imageWindow21",
     "imageWindow16",
@@ -2636,7 +3258,13 @@ const PlasmicDescendants = {
     "imageWindow23",
     "imageWindow34",
     "imageWindow35",
+    "environment",
     "imageWindow13",
+    "imageWindow47",
+    "imageWindow48",
+    "imageWindow49",
+    "imageWindow46",
+    "productRenders",
     "realisticProductRenders",
     "imageWindow25",
     "imageWindow26",
@@ -2651,14 +3279,46 @@ const PlasmicDescendants = {
     "stylizedProductRenders",
     "imageWindow14",
     "imageWindow15",
-    "imageWindow",
-    "imageWindow2",
-    "imageWindow3",
+    "cadAndPrinting",
+    "imageWindow19",
+    "imageWindow42",
+    "imageWindow36",
+    "imageWindow41",
+    "imageWindow39",
+    "imageWindow45",
+    "imageWindow40",
+    "imageWindow43",
+    "imageWindow44",
+    "imageWindow37",
+    "imageWindow38",
     "cad2",
     "cad"
   ],
   navbar: ["navbar"],
   windowButton: ["windowButton"],
+  characters: [
+    "characters",
+    "imageWindow",
+    "imageWindow20",
+    "imageWindow21",
+    "imageWindow16",
+    "imageWindow17",
+    "imageWindow18",
+    "imageWindow22",
+    "imageWindow4",
+    "imageWindow5",
+    "imageWindow10",
+    "imageWindow6",
+    "imageWindow7",
+    "imageWindow11",
+    "imageWindow8",
+    "imageWindow9",
+    "imageWindow12",
+    "imageWindow23",
+    "imageWindow34",
+    "imageWindow35"
+  ],
+  imageWindow: ["imageWindow"],
   imageWindow20: ["imageWindow20"],
   imageWindow21: ["imageWindow21"],
   imageWindow16: ["imageWindow16"],
@@ -2677,7 +3337,36 @@ const PlasmicDescendants = {
   imageWindow23: ["imageWindow23"],
   imageWindow34: ["imageWindow34"],
   imageWindow35: ["imageWindow35"],
+  environment: [
+    "environment",
+    "imageWindow13",
+    "imageWindow47",
+    "imageWindow48",
+    "imageWindow49",
+    "imageWindow46"
+  ],
   imageWindow13: ["imageWindow13"],
+  imageWindow47: ["imageWindow47"],
+  imageWindow48: ["imageWindow48"],
+  imageWindow49: ["imageWindow49"],
+  imageWindow46: ["imageWindow46"],
+  productRenders: [
+    "productRenders",
+    "realisticProductRenders",
+    "imageWindow25",
+    "imageWindow26",
+    "imageWindow24",
+    "imageWindow27",
+    "imageWindow28",
+    "imageWindow29",
+    "imageWindow30",
+    "imageWindow32",
+    "imageWindow31",
+    "imageWindow33",
+    "stylizedProductRenders",
+    "imageWindow14",
+    "imageWindow15"
+  ],
   realisticProductRenders: [
     "realisticProductRenders",
     "imageWindow25",
@@ -2708,9 +3397,33 @@ const PlasmicDescendants = {
   ],
   imageWindow14: ["imageWindow14"],
   imageWindow15: ["imageWindow15"],
-  imageWindow: ["imageWindow"],
-  imageWindow2: ["imageWindow2"],
-  imageWindow3: ["imageWindow3"],
+  cadAndPrinting: [
+    "cadAndPrinting",
+    "imageWindow19",
+    "imageWindow42",
+    "imageWindow36",
+    "imageWindow41",
+    "imageWindow39",
+    "imageWindow45",
+    "imageWindow40",
+    "imageWindow43",
+    "imageWindow44",
+    "imageWindow37",
+    "imageWindow38",
+    "cad2",
+    "cad"
+  ],
+  imageWindow19: ["imageWindow19"],
+  imageWindow42: ["imageWindow42"],
+  imageWindow36: ["imageWindow36"],
+  imageWindow41: ["imageWindow41"],
+  imageWindow39: ["imageWindow39"],
+  imageWindow45: ["imageWindow45"],
+  imageWindow40: ["imageWindow40"],
+  imageWindow43: ["imageWindow43"],
+  imageWindow44: ["imageWindow44"],
+  imageWindow37: ["imageWindow37"],
+  imageWindow38: ["imageWindow38"],
   cad2: ["cad2"],
   cad: ["cad"]
 } as const;
@@ -2721,6 +3434,8 @@ type NodeDefaultElementType = {
   _3DDesign: "div";
   navbar: typeof Navbar;
   windowButton: typeof WindowButton;
+  characters: "div";
+  imageWindow: typeof ImageWindow;
   imageWindow20: "div";
   imageWindow21: "div";
   imageWindow16: "div";
@@ -2739,7 +3454,13 @@ type NodeDefaultElementType = {
   imageWindow23: "div";
   imageWindow34: "div";
   imageWindow35: "div";
+  environment: "div";
   imageWindow13: "div";
+  imageWindow47: "div";
+  imageWindow48: "div";
+  imageWindow49: "div";
+  imageWindow46: "div";
+  productRenders: "div";
   realisticProductRenders: "div";
   imageWindow25: "div";
   imageWindow26: "div";
@@ -2754,9 +3475,18 @@ type NodeDefaultElementType = {
   stylizedProductRenders: "div";
   imageWindow14: "div";
   imageWindow15: "div";
-  imageWindow: "div";
-  imageWindow2: "div";
-  imageWindow3: "div";
+  cadAndPrinting: "div";
+  imageWindow19: "div";
+  imageWindow42: "div";
+  imageWindow36: "div";
+  imageWindow41: "div";
+  imageWindow39: "div";
+  imageWindow45: "div";
+  imageWindow40: "div";
+  imageWindow43: "div";
+  imageWindow44: "div";
+  imageWindow37: "div";
+  imageWindow38: "div";
   cad2: typeof SliderWrapper;
   cad: typeof SliderWrapper;
 };
@@ -2772,7 +3502,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicPortfolio3DDesign__VariantsArgs;
     args?: PlasmicPortfolio3DDesign__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicPortfolio3DDesign__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicPortfolio3DDesign__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicPortfolio3DDesign__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
@@ -2848,6 +3580,8 @@ export const PlasmicPortfolio3DDesign = Object.assign(
     // Helper components rendering sub-elements
     navbar: makeNodeComponent("navbar"),
     windowButton: makeNodeComponent("windowButton"),
+    characters: makeNodeComponent("characters"),
+    imageWindow: makeNodeComponent("imageWindow"),
     imageWindow20: makeNodeComponent("imageWindow20"),
     imageWindow21: makeNodeComponent("imageWindow21"),
     imageWindow16: makeNodeComponent("imageWindow16"),
@@ -2866,7 +3600,13 @@ export const PlasmicPortfolio3DDesign = Object.assign(
     imageWindow23: makeNodeComponent("imageWindow23"),
     imageWindow34: makeNodeComponent("imageWindow34"),
     imageWindow35: makeNodeComponent("imageWindow35"),
+    environment: makeNodeComponent("environment"),
     imageWindow13: makeNodeComponent("imageWindow13"),
+    imageWindow47: makeNodeComponent("imageWindow47"),
+    imageWindow48: makeNodeComponent("imageWindow48"),
+    imageWindow49: makeNodeComponent("imageWindow49"),
+    imageWindow46: makeNodeComponent("imageWindow46"),
+    productRenders: makeNodeComponent("productRenders"),
     realisticProductRenders: makeNodeComponent("realisticProductRenders"),
     imageWindow25: makeNodeComponent("imageWindow25"),
     imageWindow26: makeNodeComponent("imageWindow26"),
@@ -2881,9 +3621,18 @@ export const PlasmicPortfolio3DDesign = Object.assign(
     stylizedProductRenders: makeNodeComponent("stylizedProductRenders"),
     imageWindow14: makeNodeComponent("imageWindow14"),
     imageWindow15: makeNodeComponent("imageWindow15"),
-    imageWindow: makeNodeComponent("imageWindow"),
-    imageWindow2: makeNodeComponent("imageWindow2"),
-    imageWindow3: makeNodeComponent("imageWindow3"),
+    cadAndPrinting: makeNodeComponent("cadAndPrinting"),
+    imageWindow19: makeNodeComponent("imageWindow19"),
+    imageWindow42: makeNodeComponent("imageWindow42"),
+    imageWindow36: makeNodeComponent("imageWindow36"),
+    imageWindow41: makeNodeComponent("imageWindow41"),
+    imageWindow39: makeNodeComponent("imageWindow39"),
+    imageWindow45: makeNodeComponent("imageWindow45"),
+    imageWindow40: makeNodeComponent("imageWindow40"),
+    imageWindow43: makeNodeComponent("imageWindow43"),
+    imageWindow44: makeNodeComponent("imageWindow44"),
+    imageWindow37: makeNodeComponent("imageWindow37"),
+    imageWindow38: makeNodeComponent("imageWindow38"),
     cad2: makeNodeComponent("cad2"),
     cad: makeNodeComponent("cad"),
 
@@ -2891,14 +3640,12 @@ export const PlasmicPortfolio3DDesign = Object.assign(
     internalVariantProps: PlasmicPortfolio3DDesign__VariantProps,
     internalArgProps: PlasmicPortfolio3DDesign__ArgProps,
 
-    // Page metadata
-    pageMetadata: {
-      title: "3D Design",
-      description: '3D Design portfolio of Angelo "Disuko" Licavoli',
-      ogImageSrc:
-        "https://site-assets.plasmic.app/f33b16e8e3629b301959c659f5c8f11d.jpg",
-      canonical: "https://disuko.gay/3d-design"
-    }
+    pageMetadata: generateDynamicMetadata(wrapQueriesWithLoadingProxy({}), {
+      pageRoute: "/3d-design",
+      pagePath: "/3d-design",
+      params: {},
+      query: {}
+    })
   }
 );
 

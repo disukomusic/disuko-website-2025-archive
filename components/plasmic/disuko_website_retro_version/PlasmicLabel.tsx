@@ -60,11 +60,11 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { BaseLabel } from "@plasmicpkgs/react-aria/skinny/registerLabel";
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectcss
 import sty from "./PlasmicLabel.module.css"; // plasmic-import: _lNalJbTgwuu/css
 
@@ -140,32 +140,38 @@ function PlasmicLabel__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const currentUser = useCurrentUser?.() || {};
-
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
         path: "size",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.size
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.size
       },
       {
         path: "requirementIndicator",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           $props.requirementIndicator
       }
     ],
     [$props, $ctx, $refs]
   );
+
+  const globalVariants = _useGlobalVariants();
+
+  const currentUser = useCurrentUser?.() || {};
+
   const $state = useDollarState(stateSpecs, {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <BaseLabel
@@ -178,9 +184,7 @@ function PlasmicLabel__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
-        plasmic_plasmic_rich_components_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root,
         {
           [sty.rootrequirementIndicator_optional]: hasVariant(
@@ -198,11 +202,9 @@ function PlasmicLabel__RenderFunc(props: {
         }
       )}
     >
-      <Stack__
-        as={"div"}
+      <div
         data-plasmic-name={"freeBox"}
         data-plasmic-override={overrides.freeBox}
-        hasGap={true}
         className={classNames(projectcss.all, sty.freeBox, {
           [sty.freeBoxrequirementIndicator_optional]: hasVariant(
             $state,
@@ -256,7 +258,7 @@ function PlasmicLabel__RenderFunc(props: {
             ? "*"
             : "(optional)"}
         </div>
-      </Stack__>
+      </div>
     </BaseLabel>
   ) as React.ReactElement | null;
 }
@@ -286,7 +288,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicLabel__VariantsArgs;
     args?: PlasmicLabel__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicLabel__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicLabel__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicLabel__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

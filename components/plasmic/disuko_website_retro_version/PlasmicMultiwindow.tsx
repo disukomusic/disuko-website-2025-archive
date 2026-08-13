@@ -60,13 +60,11 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
-
-import { useScreenVariants as useScreenVariantsdmuurUfQuA6N } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: DmuurUFQuA6N/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectcss
 import sty from "./PlasmicMultiwindow.module.css"; // plasmic-import: agRDam8zA0LH/css
 
@@ -167,35 +165,37 @@ function PlasmicMultiwindow__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const currentUser = useCurrentUser?.() || {};
-
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
         path: "closeWindow1",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => true
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => true
       },
       {
         path: "closeWindow22",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => true
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => true
       }
     ],
     [$props, $ctx, $refs]
   );
+
+  const globalVariants = _useGlobalVariants();
+
+  const currentUser = useCurrentUser?.() || {};
+
   const $state = useDollarState(stateSpecs, {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
-  const globalVariants = ensureGlobalVariants({
-    screen: useScreenVariantsdmuurUfQuA6N()
-  });
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <div
@@ -208,16 +208,19 @@ function PlasmicMultiwindow__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
-        plasmic_plasmic_rich_components_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
     >
       <PlasmicLink__
         data-plasmic-name={"window"}
         data-plasmic-override={overrides.window}
-        className={classNames(projectcss.all, projectcss.a, sty.window)}
+        className={classNames(
+          projectcss.all,
+          projectcss.a,
+          projectcss.a__x4VgG,
+          sty.window
+        )}
         component={Link}
         href={(() => {
           try {
@@ -232,6 +235,7 @@ function PlasmicMultiwindow__RenderFunc(props: {
             throw e;
           }
         })()}
+        legacyBehavior={false}
         platform={"nextjs"}
       >
         <div className={classNames(projectcss.all, sty.freeBox___8SkNa)}>
@@ -261,7 +265,12 @@ function PlasmicMultiwindow__RenderFunc(props: {
           <PlasmicLink__
             data-plasmic-name={"xButton3"}
             data-plasmic-override={overrides.xButton3}
-            className={classNames(projectcss.all, projectcss.a, sty.xButton3)}
+            className={classNames(
+              projectcss.all,
+              projectcss.a,
+              projectcss.a__x4VgG,
+              sty.xButton3
+            )}
             component={Link}
             href={(() => {
               try {
@@ -276,6 +285,7 @@ function PlasmicMultiwindow__RenderFunc(props: {
                 throw e;
               }
             })()}
+            legacyBehavior={false}
             onClick={async event => {
               const $steps = {};
 
@@ -390,7 +400,12 @@ function PlasmicMultiwindow__RenderFunc(props: {
         <PlasmicLink__
           data-plasmic-name={"window2"}
           data-plasmic-override={overrides.window2}
-          className={classNames(projectcss.all, projectcss.a, sty.window2)}
+          className={classNames(
+            projectcss.all,
+            projectcss.a,
+            projectcss.a__x4VgG,
+            sty.window2
+          )}
           component={Link}
           href={(() => {
             try {
@@ -405,6 +420,7 @@ function PlasmicMultiwindow__RenderFunc(props: {
               throw e;
             }
           })()}
+          legacyBehavior={false}
           onClick={async event => {
             const $steps = {};
 
@@ -434,9 +450,8 @@ function PlasmicMultiwindow__RenderFunc(props: {
               typeof $steps["updateCloseWindow22"] === "object" &&
               typeof $steps["updateCloseWindow22"].then === "function"
             ) {
-              $steps["updateCloseWindow22"] = await $steps[
-                "updateCloseWindow22"
-              ];
+              $steps["updateCloseWindow22"] =
+                await $steps["updateCloseWindow22"];
             }
           }}
           platform={"nextjs"}
@@ -468,7 +483,12 @@ function PlasmicMultiwindow__RenderFunc(props: {
             <PlasmicLink__
               data-plasmic-name={"xButton2"}
               data-plasmic-override={overrides.xButton2}
-              className={classNames(projectcss.all, projectcss.a, sty.xButton2)}
+              className={classNames(
+                projectcss.all,
+                projectcss.a,
+                projectcss.a__x4VgG,
+                sty.xButton2
+              )}
               component={Link}
               href={(() => {
                 try {
@@ -483,6 +503,7 @@ function PlasmicMultiwindow__RenderFunc(props: {
                   throw e;
                 }
               })()}
+              legacyBehavior={false}
               onClick={async event => {
                 const $steps = {};
 
@@ -615,7 +636,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicMultiwindow__VariantsArgs;
     args?: PlasmicMultiwindow__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicMultiwindow__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicMultiwindow__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicMultiwindow__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

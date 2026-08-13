@@ -61,10 +61,11 @@ import {
 
 import * as pp from "@plasmicapp/react-web";
 
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/styleTokensProvider
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectcss
 import sty from "./PlasmicSelect__Option.module.css"; // plasmic-import: 0P9L-03iwYFK/css
 
@@ -147,41 +148,48 @@ function PlasmicSelect__Option__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const currentUser = useCurrentUser?.() || {};
-
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
         path: "isSelected",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.isSelected
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.isSelected
       },
       {
         path: "isHighlighted",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.isHighlighted
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
+          $props.isHighlighted
       },
       {
         path: "isDisabled",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.isDisabled
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.isDisabled
       }
     ],
     [$props, $ctx, $refs]
   );
+
+  const globalVariants = _useGlobalVariants();
+
+  const currentUser = useCurrentUser?.() || {};
+
   const $state = useDollarState(stateSpecs, {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
   const superContexts = {
     Select: React.useContext(SUPER__PlasmicSelect.Context)
   };
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <div
@@ -194,9 +202,7 @@ function PlasmicSelect__Option__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
-        plasmic_plasmic_rich_components_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root,
         {
           [sty.rootisDisabled]: hasVariant($state, "isDisabled", "isDisabled"),
@@ -280,7 +286,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSelect__Option__VariantsArgs;
     args?: PlasmicSelect__Option__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSelect__Option__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSelect__Option__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSelect__Option__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

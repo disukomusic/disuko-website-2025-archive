@@ -60,14 +60,11 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { Embed } from "@plasmicpkgs/plasmic-basic-components";
-
-import { useScreenVariants as useScreenVariantsdmuurUfQuA6N } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: DmuurUFQuA6N/globalVariant
-import { ThemeValue, useTheme } from "./PlasmicGlobalVariant__Theme"; // plasmic-import: 3K9IqsAFaaID/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectcss
 import sty from "./PlasmicFooter.module.css"; // plasmic-import: shKoGjSwLEEB/css
 
@@ -85,10 +82,11 @@ export const PlasmicFooter__ArgProps = new Array<ArgPropType>();
 export type PlasmicFooter__OverridesType = {
   root?: Flex__<"div">;
   columns?: Flex__<"div">;
-  freeBox?: Flex__<"div">;
   rpsLink?: Flex__<"a"> & Partial<LinkProps>;
   dotgay?: Flex__<"a"> & Partial<LinkProps>;
-  embedHtml?: Flex__<typeof Embed>;
+  theme?: Flex__<"div">;
+  classic?: Flex__<"a"> & Partial<LinkProps>;
+  classic2?: Flex__<"a"> & Partial<LinkProps>;
 };
 
 export interface DefaultFooterProps {
@@ -134,12 +132,11 @@ function PlasmicFooter__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = _useGlobalVariants();
+
   const currentUser = useCurrentUser?.() || {};
 
-  const globalVariants = ensureGlobalVariants({
-    screen: useScreenVariantsdmuurUfQuA6N(),
-    theme: useTheme()
-  });
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <div
@@ -152,16 +149,9 @@ function PlasmicFooter__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
-        plasmic_plasmic_rich_components_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root,
         {
-          [projectcss.global_theme_classic]: hasVariant(
-            globalVariants,
-            "theme",
-            "classic"
-          ),
           [sty.rootglobal_theme_classic]: hasVariant(
             globalVariants,
             "theme",
@@ -170,11 +160,9 @@ function PlasmicFooter__RenderFunc(props: {
         }
       )}
     >
-      <Stack__
-        as={"div"}
+      <div
         data-plasmic-name={"columns"}
         data-plasmic-override={overrides.columns}
-        hasGap={true}
         className={classNames(projectcss.all, sty.columns, {
           [sty.columnsglobal_theme_classic]: hasVariant(
             globalVariants,
@@ -184,19 +172,19 @@ function PlasmicFooter__RenderFunc(props: {
         })}
       >
         <div className={classNames(projectcss.all, sty.column__fE1Co)}>
-          <Stack__
-            as={"div"}
-            data-plasmic-name={"freeBox"}
-            data-plasmic-override={overrides.freeBox}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox__pGab3)}>
             <PlasmicLink__
               data-plasmic-name={"rpsLink"}
               data-plasmic-override={overrides.rpsLink}
-              className={classNames(projectcss.all, projectcss.a, sty.rpsLink)}
+              className={classNames(
+                projectcss.all,
+                projectcss.a,
+                projectcss.a__x4VgG,
+                sty.rpsLink
+              )}
               component={Link}
               href={"https://redpandastudios.net"}
+              legacyBehavior={false}
               platform={"nextjs"}
               target={"_blank"}
             >
@@ -214,7 +202,7 @@ function PlasmicFooter__RenderFunc(props: {
                 displayMinWidth={"0"}
                 displayWidth={
                   hasVariant(globalVariants, "screen", "mobileOnly")
-                    ? "64px"
+                    ? "auto"
                     : "auto"
                 }
                 loading={"lazy"}
@@ -226,49 +214,105 @@ function PlasmicFooter__RenderFunc(props: {
                 }}
               />
             </PlasmicLink__>
-          </Stack__>
+          </div>
         </div>
         <div className={classNames(projectcss.all, sty.column___7Zhwx)}>
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text___76Zlv,
-              {
-                [sty.textglobal_theme_classic___76ZlVeNktM]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              }
-            )}
-          >
-            {"\u00a9 Red Panda Studios 2024"}
+          <div className={classNames(projectcss.all, sty.freeBox___2N83S)}>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text___76Zlv,
+                {
+                  [sty.textglobal_theme_classic___76ZlVeNktM]: hasVariant(
+                    globalVariants,
+                    "theme",
+                    "classic"
+                  )
+                }
+              )}
+            >
+              <React.Fragment>
+                <React.Fragment>{""}</React.Fragment>
+                {
+                  <PlasmicLink__
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.a,
+                      projectcss.a__x4VgG,
+                      projectcss.__wab_text,
+                      projectcss.plasmic_default__inline,
+                      sty.link__vQmL
+                    )}
+                    component={Link}
+                    href={"https://redpandastudios.net"}
+                    legacyBehavior={false}
+                    platform={"nextjs"}
+                  >
+                    {"\u00a9 Red Panda Studios 2026"}
+                  </PlasmicLink__>
+                }
+                <React.Fragment>{""}</React.Fragment>
+              </React.Fragment>
+            </div>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__kdu93,
+                {
+                  [sty.textglobal_theme_classic__kdu93ENktM]: hasVariant(
+                    globalVariants,
+                    "theme",
+                    "classic"
+                  )
+                }
+              )}
+            >
+              <React.Fragment>
+                <React.Fragment>{""}</React.Fragment>
+                {
+                  <PlasmicLink__
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.a,
+                      projectcss.a__x4VgG,
+                      projectcss.__wab_text,
+                      projectcss.plasmic_default__inline,
+                      sty.link__rX07M
+                    )}
+                    component={Link}
+                    href={"https://tabler.io/icons"}
+                    legacyBehavior={false}
+                    platform={"nextjs"}
+                  >
+                    {"icons from tabler"}
+                  </PlasmicLink__>
+                }
+                <React.Fragment>{""}</React.Fragment>
+              </React.Fragment>
+            </div>
           </div>
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__kdu93,
-              {
-                [sty.textglobal_theme_classic__kdu93ENktM]: hasVariant(
-                  globalVariants,
-                  "theme",
-                  "classic"
-                )
-              }
-            )}
-          >
-            {"icons from tabler"}
-          </div>
+          <Embed
+            className={classNames("__wab_instance", sty.embedHtml__iTzWq)}
+            code={
+              '<a rel="me" href="https://mastodon.art/@disuko">Mastodon</a>'
+            }
+          />
         </div>
         <div className={classNames(projectcss.all, sty.column__e7FGn)}>
           <PlasmicLink__
             data-plasmic-name={"dotgay"}
             data-plasmic-override={overrides.dotgay}
-            className={classNames(projectcss.all, projectcss.a, sty.dotgay)}
+            className={classNames(
+              projectcss.all,
+              projectcss.a,
+              projectcss.a__x4VgG,
+              sty.dotgay
+            )}
             component={Link}
             href={"https://www.ohhey.gay"}
+            legacyBehavior={false}
             platform={"nextjs"}
             target={"_blank"}
           >
@@ -293,26 +337,102 @@ function PlasmicFooter__RenderFunc(props: {
         </div>
         <div className={classNames(projectcss.all, sty.column__eh7Rf)}>
           <Embed
-            data-plasmic-name={"embedHtml"}
-            data-plasmic-override={overrides.embedHtml}
-            className={classNames("__wab_instance", sty.embedHtml)}
+            className={classNames("__wab_instance", sty.embedHtml__pltue)}
             code={
               "<div>\r\n  <strong>last updated:</strong> <span id=\"commit-date\"></span>\r\n</div>\r\n<div id=\"latest-commit\"></div>\r\n\r\n<script>\r\n  const owner = 'disukomusic';\r\n  const repo = 'disuko-website-2025';\r\n  const branch = 'main';\r\n  const dateSpan = document.getElementById('commit-date');\r\n  const container = document.getElementById('latest-commit');\r\n\r\n  async function fetchLatestCommit() {\r\n    try {\r\n      const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/commits?sha=${branch}&per_page=1`);\r\n      const data = await response.json();\r\n\r\n      if (!data.length) {\r\n        container.innerHTML = '<p>No commits found.</p>';\r\n        return;\r\n      }\r\n\r\n      const commit = data[0];\r\n      const date = new Date(commit.commit.author.date);\r\n      const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;\r\n      const url = commit.html_url;\r\n      const title = commit.commit.message.split('\\n')[0];\r\n\r\n      dateSpan.textContent = formattedDate;\r\n      container.innerHTML = `<ul>\r\n          <li><a href=\"${url}\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>${title}</strong></a></li></ul>\r\n      `;\r\n    } catch (err) {\r\n      container.innerHTML = `<p>Error fetching commit: ${err.message}</p>`;\r\n    }\r\n  }\r\n\r\n  window.onload = function() {\r\n    fetchLatestCommit();\r\n  };\r\n</script>\r\n"
             }
           />
+
+          <div
+            data-plasmic-name={"theme"}
+            data-plasmic-override={overrides.theme}
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.theme
+            )}
+          >
+            {"Themes"}
+          </div>
+          <div className={classNames(projectcss.all, sty.freeBox__zl4KN)}>
+            <PlasmicLink__
+              data-plasmic-name={"classic"}
+              data-plasmic-override={overrides.classic}
+              className={classNames(
+                projectcss.all,
+                projectcss.a,
+                projectcss.a__x4VgG,
+                projectcss.__wab_text,
+                sty.classic
+              )}
+              component={Link}
+              legacyBehavior={false}
+              onClick={async event => {
+                const $steps = {};
+
+                $steps["runCode"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return ($state.themes = "classic");
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runCode"] != null &&
+                  typeof $steps["runCode"] === "object" &&
+                  typeof $steps["runCode"].then === "function"
+                ) {
+                  $steps["runCode"] = await $steps["runCode"];
+                }
+              }}
+              platform={"nextjs"}
+            >
+              {"Default"}
+            </PlasmicLink__>
+            <PlasmicLink__
+              data-plasmic-name={"classic2"}
+              data-plasmic-override={overrides.classic2}
+              className={classNames(
+                projectcss.all,
+                projectcss.a,
+                projectcss.a__x4VgG,
+                projectcss.__wab_text,
+                sty.classic2
+              )}
+              component={Link}
+              legacyBehavior={false}
+              platform={"nextjs"}
+            >
+              {"Classic"}
+            </PlasmicLink__>
+          </div>
         </div>
-      </Stack__>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "columns", "freeBox", "rpsLink", "dotgay", "embedHtml"],
-  columns: ["columns", "freeBox", "rpsLink", "dotgay", "embedHtml"],
-  freeBox: ["freeBox", "rpsLink"],
+  root: [
+    "root",
+    "columns",
+    "rpsLink",
+    "dotgay",
+    "theme",
+    "classic",
+    "classic2"
+  ],
+  columns: ["columns", "rpsLink", "dotgay", "theme", "classic", "classic2"],
   rpsLink: ["rpsLink"],
   dotgay: ["dotgay"],
-  embedHtml: ["embedHtml"]
+  theme: ["theme"],
+  classic: ["classic"],
+  classic2: ["classic2"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -320,10 +440,11 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   columns: "div";
-  freeBox: "div";
   rpsLink: "a";
   dotgay: "a";
-  embedHtml: typeof Embed;
+  theme: "div";
+  classic: "a";
+  classic2: "a";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -337,7 +458,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicFooter__VariantsArgs;
     args?: PlasmicFooter__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicFooter__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicFooter__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicFooter__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
@@ -387,10 +510,11 @@ export const PlasmicFooter = Object.assign(
   {
     // Helper components rendering sub-elements
     columns: makeNodeComponent("columns"),
-    freeBox: makeNodeComponent("freeBox"),
     rpsLink: makeNodeComponent("rpsLink"),
     dotgay: makeNodeComponent("dotgay"),
-    embedHtml: makeNodeComponent("embedHtml"),
+    theme: makeNodeComponent("theme"),
+    classic: makeNodeComponent("classic"),
+    classic2: makeNodeComponent("classic2"),
 
     // Metadata about props expected for PlasmicFooter
     internalVariantProps: PlasmicFooter__VariantProps,

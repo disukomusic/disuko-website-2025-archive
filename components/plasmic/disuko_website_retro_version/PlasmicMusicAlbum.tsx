@@ -61,11 +61,11 @@ import {
 
 import { AntdPopover } from "@plasmicpkgs/antd5/skinny/registerPopover";
 import Tilt from "@plasmicpkgs/react-parallax-tilt";
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectcss
 import sty from "./PlasmicMusicAlbum.module.css"; // plasmic-import: xhHvzxTdb1Y8/css
 
@@ -169,41 +169,45 @@ function PlasmicMusicAlbum__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const currentUser = useCurrentUser?.() || {};
-
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
         path: "spotify.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "appleMusic.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "bandcamp.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "youTube.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
   );
+
+  const globalVariants = _useGlobalVariants();
+
+  const currentUser = useCurrentUser?.() || {};
+
   const $state = useDollarState(stateSpecs, {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -211,6 +215,8 @@ function PlasmicMusicAlbum__RenderFunc(props: {
   const triggers = {
     hover_root: isRootHover
   };
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <div
@@ -223,9 +229,7 @@ function PlasmicMusicAlbum__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
-        plasmic_plasmic_rich_components_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
       data-plasmic-trigger-props={[triggerRootHoverProps]}
@@ -251,11 +255,9 @@ function PlasmicMusicAlbum__RenderFunc(props: {
           })()}
         </React.Fragment>
       </div>
-      <Stack__
-        as={"div"}
+      <div
         data-plasmic-name={"buttons"}
         data-plasmic-override={overrides.buttons}
-        hasGap={true}
         className={classNames(projectcss.all, sty.buttons)}
       >
         <AntdPopover
@@ -269,9 +271,7 @@ function PlasmicMusicAlbum__RenderFunc(props: {
             projectcss.root_reset,
             projectcss.plasmic_default_styles,
             projectcss.plasmic_mixins,
-            projectcss.plasmic_tokens,
-            plasmic_antd_5_hostless_css.plasmic_tokens,
-            plasmic_plasmic_rich_components_css.plasmic_tokens
+            styleTokensClassNames
           )}
           mouseEnterDelay={0}
           mouseLeaveDelay={0}
@@ -290,10 +290,12 @@ function PlasmicMusicAlbum__RenderFunc(props: {
             className={classNames(
               projectcss.all,
               projectcss.a,
+              projectcss.a__x4VgG,
               sty.link__nSoMy
             )}
             component={Link}
             href={args.spotifyLink}
+            legacyBehavior={false}
             platform={"nextjs"}
             target={"_blank"}
           >
@@ -314,9 +316,7 @@ function PlasmicMusicAlbum__RenderFunc(props: {
             projectcss.root_reset,
             projectcss.plasmic_default_styles,
             projectcss.plasmic_mixins,
-            projectcss.plasmic_tokens,
-            plasmic_antd_5_hostless_css.plasmic_tokens,
-            plasmic_plasmic_rich_components_css.plasmic_tokens
+            styleTokensClassNames
           )}
           mouseEnterDelay={0}
           mouseLeaveDelay={0}
@@ -335,10 +335,12 @@ function PlasmicMusicAlbum__RenderFunc(props: {
             className={classNames(
               projectcss.all,
               projectcss.a,
+              projectcss.a__x4VgG,
               sty.link__r9Psl
             )}
             component={Link}
             href={args.appleMusicLink}
+            legacyBehavior={false}
             platform={"nextjs"}
             target={"_blank"}
           >
@@ -359,9 +361,7 @@ function PlasmicMusicAlbum__RenderFunc(props: {
             projectcss.root_reset,
             projectcss.plasmic_default_styles,
             projectcss.plasmic_mixins,
-            projectcss.plasmic_tokens,
-            plasmic_antd_5_hostless_css.plasmic_tokens,
-            plasmic_plasmic_rich_components_css.plasmic_tokens
+            styleTokensClassNames
           )}
           mouseEnterDelay={0}
           mouseLeaveDelay={0}
@@ -380,10 +380,12 @@ function PlasmicMusicAlbum__RenderFunc(props: {
             className={classNames(
               projectcss.all,
               projectcss.a,
+              projectcss.a__x4VgG,
               sty.link__xChzL
             )}
             component={Link}
             href={args.bandcampLink}
+            legacyBehavior={false}
             platform={"nextjs"}
             target={"_blank"}
           >
@@ -404,9 +406,7 @@ function PlasmicMusicAlbum__RenderFunc(props: {
             projectcss.root_reset,
             projectcss.plasmic_default_styles,
             projectcss.plasmic_mixins,
-            projectcss.plasmic_tokens,
-            plasmic_antd_5_hostless_css.plasmic_tokens,
-            plasmic_plasmic_rich_components_css.plasmic_tokens
+            styleTokensClassNames
           )}
           mouseEnterDelay={0}
           mouseLeaveDelay={0}
@@ -425,10 +425,12 @@ function PlasmicMusicAlbum__RenderFunc(props: {
             className={classNames(
               projectcss.all,
               projectcss.a,
+              projectcss.a__x4VgG,
               sty.link__b8LoC
             )}
             component={Link}
             href={args.youTubeLink}
+            legacyBehavior={false}
             platform={"nextjs"}
             target={"_blank"}
           >
@@ -438,7 +440,7 @@ function PlasmicMusicAlbum__RenderFunc(props: {
             />
           </PlasmicLink__>
         </AntdPopover>
-      </Stack__>
+      </div>
       <Tilt
         data-plasmic-name={"tilt"}
         data-plasmic-override={overrides.tilt}
@@ -516,7 +518,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicMusicAlbum__VariantsArgs;
     args?: PlasmicMusicAlbum__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicMusicAlbum__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicMusicAlbum__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicMusicAlbum__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

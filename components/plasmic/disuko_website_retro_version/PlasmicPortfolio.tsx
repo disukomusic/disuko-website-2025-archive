@@ -67,16 +67,61 @@ import Window from "../../Window"; // plasmic-import: BWjgdOwFY_OO/component
 import ImageWindow from "../../ImageWindow"; // plasmic-import: cCfEU_zMoOP5/component
 import WindowButton from "../../WindowButton"; // plasmic-import: KZYdo-R8GYAn/component
 import Footer from "../../Footer"; // plasmic-import: shKoGjSwLEEB/component
-
-import { ThemeValue, useTheme } from "./PlasmicGlobalVariant__Theme"; // plasmic-import: 3K9IqsAFaaID/globalVariant
-import { useScreenVariants as useScreenVariantsdmuurUfQuA6N } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: DmuurUFQuA6N/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_plasmic_rich_components_css from "../plasmic_rich_components/plasmic.module.css"; // plasmic-import: jkU633o1Cz7HrJdwdxhVHk/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: x4VgG6kzZCVuaqknYN7tgc/projectcss
 import sty from "./PlasmicPortfolio.module.css"; // plasmic-import: FM3_GOS4-xG4/css
+
+const emptyProxy: any = new Proxy(() => "", {
+  get(_, prop) {
+    return prop === Symbol.toPrimitive ? () => "" : emptyProxy;
+  }
+});
+
+function wrapQueriesWithLoadingProxy($q: any): any {
+  return new Proxy($q, {
+    get(target, queryName) {
+      const query = target[queryName];
+      return !query || query.isLoading || !query.data ? emptyProxy : query;
+    }
+  });
+}
+
+export type PageCtx = {
+  pageRoute: string;
+  pagePath: string;
+  params: Record<string, string | string[] | undefined>;
+  query: Record<string, string | string[] | undefined>;
+};
+
+export function generateDynamicMetadata($q: any, $ctx: PageCtx) {
+  return {
+    title: "disuko - portfolio🌸",
+    description:
+      "~all of my completed /ongoing work, including music, 3D, design, and video.",
+    openGraph: {
+      title: "disuko - portfolio🌸",
+      description:
+        "~all of my completed /ongoing work, including music, 3D, design, and video.",
+      images: [
+        "https://site-assets.plasmic.app/f33b16e8e3629b301959c659f5c8f11d.jpg"
+      ]
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      title: "disuko - portfolio🌸",
+      description:
+        "~all of my completed /ongoing work, including music, 3D, design, and video.",
+      images: [
+        "https://site-assets.plasmic.app/f33b16e8e3629b301959c659f5c8f11d.jpg"
+      ]
+    },
+    alternates: { canonical: "https://disuko.gay/portfolio" }
+  };
+}
 
 createPlasmicElementProxy;
 
@@ -96,10 +141,12 @@ export type PlasmicPortfolio__OverridesType = {
   imageWindow?: Flex__<typeof ImageWindow>;
   columns?: Flex__<"div">;
   imm?: Flex__<"div">;
-  film?: Flex__<"div">;
+  webDesign?: Flex__<"div">;
+  link?: Flex__<"a"> & Partial<LinkProps>;
   _3DDesign?: Flex__<"div">;
   music?: Flex__<"div">;
   _2DDesign?: Flex__<"div">;
+  film?: Flex__<"div">;
   footer?: Flex__<typeof Footer>;
 };
 
@@ -144,54 +191,54 @@ function PlasmicPortfolio__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = _useGlobalVariants();
+
   const currentUser = useCurrentUser?.() || {};
 
-  const globalVariants = ensureGlobalVariants({
-    theme: useTheme(),
-    screen: useScreenVariantsdmuurUfQuA6N()
-  });
+  const pageMetadata = generateDynamicMetadata(
+    wrapQueriesWithLoadingProxy({}),
+    $ctx as PageCtx
+  );
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <React.Fragment>
       <Head>
         <meta name="twitter:card" content="summary_large_image" />
-        <title key="title">{PlasmicPortfolio.pageMetadata.title}</title>
-        <meta
-          key="og:title"
-          property="og:title"
-          content={PlasmicPortfolio.pageMetadata.title}
-        />
+        <title key="title">{pageMetadata.title}</title>
+        <meta key="og:title" property="og:title" content={pageMetadata.title} />
         <meta
           key="twitter:title"
-          name="twitter:title"
-          content={PlasmicPortfolio.pageMetadata.title}
+          property="twitter:title"
+          content={pageMetadata.title}
         />
         <meta
           key="description"
-          name="description"
-          content={PlasmicPortfolio.pageMetadata.description}
+          property="description"
+          content={pageMetadata.description}
         />
         <meta
           key="og:description"
           property="og:description"
-          content={PlasmicPortfolio.pageMetadata.description}
+          content={pageMetadata.description}
         />
         <meta
           key="twitter:description"
-          name="twitter:description"
-          content={PlasmicPortfolio.pageMetadata.description}
+          property="twitter:description"
+          content={pageMetadata.description}
         />
         <meta
           key="og:image"
           property="og:image"
-          content={PlasmicPortfolio.pageMetadata.ogImageSrc}
+          content={pageMetadata.ogImageSrc}
         />
         <meta
           key="twitter:image"
-          name="twitter:image"
-          content={PlasmicPortfolio.pageMetadata.ogImageSrc}
+          property="twitter:image"
+          content={pageMetadata.ogImageSrc}
         />
-        <link rel="canonical" href={PlasmicPortfolio.pageMetadata.canonical} />
+        <link rel="canonical" href={pageMetadata.alternates?.canonical} />
       </Head>
 
       <style>{`
@@ -211,9 +258,7 @@ function PlasmicPortfolio__RenderFunc(props: {
             projectcss.root_reset,
             projectcss.plasmic_default_styles,
             projectcss.plasmic_mixins,
-            projectcss.plasmic_tokens,
-            plasmic_antd_5_hostless_css.plasmic_tokens,
-            plasmic_plasmic_rich_components_css.plasmic_tokens,
+            styleTokensClassNames,
             sty.root,
             {
               [sty.rootglobal_theme_classic]: hasVariant(
@@ -230,11 +275,9 @@ function PlasmicPortfolio__RenderFunc(props: {
             className={classNames("__wab_instance", sty.navbar)}
           />
 
-          <Stack__
-            as={"div"}
+          <div
             data-plasmic-name={"main"}
             data-plasmic-override={overrides.main}
-            hasGap={true}
             className={classNames(projectcss.all, sty.main, {
               [sty.mainglobal_theme_classic]: hasVariant(
                 globalVariants,
@@ -243,11 +286,7 @@ function PlasmicPortfolio__RenderFunc(props: {
               )
             })}
           >
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__iNumN)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__iNumN)}>
               <div className={classNames(projectcss.all, sty.freeBox__s1Xm)}>
                 <PlasmicImg__
                   alt={""}
@@ -277,11 +316,7 @@ function PlasmicPortfolio__RenderFunc(props: {
                   windowTitle={"about me"}
                 />
               </div>
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__yDuY)}
-              >
+              <div className={classNames(projectcss.all, sty.freeBox__yDuY)}>
                 <ImageWindow
                   data-plasmic-name={"imageWindow"}
                   data-plasmic-override={overrides.imageWindow}
@@ -311,18 +346,14 @@ function PlasmicPortfolio__RenderFunc(props: {
                     }}
                   />
                 </ImageWindow>
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__a9Bbt)}
-                >
+                <div className={classNames(projectcss.all, sty.freeBox__a9Bbt)}>
                   <WindowButton
                     className={classNames(
                       "__wab_instance",
                       sty.windowButton__oX6B
                     )}
                     link={
-                      "https://xgdsk-my.sharepoint.com/:f:/g/personal/disuko_redpandastudios_net/ElEocPBhlwxBmi3QTScyB20BlwuRi4f4rWuczU8qxsQvKA?e=sgunvh"
+                      "https://drive.google.com/drive/folders/1VesaOi3VAPvbhMWhtLeT0ZD5d66nWwow?usp=drive_link"
                     }
                   >
                     <div
@@ -347,7 +378,7 @@ function PlasmicPortfolio__RenderFunc(props: {
                       "__wab_instance",
                       sty.windowButton___6RFoD
                     )}
-                    link={"mailto:disukomusic@gmail.com"}
+                    link={"mailto:angelo@disuko.gay"}
                   >
                     <div
                       className={classNames(
@@ -363,9 +394,9 @@ function PlasmicPortfolio__RenderFunc(props: {
                       {"Contact"}
                     </div>
                   </WindowButton>
-                </Stack__>
-              </Stack__>
-            </Stack__>
+                </div>
+              </div>
+            </div>
             <div
               data-plasmic-name={"columns"}
               data-plasmic-override={overrides.columns}
@@ -391,9 +422,9 @@ function PlasmicPortfolio__RenderFunc(props: {
                       displayWidth={"auto"}
                       loading={"lazy"}
                       src={{
-                        src: "/plasmic/disuko_website_retro_version/images/image99.png",
-                        fullWidth: 1280,
-                        fullHeight: 720,
+                        src: "/plasmic/disuko_website_retro_version/images/dsc8618Jpg.jpg",
+                        fullWidth: 5568,
+                        fullHeight: 3712,
                         aspectRatio: undefined
                       }}
                     />
@@ -405,17 +436,18 @@ function PlasmicPortfolio__RenderFunc(props: {
                 />
               </div>
               <div
-                data-plasmic-name={"film"}
-                data-plasmic-override={overrides.film}
-                className={classNames(projectcss.all, sty.film)}
+                data-plasmic-name={"webDesign"}
+                data-plasmic-override={overrides.webDesign}
+                className={classNames(projectcss.all, sty.webDesign)}
               >
                 <Window
-                  className={classNames("__wab_instance", sty.window__oqDxY)}
-                  linkDestination={`/film`}
+                  children={null}
+                  className={classNames("__wab_instance", sty.window__b4HY)}
+                  linkDestination={"https://disuko.cloud"}
                   windowImage={
                     <PlasmicImg__
                       alt={""}
-                      className={classNames(sty.img__azDap)}
+                      className={classNames(sty.img__lHzoC)}
                       displayHeight={"auto"}
                       displayMaxHeight={"none"}
                       displayMaxWidth={"100%"}
@@ -424,18 +456,37 @@ function PlasmicPortfolio__RenderFunc(props: {
                       displayWidth={"auto"}
                       loading={"lazy"}
                       src={{
-                        src: "/plasmic/disuko_website_retro_version/images/vlcsnap2025042401H05M47S151Png.png",
-                        fullWidth: 3840,
-                        fullHeight: 2160,
+                        src: "/plasmic/disuko_website_retro_version/images/screenshot20260510194928Png.png",
+                        fullWidth: 1717,
+                        fullHeight: 920,
                         aspectRatio: undefined
                       }}
                     />
                   }
                   windowText={
-                    "Adobe Premiere / After Effects / Davinci Resolve"
+                    "Plasmic, TypeScript, React, Node.js, HTML, Javascript, CSS"
                   }
-                  windowTitle={"Film"}
+                  windowTitle={"Web Design"}
                 />
+
+                <PlasmicLink__
+                  data-plasmic-name={"link"}
+                  data-plasmic-override={overrides.link}
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.a,
+                    projectcss.a__x4VgG,
+                    projectcss.__wab_text,
+                    sty.link
+                  )}
+                  component={Link}
+                  href={"https://disuko.cloud"}
+                  legacyBehavior={false}
+                  platform={"nextjs"}
+                  target={"_blank"}
+                >
+                  {"NEW WEBSITE UNDER CONSTRUCTION"}
+                </PlasmicLink__>
               </div>
               <div
                 data-plasmic-name={"_3DDesign"}
@@ -521,7 +572,7 @@ function PlasmicPortfolio__RenderFunc(props: {
                       displayWidth={"auto"}
                       loading={"lazy"}
                       src={{
-                        src: "/plasmic/disuko_website_retro_version/images/_2DDesignCoverJpg.jpg",
+                        src: "/plasmic/disuko_website_retro_version/images/zineCroppedPng.png",
                         fullWidth: 1920,
                         fullHeight: 1080,
                         aspectRatio: undefined
@@ -532,8 +583,41 @@ function PlasmicPortfolio__RenderFunc(props: {
                   windowTitle={"2D Design"}
                 />
               </div>
+              <div
+                data-plasmic-name={"film"}
+                data-plasmic-override={overrides.film}
+                className={classNames(projectcss.all, sty.film)}
+              >
+                <Window
+                  className={classNames("__wab_instance", sty.window__oqDxY)}
+                  linkDestination={`/film`}
+                  windowImage={
+                    <PlasmicImg__
+                      alt={""}
+                      className={classNames(sty.img__azDap)}
+                      displayHeight={"auto"}
+                      displayMaxHeight={"none"}
+                      displayMaxWidth={"100%"}
+                      displayMinHeight={"0"}
+                      displayMinWidth={"0"}
+                      displayWidth={"auto"}
+                      loading={"lazy"}
+                      src={{
+                        src: "/plasmic/disuko_website_retro_version/images/vlcsnap2025042401H05M47S151Png.png",
+                        fullWidth: 3840,
+                        fullHeight: 2160,
+                        aspectRatio: undefined
+                      }}
+                    />
+                  }
+                  windowText={
+                    "Adobe Premiere / After Effects / Davinci Resolve"
+                  }
+                  windowTitle={"Film"}
+                />
+              </div>
             </div>
-          </Stack__>
+          </div>
           <Footer
             data-plasmic-name={"footer"}
             data-plasmic-override={overrides.footer}
@@ -553,10 +637,12 @@ const PlasmicDescendants = {
     "imageWindow",
     "columns",
     "imm",
-    "film",
+    "webDesign",
+    "link",
     "_3DDesign",
     "music",
     "_2DDesign",
+    "film",
     "footer"
   ],
   navbar: ["navbar"],
@@ -565,18 +651,31 @@ const PlasmicDescendants = {
     "imageWindow",
     "columns",
     "imm",
-    "film",
+    "webDesign",
+    "link",
     "_3DDesign",
     "music",
-    "_2DDesign"
+    "_2DDesign",
+    "film"
   ],
   imageWindow: ["imageWindow"],
-  columns: ["columns", "imm", "film", "_3DDesign", "music", "_2DDesign"],
+  columns: [
+    "columns",
+    "imm",
+    "webDesign",
+    "link",
+    "_3DDesign",
+    "music",
+    "_2DDesign",
+    "film"
+  ],
   imm: ["imm"],
-  film: ["film"],
+  webDesign: ["webDesign", "link"],
+  link: ["link"],
   _3DDesign: ["_3DDesign"],
   music: ["music"],
   _2DDesign: ["_2DDesign"],
+  film: ["film"],
   footer: ["footer"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -589,10 +688,12 @@ type NodeDefaultElementType = {
   imageWindow: typeof ImageWindow;
   columns: "div";
   imm: "div";
-  film: "div";
+  webDesign: "div";
+  link: "a";
   _3DDesign: "div";
   music: "div";
   _2DDesign: "div";
+  film: "div";
   footer: typeof Footer;
 };
 
@@ -607,7 +708,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicPortfolio__VariantsArgs;
     args?: PlasmicPortfolio__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicPortfolio__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicPortfolio__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicPortfolio__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
@@ -686,25 +789,24 @@ export const PlasmicPortfolio = Object.assign(
     imageWindow: makeNodeComponent("imageWindow"),
     columns: makeNodeComponent("columns"),
     imm: makeNodeComponent("imm"),
-    film: makeNodeComponent("film"),
+    webDesign: makeNodeComponent("webDesign"),
+    link: makeNodeComponent("link"),
     _3DDesign: makeNodeComponent("_3DDesign"),
     music: makeNodeComponent("music"),
     _2DDesign: makeNodeComponent("_2DDesign"),
+    film: makeNodeComponent("film"),
     footer: makeNodeComponent("footer"),
 
     // Metadata about props expected for PlasmicPortfolio
     internalVariantProps: PlasmicPortfolio__VariantProps,
     internalArgProps: PlasmicPortfolio__ArgProps,
 
-    // Page metadata
-    pageMetadata: {
-      title: "disuko - portfolio🌸",
-      description:
-        "~all of my completed /ongoing work, including music, 3D, design, and video.",
-      ogImageSrc:
-        "https://site-assets.plasmic.app/f33b16e8e3629b301959c659f5c8f11d.jpg",
-      canonical: "https://disuko.gay/portfolio"
-    }
+    pageMetadata: generateDynamicMetadata(wrapQueriesWithLoadingProxy({}), {
+      pageRoute: "/portfolio",
+      pagePath: "/portfolio",
+      params: {},
+      query: {}
+    })
   }
 );
 

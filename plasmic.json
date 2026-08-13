@@ -110,7 +110,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/radix_ui/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/radix_ui/plasmic.tsx",
+      "dataTokensFilePath": ""
     },
     {
       "projectId": "8PtdGodUbexNYgkuyBUcWu",
@@ -133,7 +135,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/plasmic_embed_css/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/plasmic_embed_css/plasmic.tsx",
+      "dataTokensFilePath": ""
     },
     {
       "projectId": "gLnoj82AzKVVT7qXiqAbHD",
@@ -200,7 +204,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/plasmic_tabs/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/plasmic_tabs/plasmic.tsx",
+      "dataTokensFilePath": ""
     },
     {
       "projectId": "jkU633o1Cz7HrJdwdxhVHk",
@@ -255,7 +261,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/plasmic_rich_components/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/plasmic_rich_components/plasmic.tsx",
+      "dataTokensFilePath": ""
     },
     {
       "projectId": "ohDidvG9XsCeFumugENU3J",
@@ -656,7 +664,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/antd_5_hostless/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/antd_5_hostless/plasmic.tsx",
+      "dataTokensFilePath": ""
     },
     {
       "projectId": "84wxoth5npGrp6RRXPL88z",
@@ -685,7 +695,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/react_scroll_parallax_global/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/react_scroll_parallax_global/plasmic.tsx",
+      "dataTokensFilePath": ""
     },
     {
       "projectId": "i3z63WaCLuRiSZRBwZC8d1",
@@ -708,7 +720,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     },
     {
       "projectId": "xp1p7dmg329XVLHyuEUxD2",
@@ -827,7 +841,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/commerce/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/commerce/plasmic.tsx",
+      "dataTokensFilePath": ""
     },
     {
       "projectId": "enk3K4vZ6pmH6kVCoZJXGn",
@@ -850,7 +866,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/react_youtube/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/react_youtube/plasmic.tsx",
+      "dataTokensFilePath": ""
     },
     {
       "projectId": "caTPwKxj5ZrD9LQ7DMdK4Z",
@@ -909,7 +927,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/plasmic_basic_components/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/plasmic_basic_components/plasmic.tsx",
+      "dataTokensFilePath": ""
     },
     {
       "projectId": "r3ASNrnyvLLLAtDvzUioQ",
@@ -936,7 +956,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/react_slick/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/react_slick/plasmic.tsx",
+      "dataTokensFilePath": ""
     },
     {
       "projectId": "itBdcjth19Wasd6ngAYxWR",
@@ -971,7 +993,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/react_twitter_widgets/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/react_twitter_widgets/plasmic.tsx",
+      "dataTokensFilePath": ""
     },
     {
       "projectId": "58GpZjZCWTaJ8AUhpCwt2K",
@@ -994,7 +1018,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/react_awesome_reveal/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/react_awesome_reveal/plasmic.tsx",
+      "dataTokensFilePath": ""
     },
     {
       "projectId": "szjgMQpPpxhmkjnaBvZQJG",
@@ -1017,7 +1043,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/react_parallax_tilt/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/react_parallax_tilt/plasmic.tsx",
+      "dataTokensFilePath": ""
     },
     {
       "projectId": "7nJ7UcFmq9UzB6eXfC5z4a",
@@ -1040,7 +1068,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/plasmic_nav/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/plasmic_nav/plasmic.tsx",
+      "dataTokensFilePath": ""
     },
     {
       "projectId": "x4VgG6kzZCVuaqknYN7tgc",
@@ -1615,6 +1645,19 @@
             "modulePath": "ImageWindow.tsx"
           },
           "cssFilePath": "plasmic/disuko_website_retro_version/PlasmicImageWindow.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "o62CkNPQW-vk",
+          "name": "BlurredPicture",
+          "type": "managed",
+          "projectId": "x4VgG6kzZCVuaqknYN7tgc",
+          "renderModuleFilePath": "plasmic/disuko_website_retro_version/PlasmicBlurredPicture.tsx",
+          "importSpec": {
+            "modulePath": "BlurredPicture.tsx"
+          },
+          "cssFilePath": "plasmic/disuko_website_retro_version/PlasmicBlurredPicture.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         }
@@ -3111,6 +3154,201 @@
           "id": "h3qK32orIkof",
           "name": "VRChat_2024-12-30_20-20-45.634_1920x1080.png",
           "filePath": "../public/plasmic/disuko_website_retro_version/images/vrChat202412302020456341920X1080Png.png"
+        },
+        {
+          "id": "H0KX45LuR0Ee",
+          "name": "DisukoLogo2025GradientSmal.png",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/disukoLogo2025GradientSmalPng.png"
+        },
+        {
+          "id": "AY1F_RFmaVbA",
+          "name": "ZineCropped.png",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/zineCroppedPng.png"
+        },
+        {
+          "id": "bWCqDRzc6STD",
+          "name": "image 102",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/image102.png"
+        },
+        {
+          "id": "Sw-EoR3mFSZv",
+          "name": "UFOImagePink.jpg",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/ufoImagePinkJpg.jpg"
+        },
+        {
+          "id": "RAWrPmnvMx1d",
+          "name": "image 103",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/image103.png"
+        },
+        {
+          "id": "cQv__Nrppa1-",
+          "name": "image 104",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/image104.png"
+        },
+        {
+          "id": "DlVWK8V2eBjS",
+          "name": "image 105",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/image105.png"
+        },
+        {
+          "id": "MaprSr11gYYv",
+          "name": "Cloud Dreamer Album Art Transparent LOgo USE THIS ONE.png",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/cloudDreamerAlbumArtTransparentLOgoUseThisOnePng.png"
+        },
+        {
+          "id": "JU6KBsnic-4p",
+          "name": "image 106",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/image106.png"
+        },
+        {
+          "id": "6fU3by3WRXHS",
+          "name": "image 107",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/image107.png"
+        },
+        {
+          "id": "m-fTdrnE38am",
+          "name": "image 108",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/image108.png"
+        },
+        {
+          "id": "aJd5KS2VPvUF",
+          "name": "On3koPoster.jpg",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/on3KoPosterJpg.jpg"
+        },
+        {
+          "id": "OwjAISZBDdNp",
+          "name": "On3koPoster.jpg 2",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/on3KoPosterJpg2.jpg"
+        },
+        {
+          "id": "lO4kmGHvO8tp",
+          "name": "On3koPoster.jpg 3",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/on3KoPosterJpg3.jpg"
+        },
+        {
+          "id": "e9NpKjgdljTT",
+          "name": "On3koPoster.jpg 4",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/on3KoPosterJpg4.jpg"
+        },
+        {
+          "id": "uyhPdCFiE7rM",
+          "name": "image 109",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/image109.png"
+        },
+        {
+          "id": "CVApni7-uKKp",
+          "name": "image 110",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/image110.png"
+        },
+        {
+          "id": "BBpppLsUVdMH",
+          "name": "image 111",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/image111.png"
+        },
+        {
+          "id": "hEByXF6D-7N_",
+          "name": "image 112",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/image112.png"
+        },
+        {
+          "id": "L5LQIUGkucMb",
+          "name": "mirrorpic.jpg",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/mirrorpicJpg.jpg"
+        },
+        {
+          "id": "HNqAVFRyXE10",
+          "name": "image 113",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/image113.png"
+        },
+        {
+          "id": "U-FWr9wWGXAh",
+          "name": "image 114",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/image114.png"
+        },
+        {
+          "id": "Cv-FZE-OznyK",
+          "name": "image 115",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/image115.png"
+        },
+        {
+          "id": "bbOvyJjF5bYe",
+          "name": "IceCream1Fixed.png",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/iceCream1FixedPng.png"
+        },
+        {
+          "id": "7crK4PjJs7Bj",
+          "name": "IceCream2Fixed.png",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/iceCream2FixedPng.png"
+        },
+        {
+          "id": "K6Oex4gJzDt6",
+          "name": "ExploreEnvironment.gif",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/exploreEnvironmentGif.gif"
+        },
+        {
+          "id": "NK7UryHKFwwD",
+          "name": "ExploreEnvironment.gif 2",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/exploreEnvironmentGif2.gif"
+        },
+        {
+          "id": "25aechjGqa1h",
+          "name": "bathroom.gif",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/bathroomGif.gif"
+        },
+        {
+          "id": "npsDeiIefxNu",
+          "name": "DikoIceCreamFlavor.gif",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/dikoIceCreamFlavorGif.gif"
+        },
+        {
+          "id": "kUpp_D4MkSsr",
+          "name": "ShikuCowboy.gif",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/shikuCowboyGif.gif"
+        },
+        {
+          "id": "cguxIZsUm5rb",
+          "name": "BiteHandleIcon2025 (Small).png",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/biteHandleIcon2025SmallPng.png"
+        },
+        {
+          "id": "NXTMRiAtkQ48",
+          "name": "image 116",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/image116.png"
+        },
+        {
+          "id": "HSSBx_9rxYPh",
+          "name": "DSC_8618.JPG",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/dsc8618Jpg.jpg"
+        },
+        {
+          "id": "Pngb5eBjFI5N",
+          "name": "DSC_8654.JPG",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/dsc8654Jpg.jpg"
+        },
+        {
+          "id": "s14y2UZ2XRJq",
+          "name": "DSC_8669.JPG",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/dsc8669Jpg.jpg"
+        },
+        {
+          "id": "5lZMgFcmvkl_",
+          "name": "image 117",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/image117.png"
+        },
+        {
+          "id": "NcI-ORPwJROW",
+          "name": "DisukoLogo2025GradientSmal.png 2",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/disukoLogo2025GradientSmalPng2.png"
+        },
+        {
+          "id": "oQ5cAtIzIQuA",
+          "name": "Background Blur.png 2",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/backgroundBlurPng2.png"
+        },
+        {
+          "id": "WjArRPBHJrb7",
+          "name": "Screenshot 2026-05-10 194928.png",
+          "filePath": "../public/plasmic/disuko_website_retro_version/images/screenshot20260510194928Png.png"
         }
       ],
       "indirect": false,
@@ -3130,7 +3368,10 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "styleTokensProviderFilePath": "plasmic/disuko_website_retro_version/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/disuko_website_retro_version/plasmic.tsx",
+      "dataTokensFilePath": ""
     },
     {
       "projectId": "gmeH6XgPaBtkt51HunAo4g",
@@ -3339,7 +3580,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/react_aria/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/react_aria/plasmic.tsx",
+      "dataTokensFilePath": ""
     }
   ],
   "globalVariants": {
@@ -3359,9 +3602,10 @@
     ]
   },
   "wrapPagesWithGlobalContexts": true,
+  "preserveJsImportExtensions": false,
   "nextjsConfig": {
     "pagesDir": "../pages"
   },
-  "cliVersion": "0.1.338",
-  "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.338/dist/plasmic.schema.json"
+  "cliVersion": "0.1.361",
+  "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.361/dist/plasmic.schema.json"
 }
